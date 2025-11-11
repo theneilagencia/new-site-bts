@@ -1,0 +1,25 @@
+{
+  "name": "bts-global-corp-website",
+  "version": "1.0.0",
+  "description": "Site institucional da BTS Global Corp desenvolvido no Figma Make",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 8080 -c-1",
+    "dev": "npx live-server --port=8080 --no-browser",
+    "build": "echo 'Build completed - site is ready for deployment'",
+    "test": "echo 'No tests specified'"
+  },
+  "keywords": [
+    "bts-global",
+    "website",
+    "corporate",
+    "figma"
+  ],
+  "author": "BTS Global Corp",
+  "license": "MIT",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bts-global-corp/website.git"
+  }
+}

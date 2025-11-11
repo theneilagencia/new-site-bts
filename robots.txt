@@ -1,0 +1,26 @@
+# robots.txt para BTS Global Corp
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://www.btsglobal.com/sitemap.xml
+
+# Páginas administrativas (adicione se houver)
+# Disallow: /admin/
+# Disallow: /private/
+
+# Arquivos e recursos
+Allow: /css/
+Allow: /js/
+Allow: /assets/
+
+# Configuração para bots específicos
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Tempo de espera entre requisições (em segundos)
+Crawl-delay: 10
