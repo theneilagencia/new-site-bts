@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { X, Sun, Moon } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import type { Language } from '../../lib/i18n';
+import type { Language } from '@/lib/i18n';
 
 interface MobileMenuProps {
   onClose: () => void;
