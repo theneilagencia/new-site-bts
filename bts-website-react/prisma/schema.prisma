@@ -1,0 +1,72 @@
+// Prisma Schema for BTS Global
+// Database: PostgreSQL (Vercel Postgres)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model User {
+  id            String      @id @default(cuid())
+  email         String      @unique
+  password      String
+  name          String
+  role          String      @default("partner") // partner, admin
+  company       String?
+  phone         String?
+  city          String?
+  state         String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  proposals     Proposal[]
+  
+  @@index([email])
+}
+
+model Proposal {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  clientName    String
+  clientEmail   String
+  clientPhone   String
+  
+  structureId   String
+  structureName String
+  quantity      Int         @default(1)
+  unitPrice     Float
+  totalPrice    Float
+  
+  status        String      @default("pending") // pending, approved, rejected
+  notes         String?
+  
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model AgenticConversation {
+  id            String      @id @default(cuid())
+  userId        String?
+  sessionId     String      @unique
+  
+  messages      Json        // Array of messages
+  context       Json?       // Conversation context
+  status        String      @default("active") // active, closed
+  
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  @@index([sessionId])
+  @@index([userId])
+}
