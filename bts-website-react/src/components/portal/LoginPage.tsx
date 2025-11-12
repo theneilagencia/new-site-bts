@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { fadeInUp, staggerContainer, staggerItem } from '@/lib/animations';
 
-export function LoginPage({ onLoginSuccess }: { onLoginSuccess?: () => void } = {}) {
+export function LoginPage({ onLoginSuccess }: { onLoginSuccess: () => void }) {
   const { login } = useAuth();
   const { t } = useLanguage();
   const [email, setEmail] = useState('');
@@ -23,7 +23,7 @@ export function LoginPage({ onLoginSuccess }: { onLoginSuccess?: () => void } = 
     setIsLoading(false);
 
     if (success) {
-      onLoginSuccess?.();
+      onLoginSuccess();
     } else {
       setError(t.portal.login.error);
     }
