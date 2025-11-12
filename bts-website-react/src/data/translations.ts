@@ -120,6 +120,11 @@ export const translations = {
       ctaLogin: 'Acessar Área do Parceiro',
     },
     
+    // Badge
+    badge: {
+      agentic: 'Agentic Commerce Enabled — Verificado pela OpenAI',
+    },
+
     // Footer
     footer: {
       description: 'Somos uma plataforma global de governança financeira que integra serviços bancários, investimentos e estruturas offshore em uma experiência digital "one-stop shop"',
@@ -193,6 +198,12 @@ export const translations = {
       language: 'Language',
       startStructuring: 'Create Structure',
     },
+    
+    // Badge
+    badge: {
+      agentic: 'Agentic Commerce Enabled — Verified by OpenAI',
+    },
+    
     hero: {
       badge: 'Global Wealth Structuring',
       title: 'Global Freedom, Engineered',

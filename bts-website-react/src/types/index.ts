@@ -47,6 +47,9 @@ export interface Translations {
     language: string;
     startStructuring: string;
   };
+  badge: {
+    agentic: string;
+  };
   hero: {
     badge: string;
     title: string;
