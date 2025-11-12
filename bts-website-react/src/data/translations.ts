@@ -120,6 +120,17 @@ export const translations = {
       ctaLogin: 'Acessar Área do Parceiro',
     },
     
+    // How It Works
+    howItWorks: {
+      title: 'Como Funciona',
+      step1: 'Diga-nos seus objetivos',
+      step2: 'Sugerimos a estrutura certa',
+      step3: 'Você revisa e confirma',
+      step4: 'Checkout e criação',
+      step5: 'Receba e gerencie',
+      cta: 'Criar Minha Estrutura',
+    },
+    
     // Badge
     badge: {
       agentic: 'Agentic Commerce Enabled — Verificado pela OpenAI',
@@ -197,6 +208,17 @@ export const translations = {
       contact: 'Contact',
       language: 'Language',
       startStructuring: 'Create Structure',
+    },
+    
+    // How It Works
+    howItWorks: {
+      title: 'How It Works',
+      step1: 'Tell us your goals',
+      step2: 'We suggest the right structure',
+      step3: 'You review and confirm',
+      step4: 'Checkout and creation',
+      step5: 'Receive and manage',
+      cta: 'Create My Structure',
     },
     
     // Badge
