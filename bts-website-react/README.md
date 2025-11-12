@@ -1,73 +1,80 @@
-# React + TypeScript + Vite
+# ⚛️ BTS Global Corp - Website + Partner Portal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Site institucional da BTS Global Corp desenvolvido com **React + TypeScript + Framer Motion**.
 
-Currently, two official plugins are available:
+## 🚀 Quick Start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+# Instalar dependências
+npm install
 
-## React Compiler
+# Iniciar servidor de desenvolvimento
+npm run dev
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+# Build de produção
+npm run build
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Preview do build
+npm run preview
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🌐 Acesso
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Site:** http://localhost:3000
+- **Portal do Parceiro:** http://localhost:3000/portal/login
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 🔐 Credenciais Demo
+
+**Parceiro:**
+- Email: parceiro@demo.com
+- Senha: demo123
+
+**Admin:**
+- Email: admin@btsglobal.com
+- Senha: admin123
+
+## 🎨 Features
+
+✅ React 18.3 + TypeScript  
+✅ Framer Motion (animações idênticas ao Figma)  
+✅ Tailwind CSS 4.0  
+✅ Dark/Light Mode  
+✅ Multi-idioma (PT/EN)  
+✅ Partner Portal completo  
+✅ Agentic Commerce Protocol (OpenAI)  
+✅ 100% Responsivo  
+
+## 📦 Stack
+
+- React 18.3
+- TypeScript 5.2
+- Framer Motion 11.0
+- Tailwind CSS
+- Vite 5.0
+- Lucide React (ícones)
+
+## 🏗️ Estrutura
+
 ```
+/src
+├── /components
+│   ├── /layout      # Header, Footer
+│   ├── /sections    # Hero, Why, Privacy, etc
+│   ├── /ui          # Componentes reutilizáveis
+│   └── /portal      # Portal do parceiro
+├── /contexts        # Language, Theme, Auth
+├── /hooks           # Custom hooks
+├── /lib             # Utils, animations
+├── /types           # TypeScript types
+└── /data            # Translations
+```
+
+## 📝 Próximos Passos
+
+- [ ] Completar páginas do Portal
+- [ ] Implementar Backend Agentic Commerce
+- [ ] Deploy (Vercel/Netlify)
+
+---
+
+**BTS Global Corp © 2025**

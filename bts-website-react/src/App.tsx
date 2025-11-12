@@ -1,35 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect } from 'react';
+import { LanguageProvider } from '@/contexts/LanguageContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { Header } from '@/components/layout/Header';
+import { HeroSection } from '@/components/sections/HeroSection';
+import { WhySection } from '@/components/sections/WhySection';
+import { PrivacySection } from '@/components/sections/PrivacySection';
+import { TrustedSection } from '@/components/sections/TrustedSection';
+import { SolutionsSection } from '@/components/sections/SolutionsSection';
+import { AboutSection } from '@/components/sections/AboutSection';
+import { PartnerSection } from '@/components/sections/PartnerSection';
+import { Footer } from '@/components/layout/Footer';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  useEffect(() => {
+    // Add loaded class for initial animations
+    document.body.classList.add('loaded');
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <ThemeProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <div className="min-h-screen bg-[var(--color-bg-primary)]">
+            <Header />
+            <main>
+              <HeroSection />
+              <WhySection />
+              <PrivacySection />
+              <TrustedSection />
+              <SolutionsSection />
+              <AboutSection />
+              <PartnerSection />
+            </main>
+            <Footer />
+          </div>
+        </AuthProvider>
+      </LanguageProvider>
+    </ThemeProvider>
+  );
 }
-
-export default App
