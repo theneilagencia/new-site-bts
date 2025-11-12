@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { fadeInUp, staggerContainer, staggerItem } from '@/lib/animations';
+import { staggerContainer, staggerItem } from '@/lib/animations';
 
 export function Footer() {
   const { t } = useLanguage();
@@ -31,7 +31,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="relative overflow-hidden bg-[var(--color-bg-primary)] border-t border-[var(--color-text-tertiary)]/10 py-16">
+    <footer className="relative overflow-hidden bg-[#0A2540] border-t border-white/10 py-16">
       {/* Grid Background */}
       <div className="absolute inset-0 opacity-[0.02]">
         <div
@@ -142,12 +142,50 @@ export function Footer() {
             </motion.div>
           </div>
 
+          {/* Compliance Badges */}
+          <motion.div
+            className="mt-12 pt-8 border-t border-white/10 flex flex-wrap justify-center gap-6"
+            variants={staggerItem}
+          >
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm3.707 6.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+              <span className="text-sm font-semibold text-white">SOC 2</span>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm3.707 6.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+              <span className="text-sm font-semibold text-white">ISO 27001</span>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm3.707 6.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+              <span className="text-sm font-semibold text-white">GDPR</span>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm3.707 6.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+              <span className="text-sm font-semibold text-white">ACP</span>
+            </div>
+          </motion.div>
+
           {/* Bottom Bar */}
           <motion.div
-            variants={fadeInUp}
-            className="mt-12 border-t border-[var(--color-text-tertiary)]/10 pt-8 text-center text-sm text-[var(--color-text-tertiary)]"
+            className="border-t border-white/10 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
+            variants={staggerItem}
           >
-            {t.footer.copyright}
+            <p className="text-sm text-white/70">
+              {t.footer.copyright}
+            </p>
+            <p className="text-xs text-white/50 italic">Privacy by Design</p>
+            <div className="flex gap-6">
+              {legalLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="text-sm text-white/70 hover:text-white transition-colors relative group"
+                >
+                  {link.label}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300"></span>
+                </a>
+              ))}
+            </div>
           </motion.div>
         </motion.div>
       </div>

@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Home, Building2, School, Factory } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { staggerContainer, staggerItem } from '@/lib/animations';
+import { Starfield } from '@/components/ui/Starfield';
 
 export function SolutionsSection() {
   const { t } = useLanguage();
@@ -15,6 +16,7 @@ export function SolutionsSection() {
 
   return (
     <section id="solutions" className="relative overflow-hidden bg-[var(--color-bg-primary)] py-20 lg:py-32">
+      <Starfield density={80} />
       <div className="container relative z-10 mx-auto px-6 lg:px-8">
         <motion.div
           initial="hidden"

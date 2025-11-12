@@ -1,12 +1,14 @@
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { fadeInUp } from '@/lib/animations';
+import { Starfield } from '@/components/ui/Starfield';
 
 export function TrustedSection() {
   const { t } = useLanguage();
 
   return (
     <section id="trusted" className="relative overflow-hidden bg-[var(--color-bg-secondary)] py-20">
+      <Starfield density={50} />
       <div className="container relative z-10 mx-auto px-6 lg:px-8">
         <motion.div
           initial="hidden"

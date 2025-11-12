@@ -6,6 +6,7 @@ import { Header } from '@/components/layout/Header';
 import { HeroSection } from '@/components/sections/HeroSection';
 import { WhySection } from '@/components/sections/WhySection';
 import { PrivacySection } from '@/components/sections/PrivacySection';
+import { HowItWorksSection } from '@/components/sections/HowItWorksSection';
 import { TrustedSection } from '@/components/sections/TrustedSection';
 import { SolutionsSection } from '@/components/sections/SolutionsSection';
 import { AboutSection } from '@/components/sections/AboutSection';
@@ -28,6 +29,7 @@ export default function App() {
               <HeroSection />
               <WhySection />
               <PrivacySection />
+              <HowItWorksSection />
               <TrustedSection />
               <SolutionsSection />
               <AboutSection />

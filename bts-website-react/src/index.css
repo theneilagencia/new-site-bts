@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -61,12 +63,18 @@
   }
 
   body {
-    font-family: var(--font-sans);
+    font-family: 'Montserrat', var(--font-sans);
+    font-weight: 400;
     background-color: var(--color-bg-primary);
     color: var(--color-text-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 300ms ease, color 300ms ease;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', var(--font-sans);
+    font-weight: 800;
   }
 
   /* Scrollbar */
@@ -91,5 +99,29 @@
 @layer utilities {
   .container {
     @apply mx-auto px-6 lg:px-8;
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .glass-md {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.25);
+  }
+
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(32px) saturate(200%);
+    -webkit-backdrop-filter: blur(32px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.3);
   }
 }
