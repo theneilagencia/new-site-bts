@@ -12,6 +12,7 @@ import { AboutSection } from '@/components/sections/AboutSection';
 import { PartnerSection } from '@/components/sections/PartnerSection';
 import { Footer } from '@/components/layout/Footer';
 import { PortalApp } from '@/components/portal/PortalApp';
+import { AgenticChat } from '@/components/ui/AgenticChat';
 
 export default function App() {
   const [showPortal, setShowPortal] = useState(false);
@@ -43,19 +44,22 @@ export default function App() {
           {showPortal ? (
             <PortalApp />
           ) : (
-            <div className="min-h-screen bg-[var(--color-bg-primary)]">
-              <Header />
-              <main>
-                <HeroSection />
-                <WhySection />
-                <PrivacySection />
-                <TrustedSection />
-                <SolutionsSection />
-                <AboutSection />
-                <PartnerSection />
-              </main>
-              <Footer />
-            </div>
+            <>
+              <div className="min-h-screen bg-[var(--color-bg-primary)]">
+                <Header />
+                <main>
+                  <HeroSection />
+                  <WhySection />
+                  <PrivacySection />
+                  <TrustedSection />
+                  <SolutionsSection />
+                  <AboutSection />
+                  <PartnerSection />
+                </main>
+                <Footer />
+              </div>
+              <AgenticChat />
+            </>
           )}
         </AuthProvider>
       </LanguageProvider>
