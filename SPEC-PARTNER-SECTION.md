@@ -951,4 +951,83 @@ document.addEventListener('DOMContentLoaded', initPartnerSection);
 
 ---
 
-**PRÓXIMO**: Footer, Conteúdo Bilíngue, JavaScript Completo
+---
+
+## 🔗 CONTINUAÇÃO: PARTNER PORTAL (Área Logada)
+
+A seção Partner na homepage é apenas o **ponto de entrada**. Existe um **Partner Portal completo** (área logada) com funcionalidades avançadas.
+
+### 📂 Documentação do Portal
+
+A especificação completa do Partner Portal está dividida em 3 arquivos:
+
+#### 1. **SPEC-PARTNER-PORTAL-COMPLETO.md**
+- 🔐 Login Page (HTML + CSS completo)
+- 🗂️ Portal Layout (Sidebar + Header + Navigation)
+- 📱 Mobile menu e responsividade
+
+#### 2. **SPEC-PARTNER-PORTAL-PAGES.md**
+- 📝 Nova Proposta (Gerador de contratos em PDF)
+- 📋 Histórico de Propostas (Table desktop + Cards mobile)
+- 👁️ PDF Viewer Modal
+
+#### 3. **SPEC-PARTNER-PORTAL-FINAL.md**
+- 👤 Perfil do Parceiro
+- 📊 Admin Dashboard (métricas e stats)
+- ✅ Gerenciar Propostas (Admin - aprovar/rejeitar)
+- 👥 Gerenciar Usuários (Admin - criar/editar/desativar)
+- ⚙️ JavaScript Completo (auth.js, portal.js, proposals.js)
+- 🔌 API Client (integração opcional)
+
+### 🎯 Funcionalidades do Portal
+
+**Para PARCEIROS:**
+- ✅ Gerar propostas contratuais personalizadas em PDF
+- ✅ Histórico completo de propostas criadas
+- ✅ Visualizar, baixar, duplicar e excluir propostas
+- ✅ Perfil e configurações de conta
+- ✅ Status em tempo real das propostas
+
+**Para ADMINISTRADORES:**
+- ✅ Dashboard com métricas consolidadas
+- ✅ Revisar e aprovar/rejeitar propostas
+- ✅ Gerenciar todos os usuários do sistema
+- ✅ Criar novos parceiros
+- ✅ Ativar/desativar contas
+- ✅ Visualizar propostas de todos os parceiros
+
+### 🎨 Design System do Portal
+
+O Portal usa um **Dark Theme** específico diferente do site público:
+
+```css
+/* Portal Colors */
+--portal-bg-primary: #050B18
+--portal-bg-secondary: #0A1432
+--portal-accent-blue: #1F4AFF
+--portal-accent-cyan: #00E5FF
+--portal-accent-green: #10B981
+```
+
+### 🔄 Fluxo de Uso
+
+1. **Acesso ao Portal**
+   - Usuário clica em "Partner Portal" no footer ou CTAs
+   - Redirecionado para `/partner-portal/login.html`
+   - Faz login com credenciais (demo: `elcio@bts.com` / `demo123`)
+
+2. **Parceiro Logado**
+   - Vê sidebar com navegação (Nova Proposta, Histórico, Perfil)
+   - Pode gerar propostas preenchendo formulário
+   - Propostas são salvas e podem ser gerenciadas
+   - Pode visualizar/baixar PDF das propostas
+
+3. **Admin Logado**
+   - Vê sidebar expandida com seção Admin
+   - Dashboard com métricas gerais
+   - Pode aprovar/rejeitar propostas de parceiros
+   - Pode gerenciar usuários (criar, editar, desativar)
+
+---
+
+**PRÓXIMO**: Implementar o Portal completo seguindo as 3 especificações acima
