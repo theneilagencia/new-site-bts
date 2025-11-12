@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -11,30 +11,52 @@ import { SolutionsSection } from '@/components/sections/SolutionsSection';
 import { AboutSection } from '@/components/sections/AboutSection';
 import { PartnerSection } from '@/components/sections/PartnerSection';
 import { Footer } from '@/components/layout/Footer';
+import { PortalApp } from '@/components/portal/PortalApp';
 
 export default function App() {
+  const [showPortal, setShowPortal] = useState(false);
+
   useEffect(() => {
     // Add loaded class for initial animations
     document.body.classList.add('loaded');
+    
+    // Check if user wants to access portal
+    const isPortalRoute = window.location.pathname.includes('/portal') || 
+                         window.location.hash.includes('portal');
+    setShowPortal(isPortalRoute);
+
+    // Listen for navigation changes
+    const handleNavigation = () => {
+      const isPortal = window.location.pathname.includes('/portal') || 
+                      window.location.hash.includes('portal');
+      setShowPortal(isPortal);
+    };
+
+    window.addEventListener('popstate', handleNavigation);
+    return () => window.removeEventListener('popstate', handleNavigation);
   }, []);
 
   return (
     <ThemeProvider>
       <LanguageProvider>
         <AuthProvider>
-          <div className="min-h-screen bg-[var(--color-bg-primary)]">
-            <Header />
-            <main>
-              <HeroSection />
-              <WhySection />
-              <PrivacySection />
-              <TrustedSection />
-              <SolutionsSection />
-              <AboutSection />
-              <PartnerSection />
-            </main>
-            <Footer />
-          </div>
+          {showPortal ? (
+            <PortalApp />
+          ) : (
+            <div className="min-h-screen bg-[var(--color-bg-primary)]">
+              <Header />
+              <main>
+                <HeroSection />
+                <WhySection />
+                <PrivacySection />
+                <TrustedSection />
+                <SolutionsSection />
+                <AboutSection />
+                <PartnerSection />
+              </main>
+              <Footer />
+            </div>
+          )}
         </AuthProvider>
       </LanguageProvider>
     </ThemeProvider>

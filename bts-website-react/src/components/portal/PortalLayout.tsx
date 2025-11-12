@@ -18,17 +18,17 @@ export function PortalLayout({ children, currentPage = 'dashboard' }: PortalLayo
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const partnerNavItems = [
-    { key: 'dashboard', label: t.portal.nav.dashboard, icon: LayoutDashboard, href: '#dashboard' },
-    { key: 'new-proposal', label: t.portal.nav.newProposal, icon: FileText, href: '#new-proposal' },
-    { key: 'proposals', label: t.portal.nav.proposals, icon: FileText, href: '#proposals' },
-    { key: 'profile', label: t.portal.nav.profile, icon: User, href: '#profile' },
+    { key: 'dashboard', label: t.portal.nav.dashboard, icon: LayoutDashboard, href: '#dashboard', badge: undefined },
+    { key: 'new-proposal', label: t.portal.nav.newProposal, icon: FileText, href: '#new-proposal', badge: undefined },
+    { key: 'proposals', label: t.portal.nav.proposals, icon: FileText, href: '#proposals', badge: undefined },
+    { key: 'profile', label: t.portal.nav.profile, icon: User, href: '#profile', badge: undefined },
   ];
 
   const adminNavItems = [
-    { key: 'admin-dashboard', label: 'Dashboard', icon: LayoutDashboard, href: '#admin-dashboard' },
+    { key: 'admin-dashboard', label: 'Dashboard', icon: LayoutDashboard, href: '#admin-dashboard', badge: undefined },
     { key: 'admin-proposals', label: 'Propostas', icon: FileText, href: '#admin-proposals', badge: 5 },
-    { key: 'admin-users', label: 'Usuários', icon: Users, href: '#admin-users' },
-    { key: 'admin-settings', label: 'Configurações', icon: Settings, href: '#admin-settings' },
+    { key: 'admin-users', label: 'Usuários', icon: Users, href: '#admin-users', badge: undefined },
+    { key: 'admin-settings', label: 'Configurações', icon: Settings, href: '#admin-settings', badge: undefined },
   ];
 
   const navItems = isAdmin ? adminNavItems : partnerNavItems;
