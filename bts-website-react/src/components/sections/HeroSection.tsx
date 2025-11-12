@@ -33,19 +33,28 @@ export function HeroSection() {
           ))}
         </div>
 
-        {/* Diagonal glow */}
+        {/* Diagonal glow - animated shine effect */}
         <motion.div
-          className="absolute inset-0 opacity-30"
+          className="absolute inset-0 opacity-40"
           style={{
-            background: 'linear-gradient(135deg, transparent 0%, rgba(24, 90, 180, 0.4) 50%, transparent 100%)',
+            background: 'linear-gradient(135deg, transparent 0%, transparent 40%, rgba(24, 90, 180, 0.6) 50%, transparent 60%, transparent 100%)',
+            backgroundSize: '200% 200%',
           }}
           animate={{
-            backgroundPosition: ['0% 0%', '100% 100%'],
+            backgroundPosition: ['0% 0%', '200% 200%'],
           }}
           transition={{
-            duration: 8,
+            duration: 3,
             repeat: Infinity,
-            ease: 'linear',
+            ease: 'easeInOut',
+          }}
+        />
+        
+        {/* Radial glow center */}
+        <div 
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full opacity-20"
+          style={{
+            background: 'radial-gradient(circle, rgba(24, 90, 180, 0.8) 0%, transparent 70%)',
           }}
         />
       </div>

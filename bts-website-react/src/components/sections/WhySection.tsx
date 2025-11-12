@@ -35,14 +35,35 @@ export function WhySection() {
               <motion.div
                 key={index}
                 variants={staggerItem}
-                className="rounded-2xl border border-[var(--color-text-tertiary)]/10 bg-[var(--color-bg-primary)] p-8"
+                className="group relative rounded-2xl glass border border-white/10 p-8 overflow-hidden"
+                whileHover={{ y: -8, scale: 1.02 }}
+                transition={{ type: 'spring', stiffness: 300 }}
               >
-                <h3 className="mb-4 text-2xl font-semibold text-[var(--color-text-primary)]">
-                  {reason.title}
-                </h3>
-                <p className="text-[var(--color-text-secondary)]">
-                  {reason.text}
-                </p>
+                {/* Diagonal shine effect on hover */}
+                <motion.div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1200"
+                  style={{
+                    background: 'linear-gradient(135deg, transparent 0%, transparent 40%, rgba(255, 255, 255, 0.2) 50%, transparent 60%, transparent 100%)',
+                    backgroundSize: '200% 200%',
+                  }}
+                  animate={{
+                    backgroundPosition: ['0% 0%', '200% 200%'],
+                  }}
+                  transition={{
+                    duration: 1.2,
+                    repeat: Infinity,
+                    repeatDelay: 0.5,
+                  }}
+                />
+                
+                <div className="relative z-10">
+                  <h3 className="mb-4 text-2xl font-semibold text-white">
+                    {reason.title}
+                  </h3>
+                  <p className="text-white/80">
+                    {reason.text}
+                  </p>
+                </div>
               </motion.div>
             ))}
           </div>

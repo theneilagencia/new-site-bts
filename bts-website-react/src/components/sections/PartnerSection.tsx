@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { ArrowRight, LogIn } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { staggerContainer, staggerItem } from '@/lib/animations';
+import { WorldMapCanvas } from '@/components/ui/WorldMapCanvas';
+import { Starfield } from '@/components/ui/Starfield';
 
 export function PartnerSection() {
   const { t } = useLanguage();
@@ -23,32 +25,24 @@ export function PartnerSection() {
 
   return (
     <section id="partner" className="relative overflow-hidden bg-[var(--color-bg-primary)] py-20 lg:py-32">
-      {/* Grid Background */}
-      <div className="absolute inset-0 opacity-[0.03]">
-        <div
-          className="h-full w-full"
-          style={{
-            backgroundImage: `
-              linear-gradient(var(--color-text-tertiary) 1px, transparent 1px),
-              linear-gradient(90deg, var(--color-text-tertiary) 1px, transparent 1px)
-            `,
-            backgroundSize: '80px 80px',
-          }}
-        />
-      </div>
+      {/* World Map Canvas */}
+      <WorldMapCanvas />
+      
+      {/* Starfield Background */}
+      <Starfield density={60} />
 
       {/* Radial Gradients */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 pointer-events-none">
         <div
-          className="absolute left-1/4 top-1/3 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 opacity-12"
+          className="absolute left-1/4 top-1/3 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 opacity-20"
           style={{
-            background: 'radial-gradient(circle, #00639A 0%, transparent 70%)',
+            background: 'radial-gradient(circle, #185AB4 0%, transparent 70%)',
           }}
         />
         <div
-          className="absolute right-1/4 bottom-1/3 h-[500px] w-[500px] opacity-10"
+          className="absolute right-1/4 bottom-1/3 h-[500px] w-[500px] opacity-15"
           style={{
-            background: 'radial-gradient(circle, #21B6F3 0%, transparent 65%)',
+            background: 'radial-gradient(circle, #006DA5 0%, transparent 65%)',
           }}
         />
       </div>

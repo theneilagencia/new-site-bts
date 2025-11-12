@@ -25,7 +25,7 @@ export function Header() {
       <motion.header
         className={`fixed left-0 right-0 top-0 z-50 transition-all duration-500 ${
           isScrolled 
-            ? 'bg-[var(--color-bg-primary)]/95 backdrop-blur-lg shadow-lg' 
+            ? 'glass-md border-b border-white/10' 
             : 'bg-transparent'
         }`}
         initial={{ y: -100 }}
@@ -38,21 +38,18 @@ export function Header() {
             {/* Logo */}
             <motion.a
               href="#"
-              className="relative z-10"
+              className="relative z-10 flex items-center gap-3"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
+              whileHover={{ scale: 1.02 }}
             >
-              <motion.div
-                className="text-2xl font-bold"
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: 'spring', stiffness: 400 }}
-              >
-                <span className="bg-gradient-to-r from-bts-s02 to-bts-s05 bg-clip-text text-transparent">
+              <div className="text-3xl font-extrabold tracking-tight">
+                <span className="bg-gradient-to-r from-[#185AB4] to-[#006DA5] bg-clip-text text-transparent">
                   BTS
                 </span>
-                <span className="ml-2 text-[var(--color-text-primary)]">Global</span>
-              </motion.div>
+                <span className="ml-2 text-white font-normal">Global</span>
+              </div>
             </motion.a>
 
             {/* Desktop Navigation */}

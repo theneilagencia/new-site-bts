@@ -6,23 +6,33 @@
 
 @layer base {
   :root {
-    /* BTS Colors */
-    --color-bts-primary: #00639A;
+    /* BTS Figma Colors - Exact Match */
+    --color-dark: #0A0E27;
+    --color-deep-blue: #0A2540;
+    --color-primary-blue: #185AB4;
+    --color-bright-blue: #006DA5;
+    --color-cyan: #00D9FF;
+    --color-white: #FFFFFF;
+    --color-gray-light: #F5F7FA;
+    --color-gray-medium: #8B99A8;
+    
+    /* Legacy BTS Colors */
+    --color-bts-primary: #185AB4;
     --color-bts-s02: #00639A;
     --color-bts-s03: #2A7BA1;
     --color-bts-s04: #2A7BA1;
     --color-bts-s05: #21B6F3;
     
     /* Light Theme */
-    --color-bg-primary: #ffffff;
-    --color-bg-secondary: #f9fafb;
-    --color-text-primary: #111827;
-    --color-text-secondary: #374151;
-    --color-text-tertiary: #6b7280;
-    --color-accent-primary: #00639A;
-    --color-accent-secondary: #21B6F3;
+    --color-bg-primary: #0A2540;
+    --color-bg-secondary: #122539;
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #F5F7FA;
+    --color-text-tertiary: #8B99A8;
+    --color-accent-primary: #185AB4;
+    --color-accent-secondary: #006DA5;
     
-    /* Spacing */
+    /* Spacing - Figma Precise */
     --spacing-xs: 4px;
     --spacing-sm: 8px;
     --spacing-md: 16px;
@@ -30,10 +40,10 @@
     --spacing-xl: 32px;
     --spacing-2xl: 48px;
     --spacing-3xl: 64px;
-    --spacing-4xl: 80px;
-    --spacing-5xl: 96px;
-    --spacing-6xl: 128px;
-    --spacing-section: 160px;
+    --spacing-4xl: 96px;
+    --spacing-5xl: 128px;
+    --spacing-6xl: 160px;
+    --spacing-section: 128px;
     
     /* Typography */
     --font-sans: 'Inter', system-ui, sans-serif;
@@ -65,7 +75,8 @@
   body {
     font-family: 'Montserrat', var(--font-sans);
     font-weight: 400;
-    background-color: var(--color-bg-primary);
+    background: linear-gradient(135deg, #122539 0%, #18365B 50%, #006DA5 100%);
+    background-attachment: fixed;
     color: var(--color-text-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -75,6 +86,7 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Montserrat', var(--font-sans);
     font-weight: 800;
+    letter-spacing: -0.02em;
   }
 
   /* Scrollbar */
