@@ -3,7 +3,7 @@ import { Variants, Transition } from 'framer-motion';
 /**
  * CUSTOM EASING - Exatamente como no Figma
  */
-export const customEase = [0.22, 1, 0.36, 1]; // cubic-bezier
+export const customEase = [0.22, 1, 0.36, 1] as const; // cubic-bezier
 
 /**
  * TRANSITIONS - Spring Physics
