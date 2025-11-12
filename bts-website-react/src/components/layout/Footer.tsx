@@ -1,192 +1,162 @@
+
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { staggerContainer, staggerItem } from '@/lib/animations';
+import { CheckCircle2 } from 'lucide-react';
+import { BtsLogo } from '@/components/ui/BtsLogo';
 
 export function Footer() {
   const { t } = useLanguage();
 
-  const productLinks = [
-    { label: t.footer.product1, href: '#' },
-    { label: t.footer.product2, href: '#' },
-    { label: t.footer.product3, href: '#' },
-    { label: t.footer.product4, href: '#' },
-  ];
-
-  const companyLinks = [
-    { label: t.footer.aboutUs, href: '#about' },
-    { label: t.footer.careers, href: '#' },
-    { label: t.footer.press, href: '#' },
-    { label: t.footer.blog, href: '#' },
-  ];
-
-  const supportLinks = [
-    { label: t.footer.contact, href: '#contact' },
-    { label: t.footer.faq, href: '#' },
-    { label: t.footer.documentation, href: '#' },
-  ];
-
-  const legalLinks = [
-    { label: t.footer.privacy, href: '#' },
-    { label: t.footer.terms, href: '#' },
-  ];
-
   return (
-    <footer className="relative overflow-hidden bg-[#0A2540] border-t border-white/10 py-16">
-      {/* Grid Background */}
+    <footer className="relative overflow-hidden border-t border-[var(--border-color)] bg-[var(--bg-primary)]">
+      {/* Background Pattern */}
       <div className="absolute inset-0 opacity-[0.02]">
         <div
           className="h-full w-full"
           style={{
-            backgroundImage: `
-              linear-gradient(var(--color-text-tertiary) 1px, transparent 1px),
-              linear-gradient(90deg, var(--color-text-tertiary) 1px, transparent 1px)
-            `,
-            backgroundSize: '80px 80px',
+            backgroundImage: `linear-gradient(var(--border-color) 1px, transparent 1px), linear-gradient(90deg, var(--border-color) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px',
           }}
         />
       </div>
 
-      <div className="container relative z-10 mx-auto px-6 lg:px-8">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={staggerContainer}
-        >
-          <div className="grid gap-12 lg:grid-cols-5">
-            
-            {/* Company Info */}
-            <motion.div variants={staggerItem} className="lg:col-span-2">
-              <div className="mb-4 text-2xl font-bold">
-                <span className="bg-gradient-to-r from-bts-s02 to-bts-s05 bg-clip-text text-transparent">
-                  BTS
-                </span>
-                <span className="ml-2 text-[var(--color-text-primary)]">Global</span>
-              </div>
-              <p className="mb-6 text-[var(--color-text-tertiary)]">
-                {t.footer.description}
-              </p>
+      <div className="container relative z-10 mx-auto px-6 py-16 lg:px-8 lg:py-20">
+        <div className="grid gap-12 lg:grid-cols-4 lg:gap-8">
+          {/* Brand Column */}
+          <div className="lg:col-span-2">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="mb-6"
+            >
+              <BtsLogo className="h-10 w-auto" />
             </motion.div>
 
-            {/* Products */}
-            <motion.div variants={staggerItem}>
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-[var(--color-text-primary)]">
-                {t.footer.productsTitle}
-              </h3>
-              <ul className="space-y-3">
-                {productLinks.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="text-sm text-[var(--color-text-tertiary)] transition-colors hover:text-[var(--color-accent-primary)]"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="mb-8 max-w-md text-[1.1em] leading-relaxed text-[var(--text-tertiary)]"
+            >
+              {t.footer.description}
+            </motion.p>
 
-            {/* Company */}
-            <motion.div variants={staggerItem}>
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-[var(--color-text-primary)]">
-                {t.footer.companyTitle}
-              </h3>
-              <ul className="space-y-3">
-                {companyLinks.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="text-sm text-[var(--color-text-tertiary)] transition-colors hover:text-[var(--color-accent-primary)]"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-
-            {/* Support & Legal */}
-            <motion.div variants={staggerItem}>
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-[var(--color-text-primary)]">
-                {t.footer.supportTitle}
-              </h3>
-              <ul className="mb-6 space-y-3">
-                {supportLinks.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="text-sm text-[var(--color-text-tertiary)] transition-colors hover:text-[var(--color-accent-primary)]"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-[var(--color-text-primary)]">
-                {t.footer.legalTitle}
-              </h3>
-              <ul className="space-y-3">
-                {legalLinks.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="text-sm text-[var(--color-text-tertiary)] transition-colors hover:text-[var(--color-accent-primary)]"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+            {/* Agentic Commerce Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--border-color)] bg-[var(--bg-secondary)]/50 px-4 py-2 backdrop-blur-sm"
+            >
+              <CheckCircle2 className="h-4 w-4 text-[#21B6F3]" />
+              <span className="text-xs text-[var(--text-tertiary)]">{t.badge.agentic}</span>
             </motion.div>
           </div>
 
-          {/* Compliance Badges */}
-          <motion.div
-            className="mt-12 pt-8 border-t border-white/10 flex flex-wrap justify-center gap-6"
-            variants={staggerItem}
-          >
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
-              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm3.707 6.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
-              <span className="text-sm font-semibold text-white">SOC 2</span>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
-              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm3.707 6.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
-              <span className="text-sm font-semibold text-white">ISO 27001</span>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
-              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm3.707 6.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
-              <span className="text-sm font-semibold text-white">GDPR</span>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
-              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm3.707 6.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
-              <span className="text-sm font-semibold text-white">ACP</span>
-            </div>
-          </motion.div>
-
-          {/* Bottom Bar */}
-          <motion.div
-            className="border-t border-white/10 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
-            variants={staggerItem}
-          >
-            <p className="text-sm text-white/70">
-              {t.footer.copyright}
-            </p>
-            <p className="text-xs text-white/50 italic">Privacy by Design</p>
-            <div className="flex gap-6">
-              {legalLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="text-sm text-white/70 hover:text-white transition-colors relative group"
-                >
-                  {link.label}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300"></span>
-                </a>
+          {/* Solutions Column */}
+          <div>
+            <motion.h4
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="mb-4 text-sm font-semibold uppercase tracking-wider text-[var(--text-secondary)]"
+            >
+              {t.footer.solutionsTitle}
+            </motion.h4>
+            <motion.ul
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="space-y-3"
+            >
+              {[
+                { label: t.footer.digitalOffshore, href: '#' },
+                { label: t.footer.digitalFoundation, href: '#' },
+                { label: t.footer.btsBlocktrust, href: '#' },
+              ].map((item, index) => (
+                <li key={index}>
+                  <a
+                    href={item.href}
+                    className="group inline-flex items-center text-sm text-[var(--text-tertiary)] transition-colors hover:text-[var(--accent-primary)]"
+                  >
+                    <span className="relative">
+                      {item.label}
+                      <span className="absolute bottom-0 left-0 h-px w-0 bg-[var(--accent-primary)] transition-all group-hover:w-full" />
+                    </span>
+                  </a>
+                </li>
               ))}
-            </div>
-          </motion.div>
+            </motion.ul>
+          </div>
+
+          {/* Company Column */}
+          <div>
+            <motion.h4
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="mb-4 text-sm font-semibold uppercase tracking-wider text-[var(--text-secondary)]"
+            >
+              {t.footer.companyTitle}
+            </motion.h4>
+            <motion.ul
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="space-y-3"
+            >
+              {[
+                { label: t.footer.about, href: '#about' },
+                { label: t.footer.partnerProgram, href: '#partner' },
+                { label: t.footer.contact, href: '#contact' },
+              ].map((item, index) => (
+                <li key={index}>
+                  <a
+                    href={item.href}
+                    className="group inline-flex items-center text-sm text-[var(--text-tertiary)] transition-colors hover:text-[var(--accent-primary)]"
+                  >
+                    <span className="relative">
+                      {item.label}
+                      <span className="absolute bottom-0 left-0 h-px w-0 bg-[var(--accent-primary)] transition-all group-hover:w-full" />
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </motion.ul>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-[var(--border-color)] pt-8 sm:flex-row"
+        >
+          <p className="text-sm text-[var(--text-tertiary)]">{t.footer.copyright}</p>
+          <div className="flex gap-6">
+            <a
+              href="#"
+              className="text-sm text-[var(--text-tertiary)] transition-colors hover:text-[var(--accent-primary)]"
+            >
+              {t.footer.privacy}
+            </a>
+            <a
+              href="#"
+              className="text-sm text-[var(--text-tertiary)] transition-colors hover:text-[var(--accent-primary)]"
+            >
+              {t.footer.terms}
+            </a>
+          </div>
         </motion.div>
       </div>
     </footer>

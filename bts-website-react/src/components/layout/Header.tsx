@@ -1,185 +1,185 @@
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { useScrollPosition } from '@/hooks/useScrollPosition';
+import { Sun, Moon, Menu } from 'lucide-react';
+import { MobileMenu } from '@/components/layout/MobileMenu';
+import { BtsLogo } from '@/components/ui/BtsLogo';
 
-export function Header() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+interface HeaderV2Props {
+  onAccessPortal?: () => void;
+}
+
+export function Header({ onAccessPortal }: HeaderV2Props = {}) {
   const { t, language, setLanguage } = useLanguage();
   const { theme, toggleTheme } = useTheme();
-  const scrollPosition = useScrollPosition();
-  const isScrolled = scrollPosition > 50;
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const navItems = [
-    { key: 'home', href: '#home', label: t.nav.home },
-    { key: 'about', href: '#about', label: t.nav.about },
-    { key: 'solutions', href: '#solutions', label: t.nav.solutions },
-    { key: 'partner', href: '#partner', label: t.nav.partner },
-    { key: 'contact', href: '#contact', label: t.nav.contact },
-  ];
-
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
   return (
-    <>
-      <motion.header
-        className={`fixed left-0 right-0 top-0 z-50 transition-all duration-500 ${
-          isScrolled 
-            ? 'glass-md border-b border-white/10' 
-            : 'bg-transparent'
-        }`}
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="flex h-20 items-center justify-between">
-            
-            {/* Logo */}
-            <motion.a
-              href="#"
-              className="relative z-10 flex items-center gap-3"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              whileHover={{ scale: 1.02 }}
+    <motion.header
+      className={`fixed left-0 right-0 top-0 z-50 transition-all duration-500 ${
+        isScrolled 
+          ? 'bg-[var(--bg-primary)]/80 backdrop-blur-xl border-b border-[var(--border-color)]' 
+          : 'bg-transparent'
+      }`}
+    >
+      <div className="container mx-auto px-6 lg:px-8">
+        <div className="flex h-20 items-center justify-between">
+          {/* Logo */}
+          <motion.a
+            href="#"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex items-center"
+          >
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: 'spring', stiffness: 400 }}
             >
-              <div className="text-3xl font-extrabold tracking-tight">
-                <span className="bg-gradient-to-r from-[#185AB4] to-[#006DA5] bg-clip-text text-transparent">
-                  BTS
+              <BtsLogo className="h-12 w-auto" />
+            </motion.div>
+          </motion.a>
+
+          {/* Navigation */}
+          <nav className="hidden items-center gap-1 lg:flex">
+            {[
+              { key: 'solutions', href: '#solutions' },
+              { key: 'about', href: '#about' },
+              { key: 'partner', href: '#partner' },
+            ].map((item, index) => (
+              <motion.a
+                key={item.key}
+                href={item.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  const element = document.querySelector(item.href);
+                  if (element) {
+                    const headerOffset = 80;
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({
+                      top: offsetPosition,
+                      behavior: 'smooth'
+                    });
+                  }
+                }}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 + index * 0.05 }}
+                className="group relative px-4 py-2 text-sm transition-colors"
+              >
+                <span className="relative z-10 text-[var(--text-tertiary)] transition-colors group-hover:text-[var(--text-primary)]">
+                  {t.nav[item.key as keyof typeof t.nav]}
                 </span>
-                <span className="ml-2 text-white font-normal">Global</span>
-              </div>
-            </motion.a>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:block">
-              <ul className="flex items-center gap-2">
-                {navItems.map((item, index) => (
-                  <motion.li
-                    key={item.key}
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 + index * 0.1 }}
-                  >
-                    <motion.a
-                      href={item.href}
-                      className="group relative px-4 py-2 text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <span className="relative z-10">{item.label}</span>
-                      <motion.div
-                        className="absolute inset-0 rounded-lg bg-[var(--color-accent-primary)]/10 opacity-0 transition-opacity group-hover:opacity-100"
-                        layoutId={`nav-hover-${item.key}`}
-                      />
-                    </motion.a>
-                  </motion.li>
-                ))}
-              </ul>
-            </nav>
-
-            {/* Actions */}
-            <div className="flex items-center gap-4">
-              {/* Language Toggle */}
-              <motion.button
-                onClick={() => setLanguage(language === 'pt' ? 'en' : 'pt')}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="hidden lg:flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--color-text-tertiary)]/20 text-sm font-semibold text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)]"
-              >
-                {t.nav.language}
-              </motion.button>
-
-              {/* Theme Toggle */}
-              <motion.button
-                onClick={toggleTheme}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="hidden lg:flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--color-text-tertiary)]/20 text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)]"
-              >
                 <motion.div
-                  initial={false}
-                  animate={{ rotate: theme === 'dark' ? 0 : 180 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {theme === 'dark' ? '🌙' : '☀️'}
-                </motion.div>
-              </motion.button>
+                  className="absolute inset-0 rounded-lg bg-[var(--accent-glow)] opacity-0 transition-opacity group-hover:opacity-100"
+                  layoutId={`nav-hover-${item.key}`}
+                />
+              </motion.a>
+            ))}
+          </nav>
 
-              {/* Mobile Menu Toggle */}
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--color-text-tertiary)]/20 text-[var(--color-text-primary)]"
+          {/* Right Actions */}
+          <div className="flex items-center gap-3">
+            {/* Theme Toggle */}
+            <motion.button
+              onClick={toggleTheme}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="group relative flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)] transition-all hover:border-[var(--accent-primary)]/50"
+            >
+              <motion.div
+                initial={false}
+                animate={{ rotate: theme === 'dark' ? 0 : 180 }}
+                transition={{ duration: 0.3 }}
               >
-                {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
+                {theme === 'dark' ? (
+                  <Moon className="h-4 w-4 text-[var(--accent-primary)]" />
+                ) : (
+                  <Sun className="h-4 w-4 text-[var(--accent-primary)]" />
+                )}
+              </motion.div>
+            </motion.button>
+
+            {/* Language Toggle */}
+            <div className="flex items-center gap-1 rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)] p-1">
+              {(['pt', 'en'] as const).map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => setLanguage(lang)}
+                  className={`relative px-3 py-1.5 text-xs font-medium uppercase tracking-wider transition-all ${
+                    language === lang
+                      ? 'text-white'
+                      : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]'
+                  }`}
+                >
+                  {language === lang && (
+                    <motion.div
+                      layoutId="language-indicator"
+                      className="absolute inset-0 rounded-md bg-[#00639A]"
+                      transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                  <span className="relative z-10">{lang}</span>
+                </button>
+              ))}
             </div>
+
+            {/* CTA Button */}
+            <motion.button
+              onClick={onAccessPortal}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="group relative hidden overflow-hidden rounded-lg lg:block"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-[#00639A] to-[#21B6F3]" />
+              <div className="relative px-6 py-2.5 text-sm font-medium text-white">
+                {t.nav.startStructuring}
+              </div>
+              <motion.div
+                className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                initial={false}
+              />
+            </motion.button>
           </div>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="lg:hidden"
+          >
+            <Menu className="h-6 w-6 text-[var(--text-primary)]" />
+          </button>
         </div>
-      </motion.header>
+      </div>
 
       {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
-            />
-            <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="fixed right-0 top-0 z-50 h-screen w-64 bg-[var(--color-bg-primary)] shadow-2xl lg:hidden"
-            >
-              <div className="flex h-full flex-col p-6">
-                <button
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="mb-8 ml-auto flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--color-text-tertiary)]/20"
-                >
-                  <X size={20} />
-                </button>
-
-                <nav className="flex-1">
-                  <ul className="space-y-2">
-                    {navItems.map((item) => (
-                      <li key={item.key}>
-                        <a
-                          href={item.href}
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className="block rounded-lg px-4 py-3 text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text-primary)]"
-                        >
-                          {item.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
-
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setLanguage(language === 'pt' ? 'en' : 'pt')}
-                    className="flex-1 rounded-lg border border-[var(--color-text-tertiary)]/20 px-4 py-2 text-sm font-semibold"
-                  >
-                    {t.nav.language}
-                  </button>
-                  <button
-                    onClick={toggleTheme}
-                    className="flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--color-text-tertiary)]/20"
-                  >
-                    {theme === 'dark' ? '🌙' : '☀️'}
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </>
+          <MobileMenu
+            onClose={() => setIsMobileMenuOpen(false)}
+            language={language}
+            setLanguage={setLanguage}
+            theme={theme}
+            toggleTheme={toggleTheme}
+            onAccessPortal={onAccessPortal}
+          />
         )}
       </AnimatePresence>
-    </>
+    </motion.header>
   );
 }

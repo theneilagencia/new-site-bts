@@ -45,6 +45,7 @@ export interface Translations {
     partner: string;
     contact: string;
     language: string;
+    startStructuring: string;
   };
   hero: {
     badge: string;

@@ -1,203 +1,149 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { ButtonPrimary } from '@/components/ui/ButtonPrimary';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export function HowItWorksSection() {
   const { t } = useLanguage();
+  const [activeStep, setActiveStep] = useState(0);
 
   const steps = [
-    {
-      number: '01',
-      title: t.howItWorks?.step1 || 'Diga-nos seus objetivos',
-      description: 'Expansão, proteção ou sucessão',
-    },
-    {
-      number: '02',
-      title: t.howItWorks?.step2 || 'Sugerimos a estrutura certa',
-      description: 'Baseado em seu perfil e necessidades',
-    },
-    {
-      number: '03',
-      title: t.howItWorks?.step3 || 'Você revisa e confirma',
-      description: 'Total transparência no processo',
-    },
-    {
-      number: '04',
-      title: t.howItWorks?.step4 || 'Checkout e criação',
-      description: 'Processo simples e seguro',
-    },
-    {
-      number: '05',
-      title: t.howItWorks?.step5 || 'Receba e gerencie',
-      description: 'Tudo dentro do ChatGPT',
-    },
+    { number: 1, title: t.howItWorks.step1 },
+    { number: 2, title: t.howItWorks.step2 },
+    { number: 3, title: t.howItWorks.step3 },
+    { number: 4, title: t.howItWorks.step4 },
+    { number: 5, title: t.howItWorks.step5 },
   ];
 
   return (
-    <section id="how-it-works" className="relative py-32 bg-gradient-to-b from-[#0A2540] to-[#122539] overflow-hidden">
-      {/* Starfield Background */}
-      <div className="absolute inset-0">
-        {[...Array(100)].map((_, i) => (
+    <section className="py-32 bg-gradient-to-b from-[#122539] to-[#0A2540] relative overflow-hidden">
+      {/* Animated background lines */}
+      <div className="absolute inset-0 opacity-10">
+        {[...Array(5)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-white rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              opacity: Math.random() * 0.5 + 0.2,
-            }}
+            className="absolute h-px bg-gradient-to-r from-transparent via-white to-transparent"
+            style={{ top: `${20 + i * 15}%`, left: 0, right: 0 }}
             animate={{
-              opacity: [0.2, 0.8, 0.2],
-              scale: [1, 1.5, 1],
+              x: ['-100%', '100%'],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: 8 + i * 2,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              ease: 'linear',
             }}
           />
         ))}
       </div>
 
-      <div className="container relative z-10 mx-auto px-6 lg:px-8">
-        {/* Title */}
+      <div className="max-w-[1440px] mx-auto px-6 md:px-20 relative z-10">
         <motion.div
-          className="text-center mb-20"
+          className="max-w-3xl mx-auto text-center mb-20"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
-            {t.howItWorks?.title || 'Como Funciona'}
-          </h2>
-          <p className="text-xl text-white/70 max-w-2xl mx-auto">
-            Processo simples e transparente para estruturar seu patrimônio globalmente
-          </p>
+          <h2 className="mb-6 text-white">{t.howItWorks.title}</h2>
         </motion.div>
 
-        {/* Timeline - Desktop */}
-        <div className="hidden lg:block">
-          <div className="relative">
-            {/* Progress Line */}
-            <div className="absolute top-16 left-0 right-0 h-1 bg-white/10">
+        {/* Interactive Timeline */}
+        <div className="max-w-6xl mx-auto mb-16">
+          {/* Desktop horizontal timeline */}
+          <div className="hidden md:block">
+            {/* Progress line */}
+            <div className="relative mb-16">
+              <div className="absolute top-8 left-0 right-0 h-1 bg-white/10 rounded-full" />
               <motion.div
-                className="h-full bg-gradient-to-r from-[#185AB4] to-[#006DA5]"
-                initial={{ width: 0 }}
+                className="absolute top-8 left-0 h-1 bg-gradient-to-r from-[#185AB4] to-[#006DA5] rounded-full"
+                initial={{ width: '0%' }}
                 whileInView={{ width: '100%' }}
                 viewport={{ once: true }}
                 transition={{ duration: 2, ease: 'easeOut' }}
               />
-            </div>
 
-            {/* Steps */}
-            <div className="grid grid-cols-5 gap-4">
-              {steps.map((step, index) => (
-                <motion.div
-                  key={index}
-                  className="relative"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  {/* Number Circle */}
+              {/* Steps */}
+              <div className="relative flex justify-between">
+                {steps.map((step, index) => (
                   <motion.div
-                    className="relative z-10 mx-auto w-32 h-32 rounded-full bg-gradient-to-br from-[#185AB4] to-[#006DA5] flex items-center justify-center mb-6 shadow-xl"
-                    whileHover={{ scale: 1.05, rotate: 5 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
+                    key={step.number}
+                    className="flex flex-col items-center cursor-pointer"
+                    onMouseEnter={() => setActiveStep(index)}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1, duration: 0.5 }}
                   >
                     <motion.div
-                      className="absolute inset-2 rounded-full bg-[#0A2540] flex items-center justify-center"
-                      whileHover={{ scale: 0.95 }}
+                      className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-all duration-300 ${
+                        activeStep === index
+                          ? 'bg-gradient-to-br from-[#185AB4] to-[#006DA5] shadow-[0_0_24px_rgba(24,90,180,0.6)]'
+                          : 'bg-white/10 backdrop-blur-sm border-2 border-white/20'
+                      }`}
+                      whileHover={{ scale: 1.1 }}
                     >
-                      <span className="text-3xl font-extrabold text-white">
+                      <span className={`text-2xl ${activeStep === index ? 'text-white' : 'text-white/60'}`}>
                         {step.number}
                       </span>
                     </motion.div>
-                    
-                    {/* Pulse Effect */}
-                    <motion.div
-                      className="absolute inset-0 rounded-full bg-[#185AB4]"
-                      animate={{
-                        scale: [1, 1.2, 1],
-                        opacity: [0.5, 0, 0.5],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        delay: index * 0.2,
-                      }}
-                    />
-                  </motion.div>
 
-                  {/* Content */}
-                  <div className="text-center">
-                    <h3 className="text-lg font-bold text-white mb-2">
-                      {step.title}
-                    </h3>
-                    <p className="text-sm text-white/60">
-                      {step.description}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
+                    <motion.div
+                      className={`text-center max-w-[180px] transition-all duration-300 ${
+                        activeStep === index ? 'opacity-100' : 'opacity-60'
+                      }`}
+                    >
+                      <p className="text-white text-sm leading-relaxed">{step.title}</p>
+                    </motion.div>
+
+                    {/* Pulse effect on active */}
+                    {activeStep === index && (
+                      <motion.div
+                        className="absolute top-0 w-16 h-16 rounded-full bg-[#185AB4]"
+                        initial={{ opacity: 0.6, scale: 1 }}
+                        animate={{ opacity: 0, scale: 2 }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      />
+                    )}
+                  </motion.div>
+                ))}
+              </div>
             </div>
+          </div>
+
+          {/* Mobile vertical timeline */}
+          <div className="md:hidden space-y-8">
+            {steps.map((step, index) => (
+              <motion.div
+                key={step.number}
+                className="flex gap-6 items-start"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+              >
+                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-[#185AB4] to-[#006DA5] rounded-full flex items-center justify-center shadow-lg">
+                  <span className="text-white">{step.number}</span>
+                </div>
+                <div className="flex-1 pt-2">
+                  <p className="text-white/90">{step.title}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
 
-        {/* Timeline - Mobile */}
-        <div className="lg:hidden space-y-8">
-          {steps.map((step, index) => (
-            <motion.div
-              key={index}
-              className="relative flex gap-6"
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              {/* Number */}
-              <div className="relative flex-shrink-0">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#185AB4] to-[#006DA5] flex items-center justify-center shadow-xl">
-                  <span className="text-xl font-extrabold text-white">
-                    {step.number}
-                  </span>
-                </div>
-                
-                {/* Line */}
-                {index < steps.length - 1 && (
-                  <div className="absolute top-16 left-8 w-0.5 h-12 bg-white/20" />
-                )}
-              </div>
-
-              {/* Content */}
-              <div className="flex-1 pt-3">
-                <h3 className="text-xl font-bold text-white mb-2">
-                  {step.title}
-                </h3>
-                <p className="text-white/70">
-                  {step.description}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* CTA */}
         <motion.div
-          className="text-center mt-16"
-          initial={{ opacity: 0, y: 30 }}
+          className="text-center"
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.8 }}
+          transition={{ delay: 0.6, duration: 0.6 }}
         >
-          <motion.button
-            className="px-8 py-4 bg-gradient-to-r from-[#185AB4] to-[#006DA5] text-white font-semibold rounded-lg shadow-xl hover:shadow-2xl transition-all"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {t.howItWorks?.cta || 'Criar Minha Estrutura'}
-          </motion.button>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <ButtonPrimary className="text-lg px-10 py-5 shadow-[0_0_24px_rgba(24,90,180,0.5)]">
+              {t.howItWorks.cta}
+            </ButtonPrimary>
+          </motion.div>
         </motion.div>
       </div>
     </section>

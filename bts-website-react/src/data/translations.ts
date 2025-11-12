@@ -10,6 +10,7 @@ export const translations = {
       partner: 'Parceiros',
       contact: 'Contato',
       language: 'Idioma',
+      startStructuring: 'Criar Estrutura',
     },
     
     // Hero
@@ -190,6 +191,7 @@ export const translations = {
       partner: 'Partner',
       contact: 'Contact',
       language: 'Language',
+      startStructuring: 'Create Structure',
     },
     hero: {
       badge: 'Global Wealth Structuring',

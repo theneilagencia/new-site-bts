@@ -1,248 +1,228 @@
+import { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, LogIn } from 'lucide-react';
+import { Users, TrendingUp, Globe, Handshake, Award, Zap } from 'lucide-react';
+import { ButtonPrimary } from '@/components/ui/ButtonPrimary';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { staggerContainer, staggerItem } from '@/lib/animations';
-import { WorldMapCanvas } from '@/components/ui/WorldMapCanvas';
-import { Starfield } from '@/components/ui/Starfield';
 
 export function PartnerSection() {
   const { t } = useLanguage();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const infrastructureItems = [
-    t.partner.infrastructure1,
-    t.partner.infrastructure2,
-    t.partner.infrastructure3,
-    t.partner.infrastructure4,
-  ];
+  // World map with animated points
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+
+    const points: { x: number; y: number; alpha: number; growing: boolean }[] = [];
+    
+    // Generate random partner points
+    for (let i = 0; i < 30; i++) {
+      points.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        alpha: Math.random(),
+        growing: Math.random() > 0.5,
+      });
+    }
+
+    let animationId: number;
+
+    function animate() {
+      if (!ctx || !canvas) return;
+      
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw connections
+      ctx.strokeStyle = 'rgba(24, 90, 180, 0.1)';
+      ctx.lineWidth = 1;
+      
+      for (let i = 0; i < points.length; i++) {
+        for (let j = i + 1; j < points.length; j++) {
+          const dx = points[i].x - points[j].x;
+          const dy = points[i].y - points[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance < 150) {
+            ctx.beginPath();
+            ctx.moveTo(points[i].x, points[i].y);
+            ctx.lineTo(points[j].x, points[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw and animate points
+      points.forEach((point) => {
+        // Update alpha
+        if (point.growing) {
+          point.alpha += 0.01;
+          if (point.alpha >= 1) point.growing = false;
+        } else {
+          point.alpha -= 0.01;
+          if (point.alpha <= 0.2) point.growing = true;
+        }
+
+        // Draw point
+        ctx.fillStyle = `rgba(24, 90, 180, ${point.alpha})`;
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw glow
+        const gradient = ctx.createRadialGradient(point.x, point.y, 0, point.x, point.y, 10);
+        gradient.addColorStop(0, `rgba(24, 90, 180, ${point.alpha * 0.5})`);
+        gradient.addColorStop(1, 'rgba(24, 90, 180, 0)');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 10, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      animationId = requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    return () => {
+      if (animationId) cancelAnimationFrame(animationId);
+    };
+  }, []);
 
   const benefits = [
-    t.partner.benefit1,
-    t.partner.benefit2,
-    t.partner.benefit3,
-    t.partner.benefit4,
-    t.partner.benefit5,
+    { icon: Users, title: t.partner.benefit1Title, text: t.partner.benefit1Text },
+    { icon: TrendingUp, title: t.partner.benefit2Title, text: t.partner.benefit2Text },
+    { icon: Globe, title: t.partner.benefit3Title, text: t.partner.benefit3Text },
+    { icon: Handshake, title: t.partner.benefit4Title, text: t.partner.benefit4Text },
+    { icon: Award, title: t.partner.benefit5Title, text: t.partner.benefit5Text },
+    { icon: Zap, title: t.partner.benefit6Title, text: t.partner.benefit6Text },
   ];
 
   return (
-    <section id="partner" className="relative overflow-hidden bg-[var(--color-bg-primary)] py-20 lg:py-32">
-      {/* World Map Canvas */}
-      <WorldMapCanvas />
-      
-      {/* Starfield Background */}
-      <Starfield density={60} />
+    <section id="partner" className="py-32 bg-[#122539] relative overflow-hidden">
+      {/* World map canvas */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 opacity-30"
+        style={{ width: '100%', height: '100%' }}
+      />
 
-      {/* Radial Gradients */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="absolute left-1/4 top-1/3 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 opacity-20"
-          style={{
-            background: 'radial-gradient(circle, #185AB4 0%, transparent 70%)',
-          }}
-        />
-        <div
-          className="absolute right-1/4 bottom-1/3 h-[500px] w-[500px] opacity-15"
-          style={{
-            background: 'radial-gradient(circle, #006DA5 0%, transparent 65%)',
-          }}
-        />
+      {/* Starfield background */}
+      <div className="absolute inset-0">
+        {[...Array(100)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-px h-px bg-white rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              opacity: [0.1, 0.5, 0.1],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 4,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
       </div>
 
-      <div className="container relative z-10 mx-auto px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
-          
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-16 text-center"
-          >
-            <div className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-[var(--color-text-tertiary)]/20 bg-[var(--color-bg-secondary)]/50 px-4 py-2 backdrop-blur-sm">
-              {/* Shimmer Effect */}
+      <div className="max-w-[1440px] mx-auto px-6 md:px-20 relative z-10">
+        {/* Header */}
+        <motion.div
+          className="text-center mb-20"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="mb-6 text-white">{t.partner.title}</h2>
+          <p className="text-2xl text-white/80 max-w-3xl mx-auto">
+            {t.partner.subtitle}
+          </p>
+        </motion.div>
+
+        {/* Benefits Grid */}
+        <motion.div
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 max-w-6xl mx-auto"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          {benefits.map((benefit, index) => {
+            const Icon = benefit.icon;
+            return (
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-[#00639A]/10 to-transparent"
-                animate={{ x: ['-200%', '200%'] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-              />
-              {/* Pulse Dot */}
-              <motion.div
-                className="h-2 w-2 rounded-full bg-[#00639A]"
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.5, 1, 0.5],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-              />
-              <span className="relative font-mono text-xs uppercase tracking-widest text-[var(--color-text-tertiary)]">
-                {t.partner.title}
-              </span>
-            </div>
-          </motion.div>
+                key={index}
+                className="group relative"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 + index * 0.1, duration: 0.6 }}
+                whileHover={{ y: -8 }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#185AB4]/10 to-transparent rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+                <div className="relative bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 h-full group-hover:bg-white/10 group-hover:border-white/20 transition-all duration-500">
+                  <motion.div
+                    whileHover={{ rotate: 360, scale: 1.1 }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    <Icon className="w-10 h-10 text-[#185AB4] mb-6" />
+                  </motion.div>
+                  <h4 className="mb-4 text-white">{benefit.title}</h4>
+                  <p className="text-white/70 leading-relaxed">
+                    {benefit.text}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </motion.div>
 
-          {/* Header */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-            className="mb-32 text-center"
-          >
-            <motion.h2
-              variants={staggerItem}
-              className="mb-8 text-4xl font-bold text-[var(--color-text-primary)] lg:text-6xl"
-            >
-              {t.partner.title}
-            </motion.h2>
-
-            <motion.p
-              variants={staggerItem}
-              className="mx-auto mb-6 max-w-3xl text-xl text-[var(--color-text-secondary)] lg:text-2xl"
-            >
-              {t.partner.subtitle}
-            </motion.p>
-
-            <motion.p
-              variants={staggerItem}
-              className="mx-auto max-w-4xl leading-relaxed text-[var(--color-text-tertiary)]"
-            >
-              {t.partner.intro}
-            </motion.p>
-          </motion.div>
-
-          {/* Infrastructure Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="mb-32"
-          >
-            <div className="mb-12 flex items-baseline gap-6">
-              <span className="font-mono text-6xl tracking-tight text-[var(--color-text-tertiary)]/30 lg:text-7xl">
-                01
-              </span>
-              <div className="flex-1 space-y-3">
-                <div 
-                  className="h-px w-full"
-                  style={{
-                    background: 'linear-gradient(to right, rgba(0, 99, 154, 0.3), transparent)',
-                  }}
-                />
-                <h3 className="text-3xl font-semibold text-[var(--color-text-primary)] lg:text-4xl">
-                  {t.partner.infrastructureTitle}
-                </h3>
-              </div>
-            </div>
-
-            <p className="mb-10 max-w-3xl text-lg text-[var(--color-text-tertiary)]">
-              {t.partner.infrastructureIntro}
+        {/* CTA Section */}
+        <motion.div
+          className="max-w-4xl mx-auto text-center relative"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.6, duration: 0.6 }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-[#185AB4]/5 to-transparent rounded-3xl blur-3xl" />
+          <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-12">
+            <h3 className="mb-4 text-white">{t.partner.ctaTitle}</h3>
+            <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto leading-relaxed">
+              {t.partner.ctaText}
             </p>
-
-            <div className="grid gap-6 md:grid-cols-2">
-              {infrastructureItems.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="group relative"
-                >
-                  <div className="flex items-start gap-4">
-                    <div 
-                      className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full"
-                      style={{ backgroundColor: '#00639A' }}
-                    />
-                    <p className="flex-1 leading-relaxed text-[var(--color-text-tertiary)]">
-                      {item}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Benefits */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            className="mb-16"
-          >
-            <h3 className="mb-8 text-2xl font-semibold text-[var(--color-text-primary)]">
-              {t.partner.benefitsTitle}
-            </h3>
-            <div className="grid gap-4 md:grid-cols-2">
-              {benefits.map((benefit, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="flex items-center gap-3 rounded-lg border border-[var(--color-text-tertiary)]/10 bg-[var(--color-bg-secondary)]/50 p-4"
-                >
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-bts-s02/20">
-                    <div className="h-2 w-2 rounded-full bg-bts-s02" />
-                  </div>
-                  <span className="text-[var(--color-text-secondary)]">{benefit}</span>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6"
-          >
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="group relative w-full overflow-hidden rounded-lg sm:w-auto"
+            
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-block"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-[#00639A] to-[#21B6F3]" />
-              <div className="relative flex items-center gap-2 px-8 py-4 text-white">
-                <span className="font-semibold">{t.partner.cta}</span>
-                <motion.div
-                  animate={{ x: [0, 4, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </motion.div>
-              </div>
-              <motion.div
-                className="absolute inset-0 bg-white/15 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                initial={false}
-              />
-            </motion.button>
+              <ButtonPrimary className="text-lg px-10 py-5 bg-white text-[#122539] hover:bg-white/90 shadow-[0_0_32px_rgba(255,255,255,0.2)]">
+                {t.partner.cta}
+              </ButtonPrimary>
+            </motion.div>
 
-            <motion.a
-              href="/portal/login"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="group relative inline-flex w-full items-center justify-center gap-3 overflow-hidden rounded-lg border-2 px-8 py-4 transition-all duration-300 sm:w-auto"
-              style={{ 
-                borderColor: '#00639A',
-                backgroundColor: 'transparent',
-              }}
+            <motion.p
+              className="mt-6 text-white/50 text-sm"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.8, duration: 0.6 }}
             >
-              <LogIn className="h-4 w-4 text-[#00639A] transition-colors duration-300 group-hover:text-[#21B6F3]" />
-              <span className="relative z-10 font-semibold text-[#00639A] transition-colors duration-300 group-hover:text-[#21B6F3]">
-                {t.partner.ctaLogin}
-              </span>
-            </motion.a>
-          </motion.div>
-        </div>
+              {t.language === 'pt' ? 'Processo de Aprovação Rigoroso' : 'Strict Approval Process'}
+            </motion.p>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
