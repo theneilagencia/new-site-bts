@@ -49,6 +49,7 @@ export interface Translations {
   hero: {
     badge: string;
     title: string;
+    subtitle?: string;
     description: string;
     cta: string;
     ctaSecondary: string;

@@ -82,7 +82,7 @@ export function AnimatedGlobe() {
 
       // Draw orbital particles
       ctx.fillStyle = 'rgba(33, 182, 243, 0.8)';
-      particles.forEach((particle, i) => {
+      particles.forEach((particle) => {
         const angle = particle.angle + rotation;
         const orbitRadius = radius * 1.1;
         const x = centerX + Math.cos(angle) * orbitRadius * Math.cos(rotation * 0.5);
