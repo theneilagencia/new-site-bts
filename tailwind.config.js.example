@@ -1,0 +1,70 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        // BTS Brand Colors
+        'bts-primary': '#00639A',
+        'bts-s02': '#00639A',
+        'bts-s03': '#2A7BA1',
+        'bts-s04': '#2A7BA1',
+        'bts-s05': '#21B6F3',
+        
+        // Semantic Colors (will use CSS variables)
+        'accent-primary': 'var(--color-accent-primary)',
+        'accent-secondary': 'var(--color-accent-secondary)',
+        
+        'bg-primary': 'var(--color-bg-primary)',
+        'bg-secondary': 'var(--color-bg-secondary)',
+        
+        'text-primary': 'var(--color-text-primary)',
+        'text-secondary': 'var(--color-text-secondary)',
+        'text-tertiary': 'var(--color-text-tertiary)',
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Monaco', 'monospace'],
+      },
+      spacing: {
+        'xs': 'var(--spacing-xs)',
+        'sm': 'var(--spacing-sm)',
+        'md': 'var(--spacing-md)',
+        'lg': 'var(--spacing-lg)',
+        'xl': 'var(--spacing-xl)',
+        '2xl': 'var(--spacing-2xl)',
+        '3xl': 'var(--spacing-3xl)',
+        '4xl': 'var(--spacing-4xl)',
+        '5xl': 'var(--spacing-5xl)',
+        '6xl': 'var(--spacing-6xl)',
+        'section': 'var(--spacing-section)',
+      },
+      transitionDuration: {
+        'fast': 'var(--transition-fast)',
+        'base': 'var(--transition-base)',
+        'normal': 'var(--transition-normal)',
+        'slow': 'var(--transition-slow)',
+      },
+      animation: {
+        'shimmer': 'shimmer 3s linear infinite',
+        'pulse-slow': 'pulse 2s ease-in-out infinite',
+        'float': 'float 4s ease-in-out infinite',
+      },
+      keyframes: {
+        shimmer: {
+          '0%': { transform: 'translateX(-200%)' },
+          '100%': { transform: 'translateX(200%)' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(-10px)' },
+          '50%': { transform: 'translateY(10px)' },
+        },
+      },
+    },
+  },
+  plugins: [],
+}

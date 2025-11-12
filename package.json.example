@@ -1,0 +1,66 @@
+{
+  "name": "bts-global-website",
+  "version": "2.0.0",
+  "description": "BTS Global Corp - Website Institucional + Partner Portal (React + TypeScript + Framer Motion)",
+  "type": "module",
+  "author": "BTS Global Corp",
+  "license": "MIT",
+  "keywords": [
+    "bts-global",
+    "institutional-website",
+    "partner-portal",
+    "react",
+    "typescript",
+    "framer-motion",
+    "tailwindcss",
+    "vite"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,md}\"",
+    "clean": "rm -rf dist node_modules"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "framer-motion": "^11.0.0",
+    "lucide-react": "^0.344.0",
+    "clsx": "^2.1.0",
+    "tailwind-merge": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.17",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "postcss": "^8.4.35",
+    "prettier": "^3.2.5",
+    "tailwindcss": "^4.0.0-alpha.1",
+    "@tailwindcss/vite": "^4.0.0-alpha.1",
+    "typescript": "^5.2.2",
+    "vite": "^5.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/btsglobal/bts-website.git"
+  },
+  "bugs": {
+    "url": "https://github.com/btsglobal/bts-website/issues"
+  },
+  "homepage": "https://btsglobal.com"
+}
