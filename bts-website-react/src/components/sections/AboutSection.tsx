@@ -1,181 +1,414 @@
+'use client';
 
-import { motion } from 'framer-motion';
-import { Target, Compass, Heart } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useRef, useState } from 'react';
 
 export function AboutSection() {
   const { t } = useLanguage();
+  const containerRef = useRef(null);
+  const [activeTab, setActiveTab] = useState<'vision' | 'mission'>('vision');
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start end', 'end start'],
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [0, -20]);
+
+  const values = [
+    {
+      number: '01',
+      title: t.about.value1Title,
+      text: t.about.value1Text,
+      accent: '#00639A',
+    },
+    {
+      number: '02',
+      title: t.about.value2Title,
+      text: t.about.value2Text,
+      accent: '#00BCA5',
+    },
+    {
+      number: '03',
+      title: t.about.value3Title,
+      text: t.about.value3Text,
+      accent: '#21B6F3',
+    },
+  ];
 
   return (
-    <section id="about" className="py-32 bg-[#F6F9FC] relative overflow-hidden">
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/50 to-transparent" />
+    <section
+      id="about"
+      ref={containerRef}
+      className="relative overflow-hidden bg-[var(--bg-primary)] pb-24 pt-8 lg:pb-32 lg:pt-12"
+    >
+      {/* Minimal Grid Background */}
+      <div className="absolute inset-0 opacity-[0.08]">
+        <div
+          className="h-full w-full"
+          style={{
+            backgroundImage: `
+              linear-gradient(var(--border-color) 1px, transparent 1px),
+              linear-gradient(90deg, var(--border-color) 1px, transparent 1px)
+            `,
+            backgroundSize: '80px 80px',
+          }}
+        />
+      </div>
 
-      <div className="max-w-[1440px] mx-auto px-6 md:px-20 relative z-10">
-        {/* Header with video placeholder */}
+      {/* Geometric Lines - Diagonal */}
+      <div className="absolute inset-0 overflow-hidden opacity-[0.15]">
         <motion.div
-          className="max-w-5xl mx-auto mb-20"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          style={{ y }}
+          className="absolute left-0 top-0 h-full w-full"
         >
-          <div className="text-center mb-12">
-            <h2 className="mb-8 text-[#122539]">{t.about.title}</h2>
-            <p className="text-xl text-[#6B7280] leading-relaxed max-w-3xl mx-auto">
+          {/* Diagonal line 1 */}
+          <div
+            className="absolute left-[20%] top-0 h-full w-px origin-top rotate-12"
+            style={{
+              background: 'linear-gradient(180deg, transparent, #00639A 20%, #00639A 80%, transparent)',
+            }}
+          />
+          {/* Diagonal line 2 */}
+          <div
+            className="absolute right-[30%] top-0 h-full w-px origin-top -rotate-12"
+            style={{
+              background: 'linear-gradient(180deg, transparent, #21B6F3 20%, #21B6F3 80%, transparent)',
+            }}
+          />
+          {/* Horizontal accent */}
+          <div
+            className="absolute left-0 top-[40%] h-px w-full"
+            style={{
+              background: 'linear-gradient(90deg, transparent, #00BCA5 50%, transparent)',
+            }}
+          />
+        </motion.div>
+      </div>
+
+      {/* Floating Geometric Shapes */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Circle 1 - Top Left */}
+        <motion.div
+          className="absolute left-[15%] top-[10%] h-64 w-64 rounded-full opacity-[0.12]"
+          style={{
+            y: useTransform(scrollYProgress, [0, 1], [0, -30]),
+            background: 'radial-gradient(circle, #00639A, transparent 70%)',
+            filter: 'blur(60px)',
+          }}
+        />
+        
+        {/* Circle 2 - Bottom Right */}
+        <motion.div
+          className="absolute bottom-[15%] right-[10%] h-96 w-96 rounded-full opacity-[0.15]"
+          style={{
+            y: useTransform(scrollYProgress, [0, 1], [0, 40]),
+            background: 'radial-gradient(circle, #21B6F3, transparent 70%)',
+            filter: 'blur(80px)',
+          }}
+        />
+        
+        {/* Circle 3 - Middle */}
+        <motion.div
+          className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.10]"
+          style={{
+            y: useTransform(scrollYProgress, [0, 1], [0, 20]),
+            background: 'radial-gradient(circle, #00BCA5, transparent 70%)',
+            filter: 'blur(70px)',
+          }}
+        />
+
+        {/* Subtle rectangular glow - top */}
+        <div
+          className="absolute right-[5%] top-[5%] h-48 w-96 opacity-[0.12]"
+          style={{
+            background: 'linear-gradient(135deg, #00639A, transparent)',
+            filter: 'blur(50px)',
+          }}
+        />
+
+        {/* Subtle rectangular glow - bottom */}
+        <div
+          className="absolute bottom-[10%] left-[10%] h-56 w-80 opacity-[0.12]"
+          style={{
+            background: 'linear-gradient(-45deg, #21B6F3, transparent)',
+            filter: 'blur(50px)',
+          }}
+        />
+      </div>
+
+      {/* Radial gradient overlays - Enhanced from original */}
+      <div className="absolute inset-0 overflow-hidden opacity-[0.10]">
+        <motion.div
+          className="absolute left-[10%] top-[10%] h-[500px] w-[500px] blur-[100px]"
+          style={{
+            y,
+            background: 'radial-gradient(circle, #00639A, transparent 60%)',
+          }}
+        />
+        <div
+          className="absolute bottom-[15%] right-[10%] h-[400px] w-[400px] blur-[100px]"
+          style={{
+            background: 'radial-gradient(circle, #21B6F3, transparent 60%)',
+          }}
+        />
+      </div>
+
+      <div className="container relative z-10 mx-auto px-6 lg:px-12">
+        {/* Minimal Header */}
+        <div className="mx-auto mb-16 max-w-2xl text-center lg:mb-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {/* Badge - igual ao de solutions */}
+            <div className="mb-6 inline-block">
+              <div className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-[var(--border-color)] bg-[var(--bg-secondary)]/50 px-4 py-2 backdrop-blur-sm">
+                {/* Shimmer effect */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent-primary)]/10 to-transparent"
+                  animate={{ x: ['-200%', '200%'] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+                />
+                <span className="relative font-mono text-xs uppercase tracking-widest text-[var(--text-tertiary)]">
+                  {t.about.badge}
+                </span>
+              </div>
+            </div>
+
+            {/* Clean title */}
+            <h2 className="mb-6 text-[var(--text-primary)]">
+              {t.about.title}
+            </h2>
+
+            {/* Intro text */}
+            <p className="mx-auto max-w-xl leading-relaxed text-[var(--text-tertiary)] opacity-70">
               {t.about.intro}
             </p>
-          </div>
-
-          {/* Video manifesto placeholder */}
-          <motion.div
-            className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl"
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.4 }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-[#122539] to-[#006DA5]" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <motion.div
-                className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/50 flex items-center justify-center cursor-pointer"
-                whileHover={{ scale: 1.1, backgroundColor: 'rgba(255, 255, 255, 0.3)' }}
-              >
-                <div className="w-0 h-0 border-l-[16px] border-l-white border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent ml-1" />
-              </motion.div>
-            </div>
-            <div className="absolute bottom-8 left-8 right-8">
-              <p className="text-white text-lg">
-                {t.language === 'pt' ? 'Manifesto BTS: Estruture o Futuro' : 'BTS Manifesto: Structure the Future'}
-              </p>
-            </div>
           </motion.div>
-        </motion.div>
+        </div>
 
-        {/* Scroll progress indicator */}
-        <motion.div
-          className="hidden lg:block fixed left-8 top-1/2 transform -translate-y-1/2 z-50"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          <div className="w-px h-32 bg-[#E8E8E8] relative">
+        {/* Main Content Grid */}
+        <div className="mx-auto mb-24 max-w-7xl lg:mb-32">
+          <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
+            {/* Left: Video */}
             <motion.div
-              className="absolute top-0 left-0 w-full bg-[#185AB4]"
-              style={{ height: '50%' }}
-            />
-          </div>
-        </motion.div>
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.05 }}
+            >
+              {/* Video */}
+              <div className="group relative overflow-hidden rounded-xl">
+                <div className="relative aspect-video overflow-hidden bg-[var(--bg-secondary)]/60">
+                  <video
+                    className="h-full w-full object-cover opacity-90"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                  >
+                    <source
+                      src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
+                  
+                  {/* Minimal overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)]/10 to-transparent" />
+                </div>
 
-        {/* Vision, Mission, Values */}
-        <div className="max-w-4xl mx-auto space-y-12">
-          {/* Vision */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            whileHover={{ y: -4 }}
-            className="group"
-          >
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#185AB4]/5 to-transparent rounded-2xl blur-2xl group-hover:blur-3xl transition-all duration-500" />
-              <div className="relative bg-white/80 backdrop-blur-sm border border-[#E8E8E8] rounded-2xl p-10 shadow-[0_8px_24px_rgba(18,37,57,0.06)] group-hover:shadow-[0_12px_32px_rgba(18,37,57,0.1)] transition-all duration-500">
-                <div className="flex items-start gap-6">
-                  <div className="w-14 h-14 bg-gradient-to-br from-[#185AB4] to-[#006DA5] rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <Target className="w-7 h-7 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="mb-4 text-[#122539]">{t.about.visionTitle}</h3>
-                    <p className="text-[#6B7280] text-lg leading-relaxed">
+                {/* Subtle glow on hover */}
+                <div className="absolute -inset-px rounded-xl bg-gradient-to-br from-[#00639A]/0 to-[#21B6F3]/0 opacity-0 transition-opacity duration-500 group-hover:from-[#00639A]/10 group-hover:to-[#21B6F3]/10 group-hover:opacity-100" />
+              </div>
+            </motion.div>
+
+            {/* Right: Vision/Mission Tabs */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="flex flex-col"
+            >
+              {/* Enhanced Tab Switcher */}
+              <div className="mb-1 flex gap-1 rounded-t-xl bg-[var(--bg-secondary)]/15 p-1">
+                <button
+                  onClick={() => setActiveTab('vision')}
+                  className="group relative flex-1 rounded-lg py-3 text-center transition-all duration-300"
+                >
+                  {activeTab === 'vision' && (
+                    <motion.div
+                      layoutId="activeTabBg"
+                      className="absolute inset-0 rounded-lg bg-[var(--bg-secondary)]/60 shadow-lg"
+                      transition={{ type: 'spring', bounce: 0.15, duration: 0.5 }}
+                    />
+                  )}
+                  <span
+                    className={`relative font-mono text-xs uppercase tracking-[0.15em] transition-all duration-300 ${
+                      activeTab === 'vision'
+                        ? 'text-[var(--text-primary)] opacity-100'
+                        : 'text-[var(--text-tertiary)] opacity-50 group-hover:opacity-70'
+                    }`}
+                  >
+                    {t.about.visionTitle}
+                  </span>
+                  
+                  {/* Active indicator */}
+                  {activeTab === 'vision' && (
+                    <motion.div
+                      layoutId="activeIndicator"
+                      className="absolute bottom-0 left-1/2 h-0.5 w-12 -translate-x-1/2 bg-[#00639A]"
+                      transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }}
+                    />
+                  )}
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('mission')}
+                  className="group relative flex-1 rounded-lg py-3 text-center transition-all duration-300"
+                >
+                  {activeTab === 'mission' && (
+                    <motion.div
+                      layoutId="activeTabBg"
+                      className="absolute inset-0 rounded-lg bg-[var(--bg-secondary)]/60 shadow-lg"
+                      transition={{ type: 'spring', bounce: 0.15, duration: 0.5 }}
+                    />
+                  )}
+                  <span
+                    className={`relative font-mono text-xs uppercase tracking-[0.15em] transition-all duration-300 ${
+                      activeTab === 'mission'
+                        ? 'text-[var(--text-primary)] opacity-100'
+                        : 'text-[var(--text-tertiary)] opacity-50 group-hover:opacity-70'
+                    }`}
+                  >
+                    {t.about.missionTitle}
+                  </span>
+                  
+                  {/* Active indicator */}
+                  {activeTab === 'mission' && (
+                    <motion.div
+                      layoutId="activeIndicator"
+                      className="absolute bottom-0 left-1/2 h-0.5 w-12 -translate-x-1/2 bg-[#21B6F3]"
+                      transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }}
+                    />
+                  )}
+                </button>
+              </div>
+
+              {/* Tab Content */}
+              <div className="relative flex-1 overflow-hidden rounded-b-xl bg-[var(--bg-secondary)]/30 p-8 backdrop-blur-md lg:p-10">
+                {activeTab === 'vision' ? (
+                  <motion.div
+                    key="vision"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    {/* Enhanced accent bar */}
+                    <div className="mb-5 h-0.5 w-16 bg-gradient-to-r from-[#00639A] to-transparent" />
+                    
+                    <p className="text-sm leading-snug text-[var(--text-secondary)] opacity-80">
                       {t.about.visionText}
                     </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Mission */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            whileHover={{ y: -4 }}
-            className="group"
-          >
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#185AB4]/5 to-transparent rounded-2xl blur-2xl group-hover:blur-3xl transition-all duration-500" />
-              <div className="relative bg-white/80 backdrop-blur-sm border border-[#E8E8E8] rounded-2xl p-10 shadow-[0_8px_24px_rgba(18,37,57,0.06)] group-hover:shadow-[0_12px_32px_rgba(18,37,57,0.1)] transition-all duration-500">
-                <div className="flex items-start gap-6">
-                  <div className="w-14 h-14 bg-gradient-to-br from-[#185AB4] to-[#006DA5] rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <Compass className="w-7 h-7 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="mb-4 text-[#122539]">{t.about.missionTitle}</h3>
-                    <p className="text-[#6B7280] text-lg leading-relaxed">
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="mission"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    {/* Enhanced accent bar */}
+                    <div className="mb-5 h-0.5 w-16 bg-gradient-to-r from-[#21B6F3] to-transparent" />
+                    
+                    <p className="text-sm leading-snug text-[var(--text-secondary)] opacity-80">
                       {t.about.missionText}
                     </p>
-                  </div>
-                </div>
+                  </motion.div>
+                )}
               </div>
-            </div>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Values Section */}
+        <div className="mx-auto max-w-7xl">
+          {/* Values Title */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-12 text-center"
+          >
+            <h3 className="text-[var(--text-primary)]">
+              {t.about.valuesTitle}
+            </h3>
           </motion.div>
 
-          {/* Values */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            whileHover={{ y: -4 }}
-            className="group"
-          >
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#185AB4]/5 to-transparent rounded-2xl blur-2xl group-hover:blur-3xl transition-all duration-500" />
-              <div className="relative bg-white/80 backdrop-blur-sm border border-[#E8E8E8] rounded-2xl p-10 shadow-[0_8px_24px_rgba(18,37,57,0.06)] group-hover:shadow-[0_12px_32px_rgba(18,37,57,0.1)] transition-all duration-500">
-                <div className="flex items-start gap-6">
-                  <div className="w-14 h-14 bg-gradient-to-br from-[#185AB4] to-[#006DA5] rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <Heart className="w-7 h-7 text-white" />
+          {/* Values Grid - Ultra Clean */}
+          <div className="grid gap-5 md:grid-cols-3 lg:gap-6">
+            {values.map((value, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.6,
+                  delay: index * 0.08,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                whileHover={{ y: -3 }}
+                className="group relative"
+              >
+                {/* Minimal card */}
+                <div className="relative h-full overflow-hidden rounded-xl bg-[var(--bg-secondary)]/20 p-7 backdrop-blur-sm transition-all duration-400 hover:bg-[var(--bg-secondary)]/35 lg:p-8">
+                  {/* Top glow line - only on hover */}
+                  <div
+                    className="absolute left-0 top-0 h-px w-full opacity-0 transition-opacity duration-400 group-hover:opacity-100"
+                    style={{
+                      background: `linear-gradient(90deg, ${value.accent}40 0%, transparent 100%)`,
+                    }}
+                  />
+
+                  {/* Number - ultra subtle */}
+                  <div className="mb-6 flex items-start">
+                    <span
+                      className="font-mono text-3xl tracking-tighter opacity-[0.1]"
+                      style={{ color: value.accent }}
+                    >
+                      {value.number}
+                    </span>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="mb-6 text-[#122539]">{t.about.valuesTitle}</h3>
-                    <div className="space-y-6">
-                      <motion.div
-                        whileHover={{ x: 4 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <h4 className="mb-2 text-[#122539] flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 rounded-full bg-[#185AB4]" />
-                          {t.about.value1Title}
-                        </h4>
-                        <p className="text-[#6B7280] pl-4">{t.about.value1Text}</p>
-                      </motion.div>
-                      <motion.div
-                        whileHover={{ x: 4 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <h4 className="mb-2 text-[#122539] flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 rounded-full bg-[#185AB4]" />
-                          {t.about.value2Title}
-                        </h4>
-                        <p className="text-[#6B7280] pl-4">{t.about.value2Text}</p>
-                      </motion.div>
-                      <motion.div
-                        whileHover={{ x: 4 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <h4 className="mb-2 text-[#122539] flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 rounded-full bg-[#185AB4]" />
-                          {t.about.value3Title}
-                        </h4>
-                        <p className="text-[#6B7280] pl-4">{t.about.value3Text}</p>
-                      </motion.div>
-                    </div>
+
+                  {/* Content */}
+                  <div>
+                    <h4 className="mb-2.5 text-[var(--text-primary)]">
+                      {value.title}
+                    </h4>
+                    <p className="text-sm leading-relaxed text-[var(--text-tertiary)] opacity-60">
+                      {value.text}
+                    </p>
                   </div>
+
+                  {/* Corner glow - subtle */}
+                  <div
+                    className="absolute -bottom-16 -right-16 h-32 w-32 opacity-0 blur-[60px] transition-opacity duration-500 group-hover:opacity-[0.1]"
+                    style={{
+                      background: `radial-gradient(circle, ${value.accent}, transparent 70%)`,
+                    }}
+                  />
                 </div>
-              </div>
-            </div>
-          </motion.div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

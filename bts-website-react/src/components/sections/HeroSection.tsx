@@ -1,144 +1,188 @@
+'use client';
 
-import { motion } from 'framer-motion';
-import { ButtonPrimary } from '@/components/ui/ButtonPrimary';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { AnimatedGlobe } from '@/components/ui/AnimatedGlobe';
+import { ArrowRight, Play } from 'lucide-react';
+import { useRef } from 'react';
 
 export function HeroSection() {
   const { t } = useLanguage();
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end start'],
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#122539] via-[#18365B] to-[#006DA5]">
-        {/* Animated particles */}
-        <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 bg-white rounded-full"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                y: [0, -30, 0],
-                opacity: [0.2, 0.8, 0.2],
-              }}
-              transition={{
-                duration: 3 + Math.random() * 2,
-                repeat: Infinity,
-                delay: Math.random() * 2,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Diagonal glow */}
-        <motion.div
-          className="absolute inset-0 opacity-30"
+    <section
+      ref={containerRef}
+      className="relative min-h-screen overflow-hidden bg-[var(--bg-primary)] pt-20"
+    >
+      {/* Animated Grid Background */}
+      <div className="absolute inset-0 opacity-[0.03]">
+        <div
+          className="h-full w-full"
           style={{
-            background: 'linear-gradient(135deg, transparent 0%, rgba(24, 90, 180, 0.4) 50%, transparent 100%)',
-          }}
-          animate={{
-            backgroundPosition: ['0% 0%', '100% 100%'],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: 'linear',
+            backgroundImage: `
+              linear-gradient(var(--border-color) 1px, transparent 1px),
+              linear-gradient(90deg, var(--border-color) 1px, transparent 1px)
+            `,
+            backgroundSize: '80px 80px',
           }}
         />
       </div>
 
-      {/* Animated Globe */}
-      <AnimatedGlobe />
+      {/* Radial Gradient Overlay */}
+      <div className="absolute inset-0">
+        <div
+          className="absolute left-1/2 top-1/2 h-[1000px] w-[1000px] -translate-x-1/2 -translate-y-1/2 opacity-20"
+          style={{
+            background: 'radial-gradient(circle, #00639A 0%, transparent 70%)',
+          }}
+        />
+        <div
+          className="absolute left-1/4 top-1/4 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 opacity-15"
+          style={{
+            background: 'radial-gradient(circle, #21B6F3 0%, transparent 60%)',
+          }}
+        />
+      </div>
+
+      {/* Floating Particles */}
+      {[...Array(20)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute h-1 w-1 rounded-full bg-[var(--accent-primary)]"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+          }}
+          animate={{
+            y: [0, -30, 0],
+            opacity: [0.2, 0.8, 0.2],
+          }}
+          transition={{
+            duration: 3 + Math.random() * 2,
+            repeat: Infinity,
+            delay: Math.random() * 2,
+          }}
+        />
+      ))}
 
       {/* Content */}
-      <div className="relative z-10 max-w-[1440px] mx-auto px-6 md:px-20 py-32 text-center">
-        <motion.div
-          className="max-w-5xl mx-auto"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          {/* Title */}
+      <motion.div
+        style={{ y, opacity }}
+        className="container relative z-10 mx-auto px-6 lg:px-8"
+      >
+        <div className="flex min-h-screen flex-col items-center justify-center text-center pb-32 pt-12">
+          {/* Main Title */}
           <motion.h1
-            className="mb-6 text-white"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="mx-auto mb-8 max-w-5xl overflow-visible bg-gradient-to-b from-[var(--text-primary)] to-[var(--text-tertiary)] bg-clip-text pb-2 text-transparent"
           >
             {t.hero.title}
           </motion.h1>
 
           {/* Subtitle */}
           <motion.p
-            className="text-2xl md:text-3xl mb-4 text-white/90"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="mx-auto mb-12 mt-6 max-w-3xl text-xl text-[var(--text-tertiary)]"
           >
             {t.hero.subtitle}
           </motion.p>
 
           {/* Description */}
           <motion.p
-            className="text-xl mb-12 text-white/70 max-w-3xl mx-auto"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="mx-auto mb-12 max-w-2xl text-[var(--text-tertiary)]"
           >
             {t.hero.description}
           </motion.p>
 
-          {/* CTAs */}
+          {/* CTA Buttons */}
           <motion.div
-            className="flex flex-col md:flex-row gap-4 justify-center items-center"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex flex-col gap-4 sm:flex-row mb-24"
           >
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            {/* Primary CTA */}
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="group relative overflow-hidden rounded-lg"
             >
-              <ButtonPrimary className="text-lg px-10 py-5 shadow-[0_0_24px_rgba(24,90,180,0.5)] hover:shadow-[0_0_32px_rgba(24,90,180,0.7)]">
-                {t.hero.cta}
-              </ButtonPrimary>
-            </motion.div>
-
-            <motion.a
-              href="#privacy"
-              className="text-white/90 hover:text-white text-lg group relative px-4 py-2"
-              whileHover={{ scale: 1.05 }}
-            >
-              {t.language === 'pt' ? 'Explore por que a BTS existe' : 'Explore why BTS exists'}
-              <motion.span
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
-                initial={{ scaleX: 0 }}
-                whileHover={{ scaleX: 1 }}
-                transition={{ duration: 0.3 }}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#00639A] to-[#21B6F3]" />
+              <div className="relative flex items-center gap-2 px-8 py-4 text-white">
+                <span className="font-medium">{t.hero.cta}</span>
+                <motion.div
+                  animate={{ x: [0, 4, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </motion.div>
+              </div>
+              <motion.div
+                className="absolute inset-0 bg-white/15 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                initial={false}
               />
-            </motion.a>
-          </motion.div>
-        </motion.div>
+            </motion.button>
 
-        {/* Scroll indicator */}
+            {/* Secondary CTA */}
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="group relative overflow-hidden rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)]/50 backdrop-blur-sm"
+            >
+              <div className="relative flex items-center gap-2 px-8 py-4 text-[var(--text-primary)]">
+                <Play className="h-4 w-4" />
+                <span className="font-medium">{t.hero.ctaSecondary}</span>
+              </div>
+              <motion.div
+                className="absolute inset-0 bg-[#00639A]/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                initial={false}
+              />
+            </motion.button>
+          </motion.div>
+        </div>
+      </motion.div>
+
+      {/* Scroll Indicator - Fixed positioning */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 1 }}
+        className="absolute bottom-32 left-1/2 z-20 -translate-x-1/2"
+      >
         <motion.div
-          className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
+          animate={{ y: [0, 12, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
+          className="flex flex-col items-center gap-2"
         >
-          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2">
+          <div className="h-12 w-6 rounded-full border-2 border-[var(--border-color)] p-1">
             <motion.div
-              className="w-1.5 h-1.5 bg-white rounded-full"
               animate={{ y: [0, 16, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
+              className="h-2 w-2 rounded-full bg-[var(--accent-primary)]"
             />
           </div>
+          <span className="font-mono text-xs uppercase tracking-widest text-[var(--text-tertiary)]">
+            Scroll
+          </span>
         </motion.div>
-      </div>
+      </motion.div>
+
+      {/* Bottom Fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[var(--bg-primary)] to-transparent" />
     </section>
   );
 }

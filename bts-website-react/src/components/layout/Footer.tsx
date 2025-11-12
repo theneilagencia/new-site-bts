@@ -1,11 +1,13 @@
 
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
+// import { useTheme } from '@/contexts/ThemeContext';
 import { CheckCircle2 } from 'lucide-react';
 import { BtsLogo } from '@/components/ui/BtsLogo';
 
 export function Footer() {
   const { t } = useLanguage();
+  
 
   return (
     <footer className="relative overflow-hidden border-t border-[var(--border-color)] bg-[var(--bg-primary)]">
