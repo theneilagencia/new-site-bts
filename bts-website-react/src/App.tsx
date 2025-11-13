@@ -11,6 +11,9 @@ import { SolutionsSection } from '@/components/sections/SolutionsSection';
 import { AboutSection } from '@/components/sections/AboutSection';
 import { PartnerSection } from '@/components/sections/PartnerSection';
 import { Footer } from '@/components/layout/Footer';
+import { CursorGlow } from '@/components/ui/cursor-glow';
+import { ScrollToTop } from '@/components/ui/scroll-to-top';
+import { PageLoader } from '@/components/ui/page-loader';
 
 export default function App() {
   useEffect(() => {
@@ -22,7 +25,10 @@ export default function App() {
     <ThemeProvider>
       <LanguageProvider>
         <AuthProvider>
-          <div className="min-h-screen bg-[var(--color-bg-primary)]">
+          <div className="min-h-screen">
+            <PageLoader />
+            <CursorGlow />
+            <ScrollToTop />
             <Header />
             <main>
               <HeroSection />
