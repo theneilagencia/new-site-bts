@@ -72,21 +72,16 @@ const MOCK_USERS: User[] = [
 
 export function PortalApp({ onBackToPublic }: PortalAppProps) {
   const { user, isAuthenticated } = useAuth();
-  const [showPortal, setShowPortal] = useState(false);
-  const [activeSection, setActiveSection] = useState(
+  const [activeSection, setActiveSection] = useState<string>(
     user?.role === 'admin' ? 'dashboard' : 'new-proposal'
   );
   const [proposals, setProposals] = useState<Proposal[]>(MOCK_PROPOSALS);
   const [users, setUsers] = useState<User[]>(MOCK_USERS);
   const [viewingProposal, setViewingProposal] = useState<Proposal | null>(null);
 
-  const handleLoginSuccess = () => {
-    setShowPortal(true);
-  };
-
-  // If not authenticated or not showing portal, show login
-  if (!isAuthenticated || !showPortal) {
-    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
+  // If not authenticated, show login
+  if (!isAuthenticated) {
+    return <LoginPage onLoginSuccess={() => {}} />;
   }
 
   const handleProposalCreated = (proposal: Proposal) => {
