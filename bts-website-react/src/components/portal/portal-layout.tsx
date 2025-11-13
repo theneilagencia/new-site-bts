@@ -26,6 +26,7 @@ export function PortalLayout({ children, activeSection, onNavigate, onBackToPubl
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const partnerMenu = [
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'new-proposal', label: 'Nova Proposta', icon: FileText },
     { id: 'history', label: 'Histórico', icon: History },
     { id: 'profile', label: 'Perfil', icon: User },

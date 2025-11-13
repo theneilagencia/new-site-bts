@@ -5,6 +5,7 @@ import { PortalLayout } from './portal-layout';
 import { NewProposalForm } from './new-proposal-form';
 import { ProposalHistory } from './proposal-history';
 import { PartnerProfile } from './partner-profile';
+import { PartnerDashboard } from './partner-dashboard';
 import { AdminDashboard } from './admin-dashboard';
 import { AdminProposals } from './admin-proposals';
 import { AdminUsers } from './admin-users';
@@ -72,9 +73,7 @@ const MOCK_USERS: User[] = [
 
 export function PortalApp({ onBackToPublic }: PortalAppProps) {
   const { user, isAuthenticated } = useAuth();
-  const [activeSection, setActiveSection] = useState<string>(
-    user?.role === 'admin' ? 'dashboard' : 'new-proposal'
-  );
+  const [activeSection, setActiveSection] = useState<string>('dashboard');
   const [proposals, setProposals] = useState<Proposal[]>(MOCK_PROPOSALS);
   const [users, setUsers] = useState<User[]>(MOCK_USERS);
   const [viewingProposal, setViewingProposal] = useState<Proposal | null>(null);
@@ -145,6 +144,8 @@ export function PortalApp({ onBackToPublic }: PortalAppProps) {
     // Partner sections
     if (user?.role === 'partner') {
       switch (activeSection) {
+        case 'dashboard':
+          return <PartnerDashboard proposals={proposals.filter(p => p.partnerId === user.id)} />;
         case 'new-proposal':
           return <NewProposalForm onProposalCreated={handleProposalCreated} />;
         case 'history':
@@ -159,7 +160,7 @@ export function PortalApp({ onBackToPublic }: PortalAppProps) {
         case 'profile':
           return <PartnerProfile />;
         default:
-          return <NewProposalForm onProposalCreated={handleProposalCreated} />;
+          return <PartnerDashboard proposals={proposals.filter(p => p.partnerId === user.id)} />;
       }
     }
 
