@@ -1,10 +1,38 @@
-export function BtsLogo({ className = "" }: { className?: string }) {
+import { useTheme } from '@/contexts/ThemeContext';
+import btsLogoDark from '@/assets/bts-logo-dark.png';
+import btsLogoLight from '@/assets/bts-logo-light.png';
+
+interface BtsLogoProps {
+  className?: string;
+  variant?: 'dark' | 'light' | 'auto';
+}
+
+export function BtsLogo({ className = "h-8 w-auto", variant = 'auto' }: BtsLogoProps) {
+  const { theme } = useTheme();
+  
+  // Determine which logo to use
+  // btsLogoDark = white logo (for dark backgrounds)
+  // btsLogoLight = dark logo (for light backgrounds)
+  let logoSrc = btsLogoDark; // default: white logo for dark backgrounds
+  
+  if (variant === 'auto') {
+    // Auto mode: use theme
+    // If theme is 'light', use dark logo (dark text on light background)
+    // If theme is 'dark', use white logo (white text on dark background)
+    logoSrc = theme === 'light' ? btsLogoLight : btsLogoDark;
+  } else if (variant === 'light') {
+    // Light variant: use dark logo (for light backgrounds)
+    logoSrc = btsLogoLight;
+  } else {
+    // Dark variant: use white logo (for dark backgrounds)
+    logoSrc = btsLogoDark;
+  }
+  
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      <span className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-[#185AB4] to-[#006DA5] bg-clip-text text-transparent">
-        BTS
-      </span>
-      <span className="text-2xl font-normal text-white">Global</span>
-    </div>
+    <img 
+      src={logoSrc}
+      alt="BTS Global Corp"
+      className={className}
+    />
   );
 }
