@@ -204,21 +204,17 @@ export function AboutSection() {
               {/* Video */}
               <div className="group relative overflow-hidden rounded-xl">
                 <div className="relative aspect-video overflow-hidden bg-[var(--bg-secondary)]/60">
-                  <video
-                    className="h-full w-full object-cover opacity-90"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                  >
-                    <source
-                      src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-                      type="video/mp4"
-                    />
-                  </video>
+                  <iframe
+                    className="h-full w-full"
+                    src="https://www.youtube.com/embed/Jsc9RsI1VOQ"
+                    title="BTS Global Corp - Pilares"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
                   
                   {/* Minimal overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)]/10 to-transparent" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)]/10 to-transparent" />
                 </div>
 
                 {/* Subtle glow on hover */}
