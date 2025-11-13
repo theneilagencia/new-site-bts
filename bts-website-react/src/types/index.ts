@@ -3,6 +3,7 @@ export interface User {
   email: string;
   name: string;
   role: 'partner' | 'admin';
+  status?: 'active' | 'inactive';
   company?: string;
   phone?: string;
   cpf_cnpj?: string;

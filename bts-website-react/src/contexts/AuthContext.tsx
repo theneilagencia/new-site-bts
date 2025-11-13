@@ -1,6 +1,8 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { User } from '@/types';
 
+export type { User };
+
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
