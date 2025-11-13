@@ -59,8 +59,8 @@ export function PortalLayout({ children, activeSection, onNavigate, onBackToPubl
 
       <div className="relative z-10 flex min-h-screen">
         {/* Sidebar - Desktop */}
-        <aside className="hidden lg:flex lg:flex-col lg:w-72 border-r border-white/10 bg-white/[0.02] backdrop-blur-xl">
-          <div className="p-6 border-b border-white/10">
+        <aside className="hidden lg:flex lg:flex-col lg:w-72 lg:h-screen lg:sticky lg:top-0 border-r border-white/10 bg-white/[0.02] backdrop-blur-xl">
+          <div className="p-6 border-b border-white/10 flex-shrink-0">
             <BtsLogo className="h-8 w-auto mb-4" />
             <div>
               <p className="text-sm text-white">{user?.name}</p>
@@ -71,7 +71,7 @@ export function PortalLayout({ children, activeSection, onNavigate, onBackToPubl
             </div>
           </div>
 
-          <nav className="flex-1 p-4">
+          <nav className="flex-1 p-4 overflow-y-auto">
             <ul className="space-y-2">
               {menuItems.map((item) => (
                 <li key={item.id}>
@@ -91,7 +91,7 @@ export function PortalLayout({ children, activeSection, onNavigate, onBackToPubl
             </ul>
           </nav>
 
-          <div className="p-4 border-t border-white/10">
+          <div className="p-4 border-t border-white/10 flex-shrink-0">
             <button
               onClick={handleLogout}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-[#C6CEDF] hover:bg-red-500/10 hover:text-red-400 transition-all"
