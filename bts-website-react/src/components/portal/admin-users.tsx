@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Users, Plus, Edit, X, UserX, UserCheck } from 'lucide-react';
+import { Users, Plus, Edit, X, UserX, UserCheck, Key } from 'lucide-react';
 import { User } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 interface AdminUsersProps {
   users: User[];
   onCreateUser: (user: Omit<User, 'id'> & { password: string }) => void;
   onUpdateUser: (id: string, updates: Partial<User>) => void;
   onToggleStatus: (id: string) => void;
+  onResetPassword?: (id: string, newPassword: string) => void;
 }
 
-export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus }: AdminUsersProps) {
+export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus, onResetPassword }: AdminUsersProps) {
   const [showModal, setShowModal] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [resettingUser, setResettingUser] = useState<User | null>(null);
+  const [newPassword, setNewPassword] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -56,6 +61,35 @@ export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus }
     setShowModal(false);
     setEditingUser(null);
     setFormData({ name: '', email: '', password: '', role: 'partner' });
+  };
+
+  const handleResetPassword = (user: User) => {
+    setResettingUser(user);
+    setNewPassword('');
+    setShowResetModal(true);
+  };
+
+  const handleConfirmResetPassword = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!resettingUser || !newPassword) return;
+
+    if (onResetPassword) {
+      onResetPassword(resettingUser.id, newPassword);
+      toast.success('Senha resetada com sucesso!', {
+        description: `Nova senha definida para ${resettingUser.name}`,
+      });
+    }
+
+    setShowResetModal(false);
+    setResettingUser(null);
+    setNewPassword('');
+  };
+
+  const handleCloseResetModal = () => {
+    setShowResetModal(false);
+    setResettingUser(null);
+    setNewPassword('');
   };
 
   return (
@@ -146,6 +180,13 @@ export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus }
                         <Edit className="w-3.5 h-3.5" />
                       </button>
                       <button
+                        onClick={() => handleResetPassword(user)}
+                        className="p-1.5 rounded hover:bg-white/10 text-yellow-400 transition-colors"
+                        title="Resetar senha"
+                      >
+                        <Key className="w-3.5 h-3.5" />
+                      </button>
+                      <button
                         onClick={() => onToggleStatus(user.id)}
                         className={`p-1.5 rounded transition-colors ${
                           user.status === 'active'
@@ -204,6 +245,13 @@ export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus }
                 >
                   <Edit className="w-3.5 h-3.5" />
                   <span className="text-xs">Editar</span>
+                </button>
+                <button
+                  onClick={() => handleResetPassword(user)}
+                  className="px-3 py-2 bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 rounded hover:bg-yellow-500/20 transition-colors"
+                  title="Resetar senha"
+                >
+                  <Key className="w-3.5 h-3.5" />
                 </button>
                 <button
                   onClick={() => onToggleStatus(user.id)}
@@ -314,6 +362,81 @@ export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus }
                     className="flex-1 px-3 py-2 bg-gradient-to-r from-[#1F4AFF] to-[#00E5FF] rounded text-sm text-white hover:shadow-lg hover:shadow-[#1F4AFF]/30 transition-all"
                   >
                     {editingUser ? 'Salvar' : 'Criar'}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Reset Password Modal */}
+      <AnimatePresence>
+        {showResetModal && resettingUser && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={handleCloseResetModal}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white/[0.04] backdrop-blur-2xl rounded-xl border border-white/15 w-full max-w-md"
+            >
+              <div className="flex items-center justify-between p-4 border-b border-white/10">
+                <div className="flex items-center gap-2">
+                  <Key className="w-5 h-5 text-yellow-400" />
+                  <h2 className="text-lg text-white">Resetar Senha</h2>
+                </div>
+                <button
+                  onClick={handleCloseResetModal}
+                  className="p-1.5 rounded hover:bg-white/10 text-[#C6CEDF] transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <form onSubmit={handleConfirmResetPassword} className="p-4 space-y-4">
+                <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                  <p className="text-sm text-yellow-400">
+                    Você está redefinindo a senha para:
+                  </p>
+                  <p className="text-white font-medium mt-1">{resettingUser.name}</p>
+                  <p className="text-xs text-[#C6CEDF]/70">{resettingUser.email}</p>
+                </div>
+
+                <div>
+                  <label className="block text-xs text-[#C6CEDF]/70 mb-1.5">Nova Senha *</label>
+                  <input
+                    type="text"
+                    required
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Digite a nova senha"
+                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded text-sm text-white placeholder:text-[#C6CEDF]/30 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 transition-all"
+                  />
+                  <p className="text-xs text-[#C6CEDF]/50 mt-1.5">
+                    💡 Use uma senha forte com letras, números e caracteres especiais
+                  </p>
+                </div>
+
+                <div className="flex gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={handleCloseResetModal}
+                    className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded text-sm text-[#C6CEDF] hover:bg-white/10 transition-colors"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 px-3 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 rounded text-sm text-white hover:shadow-lg hover:shadow-yellow-500/30 transition-all"
+                  >
+                    Resetar Senha
                   </button>
                 </div>
               </form>

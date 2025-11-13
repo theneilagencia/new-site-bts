@@ -124,6 +124,13 @@ export function PortalApp({ onBackToPublic }: PortalAppProps) {
     toast.success('Status atualizado com sucesso!');
   };
 
+  const handleResetPassword = (id: string, newPassword: string) => {
+    // In production, this would call a backend API to update the password
+    // For now, we'll just show a success message
+    console.log(`Password reset for user ${id}: ${newPassword}`);
+    // The actual password storage would be handled by the backend
+  };
+
   const renderContent = () => {
     // Partner sections
     if (user?.role === 'partner') {
@@ -174,9 +181,10 @@ export function PortalApp({ onBackToPublic }: PortalAppProps) {
               onCreateUser={handleCreateUser}
               onUpdateUser={handleUpdateUser}
               onToggleStatus={handleToggleUserStatus}
+              onResetPassword={handleResetPassword}
             />
           );
-        case 'notifications':
+        case 'settings':
           return <NotificationSettings />;
         default:
           return (
