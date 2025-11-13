@@ -17,7 +17,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const productionUsers: Array<User & { password: string }> = [
   {
     id: 'superadmin-001',
-    email: 'Admin',
+    email: 'admin@btsglobalcorp.com',
     password: 'BtS@13112025',
     name: 'Super Admin',
     role: 'admin',

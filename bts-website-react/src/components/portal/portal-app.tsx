@@ -27,7 +27,7 @@ const MOCK_USERS: User[] = [
   {
     id: 'superadmin-001',
     name: 'Super Admin',
-    email: 'Admin',
+    email: 'admin@btsglobalcorp.com',
     role: 'admin',
     company: 'BTS Global Corp',
     status: 'active',
