@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { FileText, Send, Loader } from 'lucide-react';
 import { STRUCTURE_OPTIONS, type StructureType, type Proposal } from '@/lib/proposal-types';
 import { useAuth } from '@/contexts/AuthContext';
+import { sendStatusChangeNotification } from '@/lib/email-notifications';
+import { toast } from 'sonner';
 
 interface NewProposalFormProps {
   onProposalCreated: (proposal: Proposal) => void;
@@ -83,6 +85,20 @@ export function NewProposalForm({ onProposalCreated }: NewProposalFormProps) {
     onProposalCreated(newProposal);
     setIsGenerating(false);
     setShowSuccess(true);
+
+    // Send email notification if status is 'review' or 'approved'
+    if (formData.status === 'review' || formData.status === 'approved') {
+      const emailSent = await sendStatusChangeNotification({
+        proposal: newProposal,
+        newStatus: formData.status,
+      });
+
+      if (emailSent) {
+        toast.success('Notificação enviada por email!', {
+          description: 'comercial@btsglobalcorp.com, vinicius.debian@btsglobalcorp.com',
+        });
+      }
+    }
 
     // Reset form
     setTimeout(() => {

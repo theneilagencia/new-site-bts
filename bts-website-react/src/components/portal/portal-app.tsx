@@ -13,6 +13,7 @@ import { PDFViewerModal } from './pdf-viewer-modal';
 import { Proposal } from '@/lib/proposal-types';
 import { User } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { sendStatusChangeNotification } from '@/lib/email-notifications';
 
 interface PortalAppProps {
   onBackToPublic?: () => void;
@@ -109,11 +110,31 @@ export function PortalApp({ onBackToPublic }: PortalAppProps) {
     }
   };
 
-  const handleApproveProposal = (id: string) => {
+  const handleApproveProposal = async (id: string) => {
+    const proposal = proposals.find(p => p.id === id);
+    if (!proposal) return;
+
+    const previousStatus = proposal.status;
+    const newStatus: 'approved' = 'approved';
+
     setProposals(proposals.map(p => 
-      p.id === id ? { ...p, status: 'approved' as const } : p
+      p.id === id ? { ...p, status: newStatus } : p
     ));
+    
     toast.success('Proposta aprovada!');
+
+    // Send email notification
+    const emailSent = await sendStatusChangeNotification({
+      proposal: { ...proposal, status: newStatus },
+      previousStatus,
+      newStatus,
+    });
+
+    if (emailSent) {
+      toast.success('Notificação enviada por email!', {
+        description: 'comercial@btsglobalcorp.com, vinicius.debian@btsglobalcorp.com',
+      });
+    }
   };
 
   const handleCreateUser = (userData: Omit<User, 'id'> & { password: string }) => {
