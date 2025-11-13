@@ -117,7 +117,7 @@ export function PortalLayout({ children, activeSection, onNavigate, onBackToPubl
               initial={{ opacity: 0, x: -300 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -300 }}
-              className="lg:hidden fixed inset-0 z-40 bg-[#050B18]/95 backdrop-blur-xl"
+              className="lg:hidden fixed inset-0 z-40 bg-[#050B18]/95 backdrop-blur-xl flex flex-col"
             >
               <div className="p-6 border-b border-white/10">
                 <BtsLogo className="h-8 w-auto mb-4" />
@@ -130,7 +130,7 @@ export function PortalLayout({ children, activeSection, onNavigate, onBackToPubl
                 </div>
               </div>
 
-              <nav className="p-4">
+              <nav className="flex-1 p-4 overflow-y-auto">
                 <ul className="space-y-2">
                   {menuItems.map((item) => (
                     <li key={item.id}>
@@ -153,7 +153,7 @@ export function PortalLayout({ children, activeSection, onNavigate, onBackToPubl
                 </ul>
               </nav>
 
-              <div className="mt-auto p-4 border-t border-white/10">
+              <div className="p-4 border-t border-white/10">
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-[#C6CEDF] hover:bg-red-500/10 hover:text-red-400 transition-all"
