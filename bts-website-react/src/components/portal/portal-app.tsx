@@ -19,57 +19,17 @@ interface PortalAppProps {
   onBackToPublic?: () => void;
 }
 
-// Mock initial data
-const MOCK_PROPOSALS: Proposal[] = [
-  {
-    id: 'PROP-1731337200000',
-    clientName: 'Cassio Altiva',
-    clientEmail: 'cassio@altiva.com',
-    clientCpfCnpj: '123.456.789-00',
-    country: 'Brasil',
-    structures: ['digital-offshore-bahamas'],
-    description: 'Cliente busca estruturação offshore para consultoria internacional',
-    currency: 'USD',
-    amount: 3000,
-    maintenanceFee: 500,
-    customClauses: '',
-    status: 'generated',
-    createdAt: '2025-11-10T10:00:00.000Z',
-    partnerName: 'Elcio Reis',
-    partnerId: '1',
-  },
-  {
-    id: 'PROP-1731250800000',
-    clientName: 'Ana Duarte',
-    clientEmail: 'ana@duarte.com',
-    clientCpfCnpj: '987.654.321-00',
-    country: 'Portugal',
-    structures: ['dao-wyoming'],
-    description: 'Criação de DAO para projeto Web3',
-    currency: 'USD',
-    amount: 2500,
-    maintenanceFee: 400,
-    customClauses: '',
-    status: 'review',
-    createdAt: '2025-11-09T10:00:00.000Z',
-    partnerName: 'Elcio Reis',
-    partnerId: '1',
-  },
-];
+// Production - Clean database
+const MOCK_PROPOSALS: Proposal[] = [];
 
+// Production - SuperAdmin only (managed in AuthContext)
 const MOCK_USERS: User[] = [
   {
-    id: '1',
-    name: 'Elcio Reis',
-    email: 'elcio@bts.com',
-    role: 'partner',
-    status: 'active',
-  },
-  {
-    id: '2',
-    name: 'Admin BTS',
-    email: 'admin@bts.com',
+    id: 'superadmin-001',
+    name: 'Super Admin',
+    email: 'Admin',
     role: 'admin',
+    company: 'BTS Global Corp',
     status: 'active',
   },
 ];

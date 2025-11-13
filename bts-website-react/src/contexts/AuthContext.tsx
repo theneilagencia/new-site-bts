@@ -13,23 +13,13 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Demo users
-const demoUsers: Array<User & { password: string }> = [
+// Production user - SuperAdmin
+const productionUsers: Array<User & { password: string }> = [
   {
-    id: '1',
-    email: 'elcio@bts.com',
-    password: 'partner123',
-    name: 'Elcio Reis',
-    role: 'partner',
-    company: 'BTS Global Corp',
-    phone: '(11) 98765-4321',
-    cpf_cnpj: '12.345.678/0001-90',
-  },
-  {
-    id: '2',
-    email: 'admin@bts.com',
-    password: 'admin123',
-    name: 'Admin BTS',
+    id: 'superadmin-001',
+    email: 'Admin',
+    password: 'BtS@13112025',
+    name: 'Super Admin',
     role: 'admin',
     company: 'BTS Global Corp',
   },
@@ -48,7 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    const foundUser = demoUsers.find(
+    const foundUser = productionUsers.find(
       (u) => u.email === email && u.password === password
     );
 

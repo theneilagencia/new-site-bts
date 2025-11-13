@@ -142,21 +142,6 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
                   </div>
                 </button>
               </form>
-
-              {/* Demo Credentials */}
-              <div className="mt-6 pt-6 border-t border-white/10">
-                <p className="text-xs text-[#C6CEDF]/50 mb-3 text-center">Credenciais de demonstração:</p>
-                <div className="space-y-2 text-xs text-[#C6CEDF]/70">
-                  <div className="flex justify-between">
-                    <span>Parceiro:</span>
-                    <span className="text-[#00E5FF]">elcio@bts.com / partner123</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Admin:</span>
-                    <span className="text-[#00E5FF]">admin@bts.com / admin123</span>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 
