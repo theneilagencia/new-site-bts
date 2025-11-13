@@ -26,7 +26,15 @@ export function PDFViewerModal({ proposal, onClose }: PDFViewerModalProps) {
   };
 
   const handleDownload = () => {
-    alert('Funcionalidade de download PDF será implementada com biblioteca de geração de PDF');
+    if (!proposal) return;
+    
+    // Dynamically import and generate PDF
+    import('@/lib/pdf-generator').then(({ generateProposalPDF }) => {
+      generateProposalPDF(proposal);
+    }).catch(err => {
+      console.error('Erro ao gerar PDF:', err);
+      alert('Erro ao gerar PDF. Por favor, tente novamente.');
+    });
   };
 
   return (

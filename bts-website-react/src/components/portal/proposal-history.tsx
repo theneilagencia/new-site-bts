@@ -25,38 +25,13 @@ export function ProposalHistory({
   };
 
   const handleDownload = (proposal: Proposal) => {
-    // Create a simple text-based PDF download
-    const content = `
-PROPOSTA CONTRATUAL
-${proposal.id}
-
-Cliente: ${proposal.clientName}
-Email: ${proposal.clientEmail}
-País: ${proposal.country}
-
-Estruturas: ${proposal.structures.length}
-Valor: ${proposal.currency} $${proposal.amount.toLocaleString()}
-Taxa de Manutenção: ${proposal.currency} $${proposal.maintenanceFee.toLocaleString()}
-
-Data de Geração: ${formatDate(proposal.createdAt)}
-Parceiro Responsável: ${proposal.partnerName}
-
-Status: ${STATUS_LABELS[proposal.status]}
-
----
-BTS Global Corp
-Infraestrutura Global para Liberdade Empresarial
-    `.trim();
-
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `BTS-Proposta-${proposal.id}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    // Dynamically import and generate PDF
+    import('@/lib/pdf-generator').then(({ generateProposalPDF }) => {
+      generateProposalPDF(proposal);
+    }).catch(err => {
+      console.error('Erro ao gerar PDF:', err);
+      alert('Erro ao gerar PDF. Por favor, tente novamente.');
+    });
   };
 
   return (
