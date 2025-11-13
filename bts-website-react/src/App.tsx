@@ -14,7 +14,7 @@ import { Footer } from '@/components/layout/Footer';
 import { CursorGlow } from '@/components/ui/cursor-glow';
 import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { PageLoader } from '@/components/ui/page-loader';
-import { PortalApp } from '@/components/portal/PortalApp';
+import { PortalApp } from '@/components/portal/portal-app';
 import { Toaster } from '@/components/ui/Toaster';
 
 export default function App() {
