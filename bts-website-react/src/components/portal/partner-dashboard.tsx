@@ -45,7 +45,7 @@ export function PartnerDashboard({ proposals }: PartnerDashboardProps) {
     },
     {
       id: 'revenue',
-      label: 'Receita Total',
+      label: 'Valor total de Propostas',
       value: `$${totalRevenue.toLocaleString('en-US')}`,
       icon: DollarSign,
       color: 'from-purple-500 to-pink-500',
