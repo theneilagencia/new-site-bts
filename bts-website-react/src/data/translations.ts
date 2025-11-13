@@ -10,7 +10,7 @@ export const translations = {
       partner: 'Parceiros',
       contact: 'Contato',
       language: 'Idioma',
-      startStructuring: 'Criar Estrutura',
+      startStructuring: 'Área do Parceiro',
     },
     
     // Hero
@@ -31,6 +31,11 @@ export const translations = {
     
     // Privacy Section
     privacy: {
+      whyTitle: 'Por Que Existimos',
+      challengeLabel: 'O Desafio',
+      missionLabel: 'Nossa Missão',
+      whyText1: 'O mundo se tornou global, mas os sistemas que sustentam empresas e patrimônios continuam presos a fronteiras, sustentados por uma infraestrutura jurídica e financeira que ainda fala a língua do passado.',
+      whyText2: 'A BTS Global Corp nasce para libertar essa nova geração, combinando tecnologia, compliance e privacidade para tornar a estruturação internacional simples, segura e fluida — um novo paradigma de confiança global.',
       title: 'Privacidade é liberdade',
       intro: 'Cada estrutura criada e gerida pela BTS é ancorada em uma arquitetura de transparência verificável. Chamamos isso de',
       onewayMirror: 'Espelho Unidirecional de Confiança',
@@ -207,7 +212,7 @@ export const translations = {
       partner: 'Partner',
       contact: 'Contact',
       language: 'Language',
-      startStructuring: 'Create Structure',
+      startStructuring: 'Partner Area',
     },
     
     // How It Works
@@ -239,6 +244,11 @@ export const translations = {
       description: 'The world has become global, but the systems that sustain businesses and wealth remain trapped within borders, supported by a legal and financial infrastructure that still speaks the language of the past. BTS Global Corp was born to free this new generation, combining technology, compliance, and privacy to make international structuring simple, secure, and fluid — a new paradigm of global trust.',
     },
     privacy: {
+      whyTitle: 'Why We Exist',
+      challengeLabel: 'The Challenge',
+      missionLabel: 'Our Mission',
+      whyText1: 'The world has become global, but the systems that sustain businesses and wealth remain trapped within borders, supported by a legal and financial infrastructure that still speaks the language of the past.',
+      whyText2: 'BTS Global Corp was born to free this new generation, combining technology, compliance, and privacy to make international structuring simple, secure, and fluid — a new paradigm of global trust.',
       title: 'Privacy is Freedom',
       intro: 'Every structure created and managed by BTS is anchored in an architecture of verifiable transparency. We call it the',
       onewayMirror: 'One-Way Mirror of Trust',
