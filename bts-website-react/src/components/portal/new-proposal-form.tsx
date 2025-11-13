@@ -20,6 +20,7 @@ export function NewProposalForm({ onProposalCreated }: NewProposalFormProps) {
     structures: [] as StructureType[],
     description: '',
     currency: 'USD',
+    status: 'draft' as 'draft' | 'generated' | 'sent' | 'review' | 'approved' | 'rejected',
     customClauses: '',
     acceptedTerms: false,
   });
@@ -71,7 +72,7 @@ export function NewProposalForm({ onProposalCreated }: NewProposalFormProps) {
       amount: calculateTotal(),
       maintenanceFee: calculateMaintenance(),
       customClauses: formData.customClauses,
-      status: 'generated',
+      status: formData.status,
       createdAt: new Date().toISOString(),
       partnerName: user?.name || '',
       partnerId: user?.id || '',
@@ -90,6 +91,7 @@ export function NewProposalForm({ onProposalCreated }: NewProposalFormProps) {
         structures: [],
         description: '',
         currency: 'USD',
+        status: 'draft',
         customClauses: '',
         acceptedTerms: false,
       });
@@ -193,6 +195,26 @@ export function NewProposalForm({ onProposalCreated }: NewProposalFormProps) {
               placeholder="Descreva o contexto e necessidades específicas do cliente..."
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-[#C6CEDF]/30 focus:outline-none focus:border-[#1F4AFF] focus:ring-2 focus:ring-[#1F4AFF]/20 resize-none"
             />
+          </div>
+
+          {/* Status Selection */}
+          <div>
+            <label className="block text-sm text-[#C6CEDF] mb-2">Status da Proposta</label>
+            <select
+              value={formData.status}
+              onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#1F4AFF] focus:ring-2 focus:ring-[#1F4AFF]/20"
+            >
+              <option value="draft">Rascunho</option>
+              <option value="generated">Gerada</option>
+              <option value="sent">Enviada</option>
+              <option value="review">Em Análise</option>
+              <option value="approved">Aprovada</option>
+              <option value="rejected">Rejeitada</option>
+            </select>
+            <p className="text-xs text-[#C6CEDF]/50 mt-1">
+              Selecione o status atual desta proposta
+            </p>
           </div>
 
           {/* Currency and Values */}

@@ -11,7 +11,9 @@ export function PartnerDashboard({ proposals }: PartnerDashboardProps) {
   // Calculate stats
   const totalProposals = proposals.length;
   const approvedProposals = proposals.filter(p => p.status === 'approved').length;
-  const pendingProposals = proposals.filter(p => p.status === 'review' || p.status === 'generated' || p.status === 'sent').length;
+  const pendingProposals = proposals.filter(p => 
+    p.status === 'review' || p.status === 'generated' || p.status === 'sent' || p.status === 'draft'
+  ).length;
   const totalRevenue = proposals
     .filter(p => p.status === 'approved')
     .reduce((sum, p) => sum + p.amount, 0);

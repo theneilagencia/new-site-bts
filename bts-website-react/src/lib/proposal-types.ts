@@ -9,7 +9,7 @@ export interface Proposal {
   amount: number;
   maintenanceFee: number;
   customClauses: string;
-  status: 'generated' | 'review' | 'approved' | 'rejected';
+  status: 'draft' | 'generated' | 'sent' | 'review' | 'approved' | 'rejected';
   createdAt: string;
   partnerName: string;
   partnerId: string;
@@ -28,14 +28,18 @@ export interface Structure {
 export type StructureType = string;
 
 export const STATUS_LABELS = {
+  draft: 'Rascunho',
   generated: 'Gerado',
+  sent: 'Enviado',
   review: 'Em Revisão',
   approved: 'Aprovado',
   rejected: 'Rejeitado',
 };
 
 export const STATUS_COLORS = {
+  draft: '#6B7280',
   generated: '#21B6F3',
+  sent: '#3B82F6',
   review: '#FFA500',
   approved: '#00BCA5',
   rejected: '#FF5555',
