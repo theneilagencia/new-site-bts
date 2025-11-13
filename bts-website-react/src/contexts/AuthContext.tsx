@@ -17,17 +17,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const demoUsers: Array<User & { password: string }> = [
   {
     id: '1',
-    email: 'parceiro@demo.com',
-    password: 'demo123',
-    name: 'João Silva',
+    email: 'elcio@bts.com',
+    password: 'partner123',
+    name: 'Elcio Reis',
     role: 'partner',
-    company: 'Tech Solutions Ltda',
+    company: 'BTS Global Corp',
     phone: '(11) 98765-4321',
     cpf_cnpj: '12.345.678/0001-90',
   },
   {
     id: '2',
-    email: 'admin@btsglobal.com',
+    email: 'admin@bts.com',
     password: 'admin123',
     name: 'Admin BTS',
     role: 'admin',

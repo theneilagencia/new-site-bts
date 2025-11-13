@@ -153,7 +153,7 @@ export function PortalLayout({ children, activeSection, onNavigate, onBackToPubl
                 </ul>
               </nav>
 
-              <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10">
+              <div className="mt-auto p-4 border-t border-white/10">
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-[#C6CEDF] hover:bg-red-500/10 hover:text-red-400 transition-all"
