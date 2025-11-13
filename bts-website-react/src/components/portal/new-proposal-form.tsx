@@ -16,6 +16,7 @@ export function NewProposalForm({ onProposalCreated }: NewProposalFormProps) {
   const [formData, setFormData] = useState({
     clientName: '',
     clientEmail: '',
+    clientCpfCnpj: '',
     country: '',
     structures: [] as StructureType[],
     description: '',
@@ -65,6 +66,7 @@ export function NewProposalForm({ onProposalCreated }: NewProposalFormProps) {
       id: `PROP-${Date.now()}`,
       clientName: formData.clientName,
       clientEmail: formData.clientEmail,
+      clientCpfCnpj: formData.clientCpfCnpj,
       country: formData.country,
       structures: formData.structures,
       description: formData.description,
@@ -87,6 +89,7 @@ export function NewProposalForm({ onProposalCreated }: NewProposalFormProps) {
       setFormData({
         clientName: '',
         clientEmail: '',
+        clientCpfCnpj: '',
         country: '',
         structures: [],
         description: '',
@@ -140,16 +143,30 @@ export function NewProposalForm({ onProposalCreated }: NewProposalFormProps) {
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm text-[#C6CEDF] mb-2">País / Jurisdição principal *</label>
-            <input
-              type="text"
-              required
-              value={formData.country}
-              onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-              placeholder="Brasil"
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-[#C6CEDF]/30 focus:outline-none focus:border-[#1F4AFF] focus:ring-2 focus:ring-[#1F4AFF]/20"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm text-[#C6CEDF] mb-2">CPF/CNPJ *</label>
+              <input
+                type="text"
+                required
+                value={formData.clientCpfCnpj}
+                onChange={(e) => setFormData({ ...formData, clientCpfCnpj: e.target.value })}
+                placeholder="000.000.000-00 ou 00.000.000/0000-00"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-[#C6CEDF]/30 focus:outline-none focus:border-[#1F4AFF] focus:ring-2 focus:ring-[#1F4AFF]/20"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm text-[#C6CEDF] mb-2">País / Jurisdição principal *</label>
+              <input
+                type="text"
+                required
+                value={formData.country}
+                onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                placeholder="Brasil"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-[#C6CEDF]/30 focus:outline-none focus:border-[#1F4AFF] focus:ring-2 focus:ring-[#1F4AFF]/20"
+              />
+            </div>
           </div>
 
           {/* Structure Selection */}

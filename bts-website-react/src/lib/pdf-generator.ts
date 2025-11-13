@@ -148,7 +148,7 @@ export function generateProposalPDF(proposal: Proposal): void {
 
   doc.setFillColor(BTS_COLORS.s06.r, BTS_COLORS.s06.g, BTS_COLORS.s06.b);
   doc.setDrawColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
-  doc.roundedRect(margin, yPos, contentWidth, 20, 2, 2, 'FD');
+  doc.roundedRect(margin, yPos, contentWidth, 25, 2, 2, 'FD');
   
   doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
   doc.setFont('helvetica', 'bold');
@@ -156,8 +156,9 @@ export function generateProposalPDF(proposal: Proposal): void {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
   doc.text(proposal.clientEmail, margin + 5, yPos + 11);
-  doc.text(`Jurisdição: ${proposal.country}`, margin + 5, yPos + 16);
-  yPos += 26;
+  doc.text(`CPF/CNPJ: ${proposal.clientCpfCnpj}`, margin + 5, yPos + 16);
+  doc.text(`Jurisdição: ${proposal.country}`, margin + 5, yPos + 21);
+  yPos += 31;
 
   // Structures
   checkPageBreak(50);

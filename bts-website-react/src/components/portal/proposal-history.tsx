@@ -16,6 +16,8 @@ export function ProposalHistory({
   onDuplicate, 
   onDelete 
 }: ProposalHistoryProps) {
+  const [searchTerm, setSearchTerm] = React.useState('');
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('pt-BR', {
       day: '2-digit',
@@ -23,6 +25,17 @@ export function ProposalHistory({
       year: 'numeric',
     });
   };
+
+  const filteredProposals = proposals.filter(proposal => {
+    if (!searchTerm) return true;
+    const search = searchTerm.toLowerCase();
+    return (
+      proposal.clientName.toLowerCase().includes(search) ||
+      proposal.clientEmail.toLowerCase().includes(search) ||
+      proposal.clientCpfCnpj.toLowerCase().includes(search) ||
+      proposal.id.toLowerCase().includes(search)
+    );
+  });
 
   const handleDownload = (proposal: Proposal) => {
     // Dynamically import and generate PDF
@@ -45,6 +58,19 @@ export function ProposalHistory({
           Visualize e gerencie todas as propostas contratuais criadas.
         </p>
       </div>
+
+      {/* Search Bar */}
+      {proposals.length > 0 && (
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Buscar por nome, email, CPF/CNPJ ou ID da proposta..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-[#C6CEDF]/30 focus:outline-none focus:border-[#1F4AFF] focus:ring-2 focus:ring-[#1F4AFF]/20"
+          />
+        </div>
+      )}
 
       {proposals.length === 0 ? (
         <div className="bg-white/[0.04] backdrop-blur-2xl rounded-2xl border border-white/15 p-12 text-center">
@@ -83,7 +109,7 @@ export function ProposalHistory({
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/10">
-                {proposals.map((proposal, index) => (
+                {filteredProposals.map((proposal, index) => (
                   <motion.tr
                     key={proposal.id}
                     initial={{ opacity: 0, y: 20 }}
@@ -102,6 +128,7 @@ export function ProposalHistory({
                       <div>
                         <p className="text-white font-medium">{proposal.clientName}</p>
                         <p className="text-xs text-[#C6CEDF]/70">{proposal.clientEmail}</p>
+                        <p className="text-xs text-[#C6CEDF]/50 font-mono">{proposal.clientCpfCnpj}</p>
                       </div>
                     </td>
                     <td className="px-6 py-4">

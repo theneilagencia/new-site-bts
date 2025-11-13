@@ -2,6 +2,7 @@ export interface Proposal {
   id: string;
   clientName: string;
   clientEmail: string;
+  clientCpfCnpj: string;
   country: string;
   structures: string[];
   description: string;
