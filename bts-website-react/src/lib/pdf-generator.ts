@@ -99,12 +99,6 @@ export function generateProposalPDF(proposal: Proposal): void {
   doc.text(`Emitida por: ${proposal.partnerName}`, pageWidth / 2, 120, { align: 'center' });
   doc.text(`ID: ${proposal.id}`, pageWidth / 2, 126, { align: 'center' });
 
-  // BTS Logo text
-  doc.setFontSize(12);
-  doc.setTextColor(BTS_COLORS.s05.r, BTS_COLORS.s05.g, BTS_COLORS.s05.b);
-  doc.setFont('helvetica', 'bold');
-  doc.text('BTS GLOBAL CORP', pageWidth / 2, 270, { align: 'center' });
-
   // ===== PAGE 2: INTRODUCTION =====
   doc.addPage();
   yPos = margin;
