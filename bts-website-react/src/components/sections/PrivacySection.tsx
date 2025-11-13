@@ -1,189 +1,136 @@
-'use client';
-
+import React from 'react';
 import { motion } from 'framer-motion';
+import { Shield, Eye, Lock, Globe } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6 },
+  },
+};
 
 export function PrivacySection() {
   const { t } = useLanguage();
 
-  const features = [
-    {
-      number: '01',
-      text: t.privacy.feature1,
-      accent: '#00639A', // S02
-    },
-    {
-      number: '02',
-      text: t.privacy.feature2,
-      accent: '#2A7BA1', // S05
-    },
-    {
-      number: '03',
-      text: t.privacy.feature3,
-      accent: '#21B6F3', // S06
-    },
-  ];
-
   return (
-    <section className="relative overflow-hidden bg-[var(--bg-primary)] py-12 lg:py-16">
-      {/* Minimal background - igual ao hero */}
+    <section id="privacy" className="py-32 bg-white relative overflow-hidden">
+      {/* Background mesh pattern */}
       <div className="absolute inset-0 opacity-[0.03]">
-        <div
-          className="h-full w-full"
-          style={{
-            backgroundImage: `
-              linear-gradient(var(--border-color) 1px, transparent 1px),
-              linear-gradient(90deg, var(--border-color) 1px, transparent 1px)
-            `,
-            backgroundSize: '80px 80px',
-          }}
-        />
+        <div className="absolute inset-0" style={{
+          backgroundImage: `
+            linear-gradient(0deg, transparent 24%, rgba(24, 90, 180, 0.3) 25%, rgba(24, 90, 180, 0.3) 26%, transparent 27%, transparent 74%, rgba(24, 90, 180, 0.3) 75%, rgba(24, 90, 180, 0.3) 76%, transparent 77%, transparent),
+            linear-gradient(90deg, transparent 24%, rgba(24, 90, 180, 0.3) 25%, rgba(24, 90, 180, 0.3) 26%, transparent 27%, transparent 74%, rgba(24, 90, 180, 0.3) 75%, rgba(24, 90, 180, 0.3) 76%, transparent 77%, transparent)
+          `,
+          backgroundSize: '50px 50px',
+        }} />
       </div>
 
-      {/* Radial Gradient Overlay */}
-      <div className="absolute inset-0">
-        <div
-          className="absolute left-1/3 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 opacity-15"
-          style={{
-            background: 'radial-gradient(circle, #21B6F3 0%, transparent 70%)',
-          }}
-        />
-      </div>
-
-      <div className="container relative z-10 mx-auto px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
-          
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="mb-20 max-w-3xl"
-          >
-            <h2 className="mb-8 bg-gradient-to-br from-[var(--text-primary)] to-[var(--text-tertiary)] bg-clip-text text-transparent">
-              {t.privacy.privacyTitle}
-            </h2>
-
-            <p className="leading-[1.7] text-[var(--text-tertiary)]">
+      <div className="max-w-[1440px] mx-auto px-6 md:px-20 relative z-10">
+        {/* Privacy is Freedom */}
+        <motion.div
+          className="max-w-6xl mx-auto"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={containerVariants}
+        >
+          <motion.div variants={itemVariants} className="text-center mb-16">
+            <h2 className="mb-6 text-[#122539]">{t.privacy.privacyTitle}</h2>
+            <p className="text-xl text-[#6B7280] max-w-3xl mx-auto">
               {t.privacy.privacyIntro}{' '}
-              <span className="relative inline-block text-[var(--accent-primary)]">
-                <span className="relative z-10">{t.privacy.onewayMirror}</span>
+              <span className="text-[#185AB4] font-semibold relative">
+                {t.privacy.onewayMirror}
                 <motion.span
-                  className="absolute -bottom-0.5 left-0 h-px w-full bg-gradient-to-r from-[#00639A] to-[#21B6F3]"
+                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#185AB4]"
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.3 }}
+                  transition={{ delay: 0.5, duration: 0.6 }}
                 />
               </span>
               {t.privacy.privacyIntro2}
             </p>
           </motion.div>
 
-          {/* Features List */}
-          <div className="space-y-6">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.1 + index * 0.1,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className="group relative"
-              >
-                {/* Background effect on hover */}
-                <div className="absolute -inset-x-4 -inset-y-3 rounded-xl opacity-0 transition-all duration-500 group-hover:opacity-100"
-                  style={{
-                    background: `linear-gradient(90deg, ${feature.accent}05, transparent)`,
-                  }}
-                />
-
-                <div className="relative flex items-start gap-6 py-3">
-                  {/* Number */}
-                  <motion.span
-                    className="font-mono text-3xl tracking-tight text-[var(--text-tertiary)]/30"
-                    whileInView={{ opacity: [0.3, 0.6, 0.3] }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      delay: index * 0.3,
-                    }}
-                  >
-                    {feature.number}
-                  </motion.span>
-
-                  {/* Vertical line */}
-                  <div className="relative flex items-center pt-2">
-                    <div className="h-8 w-px bg-gradient-to-b from-[var(--text-tertiary)]/20 to-transparent" />
-                    <motion.div
-                      className="absolute left-0 top-2 h-2 w-px"
-                      style={{ background: feature.accent }}
-                      initial={{ scaleY: 0 }}
-                      whileInView={{ scaleY: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-                    />
-                  </div>
-
-                  {/* Text */}
-                  <div className="flex-1 pt-1.5">
-                    <p className="text-[var(--text-secondary)] transition-colors duration-300 group-hover:text-[var(--text-primary)]">
-                      {feature.text}
-                    </p>
-                  </div>
-
-                  {/* Animated indicator */}
-                  <motion.div
-                    className="mt-2 h-2 w-2 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    style={{ backgroundColor: feature.accent }}
-                    animate={{
-                      scale: [1, 1.3, 1],
-                      opacity: [0.5, 1, 0.5],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
-                  />
-                </div>
-
-                {/* Bottom line */}
-                <motion.div
-                  className="ml-20 mt-3 h-px w-24 origin-left bg-gradient-to-r to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                  style={{ backgroundImage: `linear-gradient(90deg, ${feature.accent}40, transparent)` }}
-                />
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Tagline */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-20 border-l-2 border-[#00639A]/30 pl-8"
+            className="grid md:grid-cols-3 gap-8"
+            variants={containerVariants}
           >
-            <p className="font-mono text-sm italic text-[var(--text-tertiary)]">
-              "{t.privacy.tagline}"
-            </p>
+            <motion.div
+              variants={itemVariants}
+              whileHover={{ y: -8, transition: { duration: 0.3 } }}
+              className="relative group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-[#185AB4]/5 to-transparent rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+              <div className="relative bg-white/80 backdrop-blur-sm border border-[#E8E8E8] rounded-2xl p-10 text-center h-full shadow-[0_8px_24px_rgba(18,37,57,0.06)] group-hover:shadow-[0_12px_32px_rgba(18,37,57,0.12)] transition-all duration-500">
+                <motion.div
+                  className="w-20 h-20 bg-gradient-to-br from-[#185AB4] to-[#00639A] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
+                  whileHover={{ rotate: 360, scale: 1.1 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <Eye className="w-10 h-10 text-white" />
+                </motion.div>
+                <h3 className="mb-4 text-[#122539] text-lg font-semibold">{t.privacy.feature1}</h3>
+              </div>
+            </motion.div>
+
+            <motion.div
+              variants={itemVariants}
+              whileHover={{ y: -8, transition: { duration: 0.3 } }}
+              className="relative group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-[#185AB4]/5 to-transparent rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+              <div className="relative bg-white/80 backdrop-blur-sm border border-[#E8E8E8] rounded-2xl p-10 text-center h-full shadow-[0_8px_24px_rgba(18,37,57,0.06)] group-hover:shadow-[0_12px_32px_rgba(18,37,57,0.12)] transition-all duration-500">
+                <motion.div
+                  className="w-20 h-20 bg-gradient-to-br from-[#185AB4] to-[#00639A] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
+                  whileHover={{ rotate: 360, scale: 1.1 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <Shield className="w-10 h-10 text-white" />
+                </motion.div>
+                <h3 className="mb-4 text-[#122539] text-lg font-semibold">{t.privacy.feature2}</h3>
+              </div>
+            </motion.div>
+
+            <motion.div
+              variants={itemVariants}
+              whileHover={{ y: -8, transition: { duration: 0.3 } }}
+              className="relative group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-[#185AB4]/5 to-transparent rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+              <div className="relative bg-white/80 backdrop-blur-sm border border-[#E8E8E8] rounded-2xl p-10 text-center h-full shadow-[0_8px_24px_rgba(18,37,57,0.06)] group-hover:shadow-[0_12px_32px_rgba(18,37,57,0.12)] transition-all duration-500">
+                <motion.div
+                  className="w-20 h-20 bg-gradient-to-br from-[#185AB4] to-[#00639A] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
+                  whileHover={{ rotate: 360, scale: 1.1 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <Lock className="w-10 h-10 text-white" />
+                </motion.div>
+                <h3 className="mb-4 text-[#122539] text-lg font-semibold">{t.privacy.feature3}</h3>
+              </div>
+            </motion.div>
           </motion.div>
 
-          {/* Bottom minimal divider */}
-          <motion.div
-            initial={{ opacity: 0, scaleX: 0 }}
-            whileInView={{ opacity: 1, scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.5, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="mx-auto mt-20 h-px w-full max-w-md origin-center bg-gradient-to-r from-transparent via-[var(--text-tertiary)]/20 to-transparent"
-          />
-        </div>
+          <motion.p
+            variants={itemVariants}
+            className="text-center text-xl text-[#122539] mt-12 italic font-medium"
+          >
+            {t.privacy.tagline}
+          </motion.p>
+        </motion.div>
       </div>
     </section>
   );
