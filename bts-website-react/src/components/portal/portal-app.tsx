@@ -9,6 +9,7 @@ import { PartnerDashboard } from './partner-dashboard';
 import { AdminDashboard } from './admin-dashboard';
 import { AdminProposals } from './admin-proposals';
 import { AdminUsers } from './admin-users';
+import { NotificationSettings } from './notification-settings';
 import { PDFViewerModal } from './pdf-viewer-modal';
 import { Proposal } from '@/lib/proposal-types';
 import { User } from '@/contexts/AuthContext';
@@ -175,6 +176,8 @@ export function PortalApp({ onBackToPublic }: PortalAppProps) {
               onToggleStatus={handleToggleUserStatus}
             />
           );
+        case 'notifications':
+          return <NotificationSettings />;
         default:
           return (
             <AdminDashboard

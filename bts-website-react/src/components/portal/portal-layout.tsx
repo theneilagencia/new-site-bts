@@ -11,7 +11,8 @@ import {
   X,
   Users,
   LayoutDashboard,
-  FileCheck
+  FileCheck,
+  Settings
 } from 'lucide-react';
 
 interface PortalLayoutProps {
@@ -36,6 +37,7 @@ export function PortalLayout({ children, activeSection, onNavigate, onBackToPubl
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'proposals', label: 'Propostas', icon: FileCheck },
     { id: 'users', label: 'Usuários', icon: Users },
+    { id: 'notifications', label: 'Notificações', icon: Settings },
   ];
 
   const menuItems = user?.role === 'admin' ? adminMenu : partnerMenu;
