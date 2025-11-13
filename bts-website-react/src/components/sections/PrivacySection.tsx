@@ -39,6 +39,28 @@ export function PrivacySection() {
       </div>
 
       <div className="max-w-[1440px] mx-auto px-6 md:px-20 relative z-10">
+        {/* Why BTS Exists */}
+        <motion.div
+          className="max-w-3xl mx-auto mb-32 text-center"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={containerVariants}
+        >
+          <motion.div variants={itemVariants} className="flex items-center justify-center gap-3 mb-8">
+            <Globe className="w-8 h-8 text-[#185AB4]" />
+            <h2 className="text-[#122539]">{t.privacy.whyTitle}</h2>
+          </motion.div>
+          
+          <motion.p variants={itemVariants} className="text-xl text-[#6B7280] leading-relaxed mb-6">
+            {t.privacy.whyText1}
+          </motion.p>
+          
+          <motion.p variants={itemVariants} className="text-xl text-[#122539] leading-relaxed">
+            {t.privacy.whyText2}
+          </motion.p>
+        </motion.div>
+
         {/* Privacy is Freedom */}
         <motion.div
           className="max-w-6xl mx-auto"
