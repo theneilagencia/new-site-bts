@@ -1,0 +1,11 @@
+#!/bin/bash
+echo "📦 Aguardando imagens de logo do usuário..."
+echo "Por enquanto, usando logo baseada em texto"
+echo ""
+echo "🎯 Logo atual: Texto estilizado 'BTS Global'"
+echo "📍 Localização: /workspace/bts-website-react/src/components/ui/BtsLogo.tsx"
+echo ""
+echo "⚠️  IMPORTANTE: Quando o usuário fornecer as imagens:"
+echo "   1. Salvar em: /workspace/bts-website-react/src/assets/"
+echo "   2. Nomes sugeridos: bts-logo-dark.png e bts-logo-light.png"
+echo "   3. Atualizar BtsLogo.tsx para usar as imagens"
