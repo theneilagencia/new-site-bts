@@ -42,7 +42,11 @@ export function PortalLayout({ children, activeSection, onNavigate, onBackToPubl
 
   const handleLogout = () => {
     logout();
-    window.location.href = '/';
+    if (onBackToPublic) {
+      onBackToPublic();
+    } else {
+      window.location.reload();
+    }
   };
 
   return (
