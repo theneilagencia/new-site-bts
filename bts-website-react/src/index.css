@@ -1,139 +1,199 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* BTS Figma Colors - Exact Match */
-    --color-dark: #0A0E27;
-    --color-deep-blue: #0A2540;
-    --color-primary-blue: #185AB4;
-    --color-bright-blue: #006DA5;
-    --color-cyan: #00D9FF;
-    --color-white: #FFFFFF;
-    --color-gray-light: #F5F7FA;
-    --color-gray-medium: #8B99A8;
+    /* BTS Brand Colors - Official Palette */
+    --color-bts-dark-blue: #1B2E3E;
+    --color-bts-black: #000000;
+    --color-bts-white: #FFFFFF;
     
-    /* Legacy BTS Colors */
-    --color-bts-primary: #185AB4;
+    /* BTS Highlight */
+    --color-bts-highlight: #1F4AFF;
+    
+    /* BTS Secondary Colors - Exact from Brand Guide */
+    --color-bts-s01: #1E365B;
     --color-bts-s02: #00639A;
-    --color-bts-s03: #2A7BA1;
+    --color-bts-s03: #00BCA5;
     --color-bts-s04: #2A7BA1;
     --color-bts-s05: #21B6F3;
+    --color-bts-s06: #E8E8E8;
     
-    /* Light Theme */
-    --color-bg-primary: #0A2540;
-    --color-bg-secondary: #122539;
-    --color-text-primary: #FFFFFF;
-    --color-text-secondary: #F5F7FA;
-    --color-text-tertiary: #8B99A8;
-    --color-accent-primary: #185AB4;
-    --color-accent-secondary: #006DA5;
+    /* Monochrome scale with BTS Dark Blue base */
+    --color-gray-10: rgba(255, 255, 255, 0.10);
+    --color-gray-20: rgba(255, 255, 255, 0.20);
+    --color-gray-40: rgba(255, 255, 255, 0.40);
+    --color-gray-60: rgba(255, 255, 255, 0.60);
+    --color-gray-80: rgba(255, 255, 255, 0.80);
     
-    /* Spacing - Figma Precise */
-    --spacing-xs: 4px;
-    --spacing-sm: 8px;
-    --spacing-md: 16px;
-    --spacing-lg: 24px;
-    --spacing-xl: 32px;
-    --spacing-2xl: 48px;
-    --spacing-3xl: 64px;
-    --spacing-4xl: 96px;
-    --spacing-5xl: 128px;
-    --spacing-6xl: 160px;
-    --spacing-section: 128px;
+    /* Spacing - generous whitespace */
+    --spacing-section: 96px;
+    --spacing-internal: 64px;
     
-    /* Typography */
-    --font-sans: 'Inter', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', 'Monaco', monospace;
-    
-    /* Animations */
-    --transition-fast: 150ms;
-    --transition-base: 200ms;
-    --transition-normal: 300ms;
-    --transition-slow: 500ms;
+    /* Effects - minimal */
+    --shadow-subtle: 0 0 40px rgba(31, 74, 255, 0.15);
+    --glow-highlight: 0 0 30px rgba(0, 188, 238, 0.3);
+  }
+
+  /* Light Mode */
+  [data-theme='light'] {
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F8F9FA;
+    --bg-tertiary: #E8E8E8;
+    --text-primary: #1B2B3E;
+    --text-secondary: #1E2B3E;
+    --text-tertiary: rgba(27, 43, 62, 0.7);
+    --border-color: rgba(27, 43, 62, 0.1);
+    --accent-primary: #00639A;
+    --accent-secondary: #21B6F3;
+    --accent-glow: rgba(0, 99, 154, 0.15);
   }
 
   /* Dark Mode */
-  .dark {
-    --color-bg-primary: #0f172a;
-    --color-bg-secondary: #1e293b;
-    --color-text-primary: #f8fafc;
-    --color-text-secondary: #cbd5e1;
-    --color-text-tertiary: #94a3b8;
+  [data-theme='dark'] {
+    --bg-primary: #0B1221;
+    --bg-secondary: #1B2B3E;
+    --bg-tertiary: #1E2B3E;
+    --text-primary: #FFFFFF;
+    --text-secondary: rgba(255, 255, 255, 0.9);
+    --text-tertiary: rgba(255, 255, 255, 0.6);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --accent-primary: #00639A;
+    --accent-secondary: #21B6F3;
+    --accent-glow: rgba(0, 99, 154, 0.2);
   }
 
-  /* Base styles */
   * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
   }
 
   body {
-    font-family: 'Montserrat', var(--font-sans);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    @apply antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-weight: 400;
-    background: linear-gradient(135deg, #122539 0%, #18365B 50%, #006DA5 100%);
-    background-attachment: fixed;
-    color: var(--color-text-primary);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    transition: background-color 300ms ease, color 300ms ease;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Montserrat', var(--font-sans);
-    font-weight: 800;
-    letter-spacing: -0.02em;
+    cursor: default;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
-  /* Scrollbar */
+  /* Dark mode gradient background */
+  [data-theme='dark'] body {
+    background: linear-gradient(180deg, #0B1221 0%, #1B2B3E 100%);
+  }
+
+  /* Light mode gradient background */
+  [data-theme='light'] body {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8F9FA 100%);
+  }
+
+  h1 {
+    font-size: 88px;
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    font-family: 'Inter Tight', 'Inter', sans-serif;
+  }
+
+  h2 {
+    font-size: 64px;
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-family: 'Inter Tight', 'Inter', sans-serif;
+  }
+
+  h3 {
+    font-size: 40px;
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    font-family: 'Inter Tight', 'Inter', sans-serif;
+  }
+
+  h4 {
+    font-size: 24px;
+    line-height: 1.3;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+  }
+
+  p {
+    font-size: 18px;
+    line-height: 1.7;
+    font-weight: 400;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-tertiary);
+  }
+
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 40px;
+      line-height: 1.15;
+    }
+
+    h2 {
+      font-size: 32px;
+    }
+
+    h3 {
+      font-size: 24px;
+    }
+
+    p {
+      font-size: 16px;
+    }
+  }
+
+  /* Smooth scroll */
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* Account for fixed header */
+  }
+
+  /* Smooth section transitions */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* Custom scrollbar - Theme aware */
   ::-webkit-scrollbar {
-    width: 10px;
+    width: 6px;
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--color-bg-secondary);
+    background: var(--bg-primary);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--color-accent-primary);
-    border-radius: 5px;
+    background: var(--accent-glow);
+    border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-accent-secondary);
-  }
-}
-
-@layer utilities {
-  .container {
-    @apply mx-auto px-6 lg:px-8;
+    background: var(--accent-primary);
   }
 
-  .glass {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  /* Selection - Theme aware */
+  ::selection {
+    background: var(--accent-glow);
+    color: var(--text-primary);
   }
 
-  .glass-md {
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.25);
+  /* Custom Animations */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
   }
 
-  .glass-strong {
-    background: rgba(255, 255, 255, 0.18);
-    backdrop-filter: blur(32px) saturate(200%);
-    -webkit-backdrop-filter: blur(32px) saturate(200%);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.3);
+  .animate-shimmer {
+    animation: shimmer 3s infinite;
   }
 }
