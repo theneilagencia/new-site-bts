@@ -26,14 +26,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       select: {
         id: true,
         email: true,
-        name: true,
-        role: true,
-        company: true,
-        phone: true,
-        city: true,
-        state: true,
         credits: true,
-        createdAt: true,
       },
     });
 
@@ -41,14 +34,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return unauthorized(res, 'User not found');
     }
 
-    return success(res, user);
+    const hasCredits = user.credits > 0;
+    const isOutOfCredits = user.credits === 0;
+
+    return success(res, {
+      credits: user.credits,
+      hasCredits,
+      isOutOfCredits,
+      message: isOutOfCredits 
+        ? 'Você está sem créditos. Por favor, entre em contato para recarregar.' 
+        : `Você possui ${user.credits} crédito${user.credits !== 1 ? 's' : ''} disponível${user.credits !== 1 ? 'eis' : ''}.`,
+    });
   } catch (err: any) {
-    console.error('Get user error:', err);
+    console.error('Get credit status error:', err);
     
     if (err.message === 'Unauthorized') {
       return unauthorized(res);
     }
     
-    return error(res, 'Failed to get user', 500);
+    return error(res, 'Failed to get credit status', 500);
   }
 }
