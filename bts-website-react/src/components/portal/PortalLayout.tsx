@@ -10,12 +10,18 @@ import { useLanguage } from '@/contexts/LanguageContext';
 interface PortalLayoutProps {
   children: ReactNode;
   currentPage?: string;
+  onBackToPublic?: () => void;
 }
 
-export function PortalLayout({ children, currentPage = 'dashboard' }: PortalLayoutProps) {
+export function PortalLayout({ children, currentPage = 'dashboard', onBackToPublic }: PortalLayoutProps) {
   const { user, logout, isAdmin } = useAuth();
   const { t } = useLanguage();
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  
+  const handleLogout = () => {
+    logout();
+    if (onBackToPublic) onBackToPublic();
+  };
 
   const partnerNavItems = [
     { key: 'dashboard', label: t.portal.nav.dashboard, icon: LayoutDashboard, href: '#dashboard', badge: undefined },
@@ -113,7 +119,7 @@ export function PortalLayout({ children, currentPage = 'dashboard' }: PortalLayo
             </div>
             
             <motion.button
-              onClick={logout}
+                onClick={handleLogout}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="flex w-full items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-300 transition-colors hover:bg-white/10"

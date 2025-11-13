@@ -8,7 +8,11 @@ import { NewProposal } from './NewProposal';
 import { ProposalsHistory } from './ProposalsHistory';
 import { Profile } from './Profile';
 
-export function PortalApp() {
+interface PortalAppProps {
+  onBackToPublic?: () => void;
+}
+
+export function PortalApp({ onBackToPublic }: PortalAppProps = {}) {
   const { user } = useAuth();
   const [currentPage, setCurrentPage] = useState<string>('dashboard');
 
@@ -40,7 +44,7 @@ export function PortalApp() {
   };
 
   return (
-    <PortalLayout currentPage={currentPage}>
+    <PortalLayout currentPage={currentPage} onBackToPublic={onBackToPublic}>
       <AnimatePresence mode="wait">
         {renderPage()}
       </AnimatePresence>
