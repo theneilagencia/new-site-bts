@@ -26,13 +26,13 @@ export function PrivacySection() {
   const { t } = useLanguage();
 
   return (
-    <section id="privacy" className="py-32 bg-white relative overflow-hidden">
+    <section id="privacy" className="py-32 bg-[var(--bg-primary)] relative overflow-hidden">
       {/* Background mesh pattern */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div className="absolute inset-0" style={{
           backgroundImage: `
-            linear-gradient(0deg, transparent 24%, rgba(24, 90, 180, 0.3) 25%, rgba(24, 90, 180, 0.3) 26%, transparent 27%, transparent 74%, rgba(24, 90, 180, 0.3) 75%, rgba(24, 90, 180, 0.3) 76%, transparent 77%, transparent),
-            linear-gradient(90deg, transparent 24%, rgba(24, 90, 180, 0.3) 25%, rgba(24, 90, 180, 0.3) 26%, transparent 27%, transparent 74%, rgba(24, 90, 180, 0.3) 75%, rgba(24, 90, 180, 0.3) 76%, transparent 77%, transparent)
+            linear-gradient(0deg, transparent 24%, var(--border-color) 25%, var(--border-color) 26%, transparent 27%, transparent 74%, var(--border-color) 75%, var(--border-color) 76%, transparent 77%, transparent),
+            linear-gradient(90deg, transparent 24%, var(--border-color) 25%, var(--border-color) 26%, transparent 27%, transparent 74%, var(--border-color) 75%, var(--border-color) 76%, transparent 77%, transparent)
           `,
           backgroundSize: '50px 50px',
         }} />
@@ -48,15 +48,15 @@ export function PrivacySection() {
           variants={containerVariants}
         >
           <motion.div variants={itemVariants} className="flex items-center justify-center gap-3 mb-8">
-            <Globe className="w-8 h-8 text-[#185AB4]" />
-            <h2 className="text-[#122539]">{t.privacy.whyTitle}</h2>
+            <Globe className="w-8 h-8 text-[var(--accent-primary)]" />
+            <h2 className="text-[var(--text-primary)]">{t.privacy.whyTitle}</h2>
           </motion.div>
           
-          <motion.p variants={itemVariants} className="text-xl text-[#6B7280] leading-relaxed mb-6">
+          <motion.p variants={itemVariants} className="text-xl text-[var(--text-secondary)] leading-relaxed mb-6">
             {t.privacy.whyText1}
           </motion.p>
           
-          <motion.p variants={itemVariants} className="text-xl text-[#122539] leading-relaxed">
+          <motion.p variants={itemVariants} className="text-xl text-[var(--text-primary)] leading-relaxed font-semibold">
             {t.privacy.whyText2}
           </motion.p>
         </motion.div>
@@ -70,13 +70,13 @@ export function PrivacySection() {
           variants={containerVariants}
         >
           <motion.div variants={itemVariants} className="text-center mb-16">
-            <h2 className="mb-6 text-[#122539]">{t.privacy.privacyTitle}</h2>
-            <p className="text-xl text-[#6B7280] max-w-3xl mx-auto">
+            <h2 className="mb-6 text-[var(--text-primary)]">{t.privacy.privacyTitle}</h2>
+            <p className="text-xl text-[var(--text-secondary)] max-w-3xl mx-auto">
               {t.privacy.privacyIntro}{' '}
-              <span className="text-[#185AB4] font-semibold relative">
+              <span className="text-[var(--accent-primary)] font-semibold relative">
                 {t.privacy.onewayMirror}
                 <motion.span
-                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#185AB4]"
+                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[var(--accent-primary)]"
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
                   viewport={{ once: true }}
@@ -96,16 +96,16 @@ export function PrivacySection() {
               whileHover={{ y: -8, transition: { duration: 0.3 } }}
               className="relative group"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-[#185AB4]/5 to-transparent rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500" />
-              <div className="relative bg-white/80 backdrop-blur-sm border border-[#E8E8E8] rounded-2xl p-10 text-center h-full shadow-[0_8px_24px_rgba(18,37,57,0.06)] group-hover:shadow-[0_12px_32px_rgba(18,37,57,0.12)] transition-all duration-500">
+              <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-primary)]/5 to-transparent rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+              <div className="relative bg-[var(--bg-secondary)]/80 backdrop-blur-sm border border-[var(--border-color)] rounded-2xl p-10 text-center h-full shadow-[0_8px_24px_rgba(0,0,0,0.06)] group-hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)] transition-all duration-500">
                 <motion.div
-                  className="w-20 h-20 bg-gradient-to-br from-[#185AB4] to-[#00639A] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
+                  className="w-20 h-20 bg-gradient-to-br from-[var(--accent-primary)] to-[#00639A] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
                   whileHover={{ rotate: 360, scale: 1.1 }}
                   transition={{ duration: 0.6 }}
                 >
                   <Eye className="w-10 h-10 text-white" />
                 </motion.div>
-                <h3 className="mb-4 text-[#122539] text-lg font-semibold">{t.privacy.feature1}</h3>
+                <h3 className="mb-4 text-[var(--text-primary)] text-lg font-semibold">{t.privacy.feature1}</h3>
               </div>
             </motion.div>
 
@@ -114,16 +114,16 @@ export function PrivacySection() {
               whileHover={{ y: -8, transition: { duration: 0.3 } }}
               className="relative group"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-[#185AB4]/5 to-transparent rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500" />
-              <div className="relative bg-white/80 backdrop-blur-sm border border-[#E8E8E8] rounded-2xl p-10 text-center h-full shadow-[0_8px_24px_rgba(18,37,57,0.06)] group-hover:shadow-[0_12px_32px_rgba(18,37,57,0.12)] transition-all duration-500">
+              <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-primary)]/5 to-transparent rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+              <div className="relative bg-[var(--bg-secondary)]/80 backdrop-blur-sm border border-[var(--border-color)] rounded-2xl p-10 text-center h-full shadow-[0_8px_24px_rgba(0,0,0,0.06)] group-hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)] transition-all duration-500">
                 <motion.div
-                  className="w-20 h-20 bg-gradient-to-br from-[#185AB4] to-[#00639A] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
+                  className="w-20 h-20 bg-gradient-to-br from-[var(--accent-primary)] to-[#00639A] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
                   whileHover={{ rotate: 360, scale: 1.1 }}
                   transition={{ duration: 0.6 }}
                 >
                   <Shield className="w-10 h-10 text-white" />
                 </motion.div>
-                <h3 className="mb-4 text-[#122539] text-lg font-semibold">{t.privacy.feature2}</h3>
+                <h3 className="mb-4 text-[var(--text-primary)] text-lg font-semibold">{t.privacy.feature2}</h3>
               </div>
             </motion.div>
 
@@ -132,23 +132,23 @@ export function PrivacySection() {
               whileHover={{ y: -8, transition: { duration: 0.3 } }}
               className="relative group"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-[#185AB4]/5 to-transparent rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500" />
-              <div className="relative bg-white/80 backdrop-blur-sm border border-[#E8E8E8] rounded-2xl p-10 text-center h-full shadow-[0_8px_24px_rgba(18,37,57,0.06)] group-hover:shadow-[0_12px_32px_rgba(18,37,57,0.12)] transition-all duration-500">
+              <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-primary)]/5 to-transparent rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+              <div className="relative bg-[var(--bg-secondary)]/80 backdrop-blur-sm border border-[var(--border-color)] rounded-2xl p-10 text-center h-full shadow-[0_8px_24px_rgba(0,0,0,0.06)] group-hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)] transition-all duration-500">
                 <motion.div
-                  className="w-20 h-20 bg-gradient-to-br from-[#185AB4] to-[#00639A] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
+                  className="w-20 h-20 bg-gradient-to-br from-[var(--accent-primary)] to-[#00639A] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
                   whileHover={{ rotate: 360, scale: 1.1 }}
                   transition={{ duration: 0.6 }}
                 >
                   <Lock className="w-10 h-10 text-white" />
                 </motion.div>
-                <h3 className="mb-4 text-[#122539] text-lg font-semibold">{t.privacy.feature3}</h3>
+                <h3 className="mb-4 text-[var(--text-primary)] text-lg font-semibold">{t.privacy.feature3}</h3>
               </div>
             </motion.div>
           </motion.div>
 
           <motion.p
             variants={itemVariants}
-            className="text-center text-xl text-[#122539] mt-12 italic font-medium"
+            className="text-center text-xl text-[var(--text-primary)] mt-12 italic font-medium"
           >
             {t.privacy.tagline}
           </motion.p>
