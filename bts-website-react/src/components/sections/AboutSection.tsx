@@ -202,23 +202,20 @@ export function AboutSection() {
               transition={{ duration: 0.6, delay: 0.05 }}
             >
               {/* Video */}
-              <div className="group relative overflow-hidden rounded-xl">
+              <div className="group relative overflow-hidden rounded-xl border border-[var(--border-color)]/20">
                 <div className="relative aspect-video overflow-hidden bg-[var(--bg-secondary)]/60">
                   <iframe
                     className="h-full w-full"
-                    src="https://www.youtube.com/embed/QLFHDlVA-1w"
+                    src="https://www.youtube.com/embed/QLFHDlVA-1w?rel=0&modestbranding=1&controls=1"
                     title="BTS Global Corp - Pilares"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                   />
-                  
-                  {/* Minimal overlay */}
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)]/10 to-transparent" />
                 </div>
 
                 {/* Subtle glow on hover */}
-                <div className="absolute -inset-px rounded-xl bg-gradient-to-br from-[#00639A]/0 to-[#21B6F3]/0 opacity-0 transition-opacity duration-500 group-hover:from-[#00639A]/10 group-hover:to-[#21B6F3]/10 group-hover:opacity-100" />
+                <div className="absolute -inset-px -z-10 rounded-xl bg-gradient-to-br from-[#00639A]/0 to-[#21B6F3]/0 opacity-0 transition-opacity duration-500 group-hover:from-[#00639A]/10 group-hover:to-[#21B6F3]/10 group-hover:opacity-100" />
               </div>
             </motion.div>
 
