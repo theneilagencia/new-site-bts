@@ -1,6 +1,21 @@
 import jsPDF from 'jspdf';
 import { Proposal, STRUCTURE_OPTIONS } from './proposal-types';
 
+// BTS Official Color Palette
+const BTS_COLORS = {
+  darkBlue: { r: 27, g: 46, b: 62 },      // #1B2E3E
+  black: { r: 0, g: 0, b: 0 },            // #000000
+  white: { r: 255, g: 255, b: 255 },      // #FFFFFF
+  highlight: { r: 31, g: 74, b: 255 },    // #1F4AFF
+  s01: { r: 30, g: 54, b: 91 },           // #1E365B
+  s02: { r: 0, g: 99, b: 154 },           // #00639A
+  s03: { r: 0, g: 188, b: 165 },          // #00BCA5
+  s04: { r: 42, g: 123, b: 161 },         // #2A7BA1
+  s05: { r: 33, g: 182, b: 243 },         // #21B6F3
+  s06: { r: 232, g: 232, b: 232 },        // #E8E8E8
+  gray: { r: 198, g: 206, b: 223 },       // Text gray
+};
+
 export function generateProposalPDF(proposal: Proposal): void {
   const doc = new jsPDF({
     orientation: 'portrait',
@@ -49,22 +64,22 @@ export function generateProposalPDF(proposal: Proposal): void {
   };
 
   // ===== COVER PAGE =====
-  // Header gradient simulation with rectangles
-  doc.setFillColor(31, 74, 255);
-  doc.rect(0, 0, pageWidth, 60, 'F');
-  doc.setFillColor(0, 229, 255);
+  // Header gradient simulation with BTS colors
+  doc.setFillColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
+  doc.rect(0, 0, pageWidth, 50, 'F');
+  doc.setFillColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.rect(0, 50, pageWidth, 10, 'F');
 
   // Confidential badge
-  doc.setFillColor(255, 255, 255);
-  doc.setDrawColor(0, 229, 255);
+  doc.setFillColor(BTS_COLORS.white.r, BTS_COLORS.white.g, BTS_COLORS.white.b);
+  doc.setDrawColor(BTS_COLORS.s05.r, BTS_COLORS.s05.g, BTS_COLORS.s05.b);
   doc.roundedRect(margin, 70, 30, 8, 2, 2, 'FD');
-  doc.setTextColor(31, 74, 255);
+  doc.setTextColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.setFontSize(8);
   doc.text('CONFIDENCIAL', margin + 2, 75);
 
   // Title
-  doc.setTextColor(255, 255, 255);
+  doc.setTextColor(BTS_COLORS.white.r, BTS_COLORS.white.g, BTS_COLORS.white.b);
   doc.setFontSize(32);
   doc.setFont('helvetica', 'bold');
   doc.text('PROPOSTA', pageWidth / 2, 25, { align: 'center' });
@@ -76,7 +91,7 @@ export function generateProposalPDF(proposal: Proposal): void {
   doc.text(proposal.clientName, pageWidth / 2, 95, { align: 'center' });
   
   doc.setFontSize(10);
-  doc.setTextColor(200, 206, 223);
+  doc.setTextColor(BTS_COLORS.gray.r, BTS_COLORS.gray.g, BTS_COLORS.gray.b);
   doc.text(formatDate(proposal.createdAt), pageWidth / 2, 105, { align: 'center' });
 
   // Footer info
@@ -86,7 +101,7 @@ export function generateProposalPDF(proposal: Proposal): void {
 
   // BTS Logo text
   doc.setFontSize(12);
-  doc.setTextColor(0, 229, 255);
+  doc.setTextColor(BTS_COLORS.s05.r, BTS_COLORS.s05.g, BTS_COLORS.s05.b);
   doc.setFont('helvetica', 'bold');
   doc.text('BTS GLOBAL CORP', pageWidth / 2, 270, { align: 'center' });
 
@@ -95,18 +110,18 @@ export function generateProposalPDF(proposal: Proposal): void {
   yPos = margin;
 
   // Section 1
-  doc.setTextColor(255, 255, 255);
+  doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
   doc.text('1. Apresentação da BTS Global Corp', margin, yPos);
   yPos += 10;
 
-  doc.setDrawColor(255, 255, 255);
+  doc.setDrawColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.setLineWidth(0.5);
   doc.line(margin, yPos, pageWidth - margin, yPos);
   yPos += 8;
 
-  doc.setTextColor(198, 206, 223);
+  doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
   
@@ -120,30 +135,31 @@ export function generateProposalPDF(proposal: Proposal): void {
 
   // Section 2: Scope
   checkPageBreak(40);
-  doc.setTextColor(255, 255, 255);
+  doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
   doc.text('2. Escopo da Proposta', margin, yPos);
   yPos += 10;
 
-  doc.setDrawColor(255, 255, 255);
+  doc.setDrawColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.line(margin, yPos, pageWidth - margin, yPos);
   yPos += 8;
 
   // Client box
-  doc.setTextColor(198, 206, 223);
+  doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
   doc.text('Cliente:', margin, yPos);
   yPos += 6;
 
-  doc.setFillColor(255, 255, 255, 0.02);
-  doc.setDrawColor(255, 255, 255, 0.1);
+  doc.setFillColor(BTS_COLORS.s06.r, BTS_COLORS.s06.g, BTS_COLORS.s06.b);
+  doc.setDrawColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.roundedRect(margin, yPos, contentWidth, 20, 2, 2, 'FD');
   
-  doc.setTextColor(255, 255, 255);
+  doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
+  doc.setFont('helvetica', 'bold');
   doc.text(proposal.clientName, margin + 5, yPos + 6);
-  doc.setTextColor(198, 206, 223);
+  doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
   doc.text(proposal.clientEmail, margin + 5, yPos + 11);
   doc.text(`Jurisdição: ${proposal.country}`, margin + 5, yPos + 16);
@@ -151,6 +167,7 @@ export function generateProposalPDF(proposal: Proposal): void {
 
   // Structures
   checkPageBreak(50);
+  doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
   doc.setFontSize(10);
   doc.text('Estruturas Selecionadas:', margin, yPos);
   yPos += 6;
@@ -161,19 +178,19 @@ export function generateProposalPDF(proposal: Proposal): void {
     
     checkPageBreak(25);
     
-    doc.setFillColor(255, 255, 255, 0.02);
-    doc.setDrawColor(255, 255, 255, 0.1);
+    doc.setFillColor(BTS_COLORS.s06.r, BTS_COLORS.s06.g, BTS_COLORS.s06.b);
+    doc.setDrawColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
     doc.roundedRect(margin, yPos, contentWidth, 18, 2, 2, 'FD');
     
-    doc.setTextColor(255, 255, 255);
+    doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
     doc.text(structure.label, margin + 5, yPos + 6);
     
-    doc.setTextColor(0, 229, 255);
+    doc.setTextColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
     doc.text(`$${structure.basePrice.toLocaleString()}`, pageWidth - margin - 5, yPos + 6, { align: 'right' });
     
-    doc.setTextColor(198, 206, 223);
+    doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     const descLines = doc.splitTextToSize(structure.description, contentWidth - 15);
@@ -185,17 +202,17 @@ export function generateProposalPDF(proposal: Proposal): void {
   // Description if exists
   if (proposal.description) {
     checkPageBreak(30);
-    doc.setTextColor(198, 206, 223);
+    doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
     doc.setFontSize(10);
     doc.text('Descrição do Caso:', margin, yPos);
     yPos += 6;
 
-    doc.setFillColor(255, 255, 255, 0.02);
-    doc.setDrawColor(255, 255, 255, 0.1);
+    doc.setFillColor(BTS_COLORS.s06.r, BTS_COLORS.s06.g, BTS_COLORS.s06.b);
+    doc.setDrawColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
     const descHeight = Math.max(20, Math.ceil(proposal.description.length / 80) * 5);
     doc.roundedRect(margin, yPos, contentWidth, descHeight, 2, 2, 'FD');
     
-    doc.setTextColor(198, 206, 223);
+    doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
     doc.setFontSize(9);
     yPos += addWrappedText(proposal.description, margin + 5, yPos + 5, contentWidth - 10, 9);
     yPos += 10;
@@ -205,13 +222,13 @@ export function generateProposalPDF(proposal: Proposal): void {
   doc.addPage();
   yPos = margin;
 
-  doc.setTextColor(255, 255, 255);
+  doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
   doc.text('3. Condições Comerciais e Operacionais', margin, yPos);
   yPos += 10;
 
-  doc.setDrawColor(255, 255, 255);
+  doc.setDrawColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.line(margin, yPos, pageWidth - margin, yPos);
   yPos += 10;
 
@@ -219,29 +236,29 @@ export function generateProposalPDF(proposal: Proposal): void {
   const boxWidth = (contentWidth - 5) / 2;
   
   // Total value box
-  doc.setFillColor(255, 255, 255, 0.02);
-  doc.setDrawColor(255, 255, 255, 0.1);
+  doc.setFillColor(BTS_COLORS.s06.r, BTS_COLORS.s06.g, BTS_COLORS.s06.b);
+  doc.setDrawColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.roundedRect(margin, yPos, boxWidth, 20, 2, 2, 'FD');
   
-  doc.setTextColor(198, 206, 223);
+  doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
   doc.setFontSize(8);
   doc.text('Valor Total da Estrutura', margin + 5, yPos + 6);
   
-  doc.setTextColor(255, 255, 255);
+  doc.setTextColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
   doc.text(`${proposal.currency} $${proposal.amount.toLocaleString()}`, margin + 5, yPos + 14);
 
   // Maintenance box
-  doc.setFillColor(255, 255, 255, 0.02);
-  doc.setDrawColor(255, 255, 255, 0.1);
+  doc.setFillColor(BTS_COLORS.s06.r, BTS_COLORS.s06.g, BTS_COLORS.s06.b);
+  doc.setDrawColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.roundedRect(margin + boxWidth + 5, yPos, boxWidth, 20, 2, 2, 'FD');
   
-  doc.setTextColor(198, 206, 223);
+  doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
   doc.setFontSize(8);
   doc.text('Manutenção Anual', margin + boxWidth + 10, yPos + 6);
   
-  doc.setTextColor(255, 255, 255);
+  doc.setTextColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
   doc.text(`${proposal.currency} $${proposal.maintenanceFee.toLocaleString()}`, margin + boxWidth + 10, yPos + 14);
@@ -249,11 +266,11 @@ export function generateProposalPDF(proposal: Proposal): void {
   yPos += 26;
 
   // Additional terms box
-  doc.setFillColor(255, 255, 255, 0.02);
-  doc.setDrawColor(255, 255, 255, 0.1);
+  doc.setFillColor(BTS_COLORS.s06.r, BTS_COLORS.s06.g, BTS_COLORS.s06.b);
+  doc.setDrawColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.roundedRect(margin, yPos, contentWidth, 25, 2, 2, 'FD');
   
-  doc.setTextColor(198, 206, 223);
+  doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.text('Prazo de Execução: 30 a 45 dias úteis após aprovação', margin + 5, yPos + 6);
@@ -264,13 +281,13 @@ export function generateProposalPDF(proposal: Proposal): void {
 
   // Section 4: Terms
   checkPageBreak(40);
-  doc.setTextColor(255, 255, 255);
+  doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
   doc.text('4. Termos e Cláusulas Contratuais', margin, yPos);
   yPos += 10;
 
-  doc.setDrawColor(255, 255, 255);
+  doc.setDrawColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.line(margin, yPos, pageWidth - margin, yPos);
   yPos += 10;
 
@@ -295,13 +312,13 @@ export function generateProposalPDF(proposal: Proposal): void {
 
   clauses.forEach(clause => {
     checkPageBreak(20);
-    doc.setTextColor(255, 255, 255);
+    doc.setTextColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.text(clause.title, margin, yPos);
     yPos += 6;
     
-    doc.setTextColor(198, 206, 223);
+    doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     yPos += addWrappedText(clause.text, margin, yPos, contentWidth, 9);
@@ -311,18 +328,18 @@ export function generateProposalPDF(proposal: Proposal): void {
   // Custom clauses if exist
   if (proposal.customClauses) {
     checkPageBreak(25);
-    doc.setTextColor(255, 255, 255);
+    doc.setTextColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.text('4.5 Cláusulas Específicas', margin, yPos);
     yPos += 6;
 
-    doc.setFillColor(255, 255, 255, 0.02);
-    doc.setDrawColor(255, 255, 255, 0.1);
+    doc.setFillColor(BTS_COLORS.s06.r, BTS_COLORS.s06.g, BTS_COLORS.s06.b);
+    doc.setDrawColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
     const customHeight = Math.max(15, Math.ceil(proposal.customClauses.length / 80) * 5);
     doc.roundedRect(margin, yPos, contentWidth, customHeight, 2, 2, 'FD');
     
-    doc.setTextColor(198, 206, 223);
+    doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     yPos += addWrappedText(proposal.customClauses, margin + 5, yPos + 5, contentWidth - 10, 9);
@@ -331,13 +348,13 @@ export function generateProposalPDF(proposal: Proposal): void {
 
   // Jurisdiction
   checkPageBreak(15);
-  doc.setTextColor(255, 255, 255);
+  doc.setTextColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
   doc.text('4.6 Jurisdição', margin, yPos);
   yPos += 6;
   
-  doc.setTextColor(198, 206, 223);
+  doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
   doc.text(`Este contrato será regido pelas leis aplicáveis às jurisdições selecionadas: ${proposal.country}.`, margin, yPos);
@@ -345,73 +362,79 @@ export function generateProposalPDF(proposal: Proposal): void {
 
   // ===== SIGNATURE SECTION =====
   checkPageBreak(60);
-  doc.setTextColor(255, 255, 255);
+  doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
   doc.text('5. Assinatura Digital', margin, yPos);
   yPos += 10;
 
-  doc.setDrawColor(255, 255, 255);
+  doc.setDrawColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.line(margin, yPos, pageWidth - margin, yPos);
   yPos += 10;
 
   const sigBoxWidth = (contentWidth - 10) / 2;
 
   // BTS signature
-  doc.setFillColor(255, 255, 255, 0.02);
-  doc.setDrawColor(255, 255, 255, 0.1);
+  doc.setFillColor(BTS_COLORS.s06.r, BTS_COLORS.s06.g, BTS_COLORS.s06.b);
+  doc.setDrawColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.roundedRect(margin, yPos, sigBoxWidth, 30, 2, 2, 'FD');
   
-  doc.setTextColor(198, 206, 223);
+  doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
   doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
   doc.text('BTS Global Corp', margin + 5, yPos + 6);
   
-  doc.setDrawColor(255, 255, 255, 0.3);
+  doc.setDrawColor(BTS_COLORS.gray.r, BTS_COLORS.gray.g, BTS_COLORS.gray.b);
   doc.line(margin + 5, yPos + 20, margin + sigBoxWidth - 5, yPos + 20);
   
   doc.setFontSize(7);
-  doc.setTextColor(198, 206, 223, 0.7);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(BTS_COLORS.gray.r, BTS_COLORS.gray.g, BTS_COLORS.gray.b);
   doc.text('Assinatura e carimbo', margin + 5, yPos + 26);
 
   // Client signature
-  doc.setFillColor(255, 255, 255, 0.02);
-  doc.setDrawColor(255, 255, 255, 0.1);
+  doc.setFillColor(BTS_COLORS.s06.r, BTS_COLORS.s06.g, BTS_COLORS.s06.b);
+  doc.setDrawColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.roundedRect(margin + sigBoxWidth + 10, yPos, sigBoxWidth, 30, 2, 2, 'FD');
   
-  doc.setTextColor(198, 206, 223);
+  doc.setTextColor(BTS_COLORS.darkBlue.r, BTS_COLORS.darkBlue.g, BTS_COLORS.darkBlue.b);
   doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
   doc.text(proposal.clientName, margin + sigBoxWidth + 15, yPos + 6);
   
-  doc.setDrawColor(255, 255, 255, 0.3);
+  doc.setDrawColor(BTS_COLORS.gray.r, BTS_COLORS.gray.g, BTS_COLORS.gray.b);
   doc.line(margin + sigBoxWidth + 15, yPos + 20, margin + contentWidth - 5, yPos + 20);
   
   doc.setFontSize(7);
-  doc.setTextColor(198, 206, 223, 0.7);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(BTS_COLORS.gray.r, BTS_COLORS.gray.g, BTS_COLORS.gray.b);
   doc.text('Assinatura e data', margin + sigBoxWidth + 15, yPos + 26);
   
   yPos += 40;
 
   // Footer
   checkPageBreak(25);
-  doc.setDrawColor(255, 255, 255);
+  doc.setDrawColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.line(margin, yPos, pageWidth - margin, yPos);
   yPos += 8;
 
-  doc.setFillColor(255, 255, 255, 0.02);
-  doc.setDrawColor(0, 229, 255);
+  doc.setFillColor(BTS_COLORS.s06.r, BTS_COLORS.s06.g, BTS_COLORS.s06.b);
+  doc.setDrawColor(BTS_COLORS.s05.r, BTS_COLORS.s05.g, BTS_COLORS.s05.b);
   doc.roundedRect(pageWidth / 2 - 40, yPos, 80, 8, 2, 2, 'FD');
   
-  doc.setTextColor(0, 229, 255);
+  doc.setTextColor(BTS_COLORS.s02.r, BTS_COLORS.s02.g, BTS_COLORS.s02.b);
   doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
   doc.text('One-Way Mirror of Trust™', pageWidth / 2, yPos + 5, { align: 'center' });
   yPos += 12;
 
-  doc.setTextColor(198, 206, 223);
+  doc.setTextColor(BTS_COLORS.gray.r, BTS_COLORS.gray.g, BTS_COLORS.gray.b);
   doc.setFontSize(7);
+  doc.setFont('helvetica', 'normal');
   doc.text('BTS Global Corp · Infraestrutura Digital Global', pageWidth / 2, yPos, { align: 'center' });
   yPos += 4;
   
-  doc.setTextColor(198, 206, 223, 0.5);
+  doc.setTextColor(BTS_COLORS.gray.r, BTS_COLORS.gray.g, BTS_COLORS.gray.b);
   doc.text(`ID de Verificação: ${proposal.id}`, pageWidth / 2, yPos, { align: 'center' });
 
   // Save the PDF
