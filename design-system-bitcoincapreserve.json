@@ -1,0 +1,332 @@
+{
+  "site": {
+    "url": "https://bitcoincapreserve.com/",
+    "platform": "WordPress",
+    "hosting": "Kinghost",
+    "theme": "Most",
+    "themeVersion": "1.4.0",
+    "pageBuilder": "Elementor",
+    "pageBuilderVersion": "3.33.0",
+    "wordPressVersion": "6.8.3"
+  },
+  "colors": {
+    "primary": {
+      "base": "hsl(12, 85%, 58%)",
+      "variations": {
+        "darker": "hsl(12, 85%, 46%)",
+        "dark": "hsl(12, 85%, 52%)",
+        "light": "hsl(12, 85%, 64%)",
+        "lighter": "hsl(12, 85%, 70%)"
+      }
+    },
+    "accent": {
+      "light": {
+        "base": "hsl(342, 89%, 48%)",
+        "darker": "hsl(342, 89%, 28%)",
+        "dark": "hsl(342, 89%, 38%)",
+        "light": "hsl(342, 89%, 58%)",
+        "lighter": "hsl(342, 89%, 68%)"
+      },
+      "dark": {
+        "base": "hsl(342, 92%, 54%)",
+        "darker": "hsl(342, 92%, 41%)",
+        "dark": "hsl(342, 92%, 47%)",
+        "light": "hsl(342, 92%, 60%)",
+        "lighter": "hsl(342, 92%, 65%)"
+      }
+    },
+    "contrast": {
+      "light": {
+        "higher": "hsl(0, 0%, 0%)",
+        "high": "hsl(0, 0%, 17%)",
+        "medium": "hsl(0, 0%, 46%)",
+        "low": "hsl(0, 0%, 91%)",
+        "lower": "hsl(0, 0%, 97%)",
+        "bg": "hsl(0, 0%, 100%)"
+      },
+      "dark": {
+        "higher": "hsl(0, 100%, 99%)",
+        "high": "hsl(0, 0%, 81%)",
+        "medium": "hsl(0, 0%, 57%)",
+        "low": "hsl(0, 0%, 22%)",
+        "lower": "hsl(0, 0%, 15%)",
+        "bg": "hsl(0, 0%, 11%)"
+      }
+    },
+    "semantic": {
+      "success": {
+        "light": "hsl(128, 51%, 47%)",
+        "dark": "hsl(122, 50%, 60%)"
+      },
+      "warning": "hsl(46, 100%, 61%)",
+      "error": {
+        "light": "hsl(357, 91%, 55%)",
+        "dark": "hsl(342, 92%, 54%)"
+      }
+    },
+    "wordpress": {
+      "primary": "#1258ca",
+      "accent": "#c70a1a",
+      "success": "#88c559",
+      "black": "#263654",
+      "white": "#ffffff",
+      "contrast": "#292a2d",
+      "contrastMedium": "#79797c",
+      "contrastLower": "#323639"
+    },
+    "custom": {
+      "footerBackground": "#0B0F1F",
+      "cookieNoticeBackground": "rgba(50,50,58,1)",
+      "cookieButton": "#e2851b"
+    }
+  },
+  "typography": {
+    "fonts": {
+      "primary": {
+        "name": "Inter",
+        "usage": "Body text, paragraphs, general content",
+        "source": "Google Fonts (localized via Elementor)"
+      },
+      "heading": {
+        "name": "Plus Jakarta Sans",
+        "weights": [200, 300, 400, 500, 600, 700, 800],
+        "styles": ["normal", "italic"],
+        "usage": "Headings, titles, emphasis",
+        "source": "Google Fonts"
+      },
+      "additional": ["Roboto", "Roboto Slab"]
+    },
+    "sizes": {
+      "global": {
+        "base": "1.25rem",
+        "xs": "1rem",
+        "sm": "1.125rem",
+        "md": "1.25rem",
+        "lg": "1.5rem",
+        "xl": "2.25rem",
+        "xxl": "4rem",
+        "xxxl": "5rem"
+      },
+      "wordpress": {
+        "small": "14px",
+        "normal": "16px",
+        "medium": "20px",
+        "large": "24px",
+        "xLarge": "42px",
+        "huge": "28px"
+      },
+      "responsive": {
+        "footerTitle": "clamp(28px, 3.2vw, 48px)",
+        "footerSocial": "clamp(16px, 1.6vw, 22px)",
+        "footerRights": "clamp(12px, 1.1vw, 16px)"
+      }
+    },
+    "lineHeights": {
+      "body": 2.1,
+      "heading": 1.3,
+      "pageTitle": 1.1,
+      "widgetTitle": 1.4,
+      "widgetList": 1.9
+    },
+    "letterSpacing": {
+      "default": "normal",
+      "footerTitle": "0.02em"
+    }
+  },
+  "spacing": {
+    "scale": {
+      "xxxxx": "calc(0.125 * var(--space-unit))",
+      "xxxx": "calc(0.25 * var(--space-unit))",
+      "xxx": "calc(0.375 * var(--space-unit))",
+      "xx": "calc(0.5 * var(--space-unit))",
+      "xs": "calc(0.75 * var(--space-unit))",
+      "sm": "calc(1.25 * var(--space-unit))",
+      "md": "calc(2 * var(--space-unit))",
+      "lg": "calc(3.25 * var(--space-unit))",
+      "xl": "calc(5.25 * var(--space-unit))",
+      "xxl": "calc(8.5 * var(--space-unit))",
+      "xxxl": "calc(13.75 * var(--space-unit))"
+    },
+    "wordpress": {
+      "20": "0.44rem",
+      "30": "0.67rem",
+      "40": "1rem",
+      "50": "1.5rem",
+      "60": "2.25rem",
+      "70": "3.38rem",
+      "80": "5.06rem"
+    },
+    "global": {
+      "unit": "20px",
+      "horizontal": "25px",
+      "vertical": "30px",
+      "componentPadding": "var(--space-md)"
+    },
+    "components": {
+      "headerHeight": "90px",
+      "headerWidth": "1320px",
+      "logoHeight": "43px",
+      "footerPadding": {
+        "desktop": "56px 24px 40px",
+        "mobile": "40px 20px"
+      },
+      "footerSocialGap": {
+        "desktop": "48px",
+        "mobile": "28px"
+      }
+    }
+  },
+  "shadows": {
+    "theme": {
+      "xs": "0 0.1px 0.3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.12)",
+      "sm": "0 0.3px 0.4px rgba(0,0,0,0.025), 0 0.9px 1.5px rgba(0,0,0,0.05), 0 3.5px 6px rgba(0,0,0,0.1)",
+      "md": "0 0.9px 1.5px rgba(0,0,0,0.03), 0 3.1px 5.5px rgba(0,0,0,0.08), 0 14px 25px rgba(0,0,0,0.12)",
+      "lg": "0 1.2px 1.9px -1px rgba(0,0,0,0.014), 0 3.3px 5.3px -1px rgba(0,0,0,0.038), 0 8.5px 12.7px -1px rgba(0,0,0,0.085), 0 30px 42px -1px rgba(0,0,0,0.15)",
+      "xl": "Multiple layers with negative offsets"
+    },
+    "wordpress": {
+      "natural": "6px 6px 9px rgba(0, 0, 0, 0.2)",
+      "deep": "12px 12px 50px rgba(0, 0, 0, 0.4)",
+      "sharp": "6px 6px 0px rgba(0, 0, 0, 0.2)",
+      "outlined": "6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1)",
+      "crisp": "6px 6px 0px rgba(0, 0, 0, 1)"
+    }
+  },
+  "borderRadius": {
+    "sm": "calc(var(--radius, 0.25em) / 2)",
+    "md": "var(--radius, 0.25em)",
+    "lg": "calc(var(--radius, 0.25em) * 2)",
+    "xl": "calc(var(--radius, 2em) * 2)",
+    "pill": "9999px"
+  },
+  "layout": {
+    "container": {
+      "defaultWidth": "810px",
+      "alignWideWidth": "1320px",
+      "fullWidth": "100%"
+    },
+    "breakpoints": {
+      "mobile": "< 552px",
+      "tablet": "552px - 992px",
+      "desktop": "> 992px",
+      "largeDesktop": "≥ 822px"
+    },
+    "grid": {
+      "framework": "Bootstrap Grid",
+      "aspectRatios": ["1:1", "4:3", "3:4", "3:2", "2:3", "16:9", "9:16"]
+    }
+  },
+  "animations": {
+    "easing": {
+      "bounce": "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+      "easeInOut": "cubic-bezier(0.645, 0.045, 0.355, 1)",
+      "easeIn": "cubic-bezier(0.55, 0.055, 0.675, 0.19)",
+      "easeOut": "cubic-bezier(0.215, 0.61, 0.355, 1)",
+      "easeOutBack": "cubic-bezier(0.34, 1.56, 0.64, 1)"
+    },
+    "fontSmoothing": {
+      "light": "-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale",
+      "dark": "-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale"
+    }
+  },
+  "components": {
+    "button": {
+      "wordpress": {
+        "backgroundColor": "#32373c",
+        "color": "#fff",
+        "borderRadius": "9999px",
+        "padding": "calc(.667em + 2px) calc(1.333em + 2px)",
+        "fontSize": "1.125em"
+      },
+      "circle": {
+        "classes": [".btn", ".btn-circle", ".btn--md"],
+        "usage": "Circular navigation buttons"
+      }
+    },
+    "header": {
+      "class": ".main-header",
+      "height": "90px",
+      "width": "1320px",
+      "logoHeight": "43px",
+      "features": ["transparent", "auto-hide"]
+    },
+    "footer": {
+      "id": "#bcr-footer",
+      "backgroundColor": "#0B0F1F",
+      "textColor": "#FFFFFF",
+      "maxWidth": "1320px",
+      "elements": {
+        "title": {
+          "class": ".bcr-title",
+          "transform": "uppercase",
+          "fontWeight": 800
+        },
+        "divider": {
+          "class": ".bcr-divider",
+          "color": "rgba(255,255,255,0.8)"
+        },
+        "social": {
+          "class": ".bcr-social",
+          "gap": "48px"
+        },
+        "rights": {
+          "class": ".bcr-rights",
+          "opacity": 0.9
+        }
+      }
+    },
+    "slider": {
+      "class": ".ms-slider",
+      "navigation": ".ms-slider--nav",
+      "controls": {
+        "next": ".ms-nav--next",
+        "prev": ".ms-nav--prev"
+      },
+      "size": ".nav-size--lg"
+    }
+  },
+  "technologies": {
+    "core": {
+      "wordPress": "6.8.3",
+      "theme": "Most 1.4.0",
+      "elementor": "3.33.0"
+    },
+    "libraries": {
+      "bootstrap": "Grid system",
+      "swiper": "8.4.5",
+      "magnificPopup": "Modals and lightboxes",
+      "plyr": "Video player",
+      "fontAwesome": "Icons"
+    },
+    "plugins": {
+      "contactForm7": "6.1.3",
+      "cookieNotice": "2.5.8",
+      "yoastSEO": "26.3",
+      "mostGoogleFonts": "Font management"
+    }
+  },
+  "darkMode": {
+    "supported": true,
+    "attribute": "data-theme=\"dark\"",
+    "customClass": ".bcr-night-mode",
+    "footer": {
+      "backgroundColor": "hsl(0, 0%, 15%)"
+    }
+  },
+  "gradients": {
+    "wordpress": [
+      "Vivid Cyan Blue to Vivid Purple",
+      "Light Green Cyan to Vivid Green Cyan",
+      "Luminous Vivid Amber to Luminous Vivid Orange",
+      "Luminous Vivid Orange to Vivid Red",
+      "Very Light Gray to Cyan Bluish Gray",
+      "Cool to Warm Spectrum",
+      "Blush Light Purple",
+      "Blush Bordeaux",
+      "Luminous Dusk",
+      "Pale Ocean",
+      "Electric Grass",
+      "Midnight"
+    ]
+  }
+}
