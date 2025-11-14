@@ -206,7 +206,7 @@ export function AboutSection() {
                 <div className="relative aspect-video overflow-hidden bg-[var(--bg-secondary)]/60">
                   <iframe
                     className="h-full w-full"
-                    src="https://www.youtube.com/embed/QLFHDlVA-1w?rel=0&modestbranding=1&controls=1"
+                    src="https://www.youtube.com/embed/4H7s5G-1Mb0?rel=0&modestbranding=1&controls=1"
                     title="BTS Global Corp - Pilares"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
