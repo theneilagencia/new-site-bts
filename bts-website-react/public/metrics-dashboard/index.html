@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Painel de métricas Bitcoin da Bitcoin Capital Reserve com dados em tempo real, pronto para WordPress/Kinghost."
+    />
+    <title>Bitcoin Capital Reserve · Painel de Métricas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="bcr-header" aria-label="Cabeçalho principal">
+        <div class="container">
+          <a class="brand" href="/">
+            <img
+              src="https://bitcoincapreserve.com/wp-content/uploads/2025/08/cropped-d.png"
+              alt="Bitcoin Capital Reserve"
+              height="48"
+              width="220"
+              loading="lazy"
+            />
+          </a>
+          <nav class="main-nav" aria-label="Menu principal">
+            <a href="https://bitcoincapreserve.com/">Home</a>
+            <a href="https://bitcoincapreserve.com/about-us/">About</a>
+            <a href="https://bitcoincapreserve.com/bcr-strategy/">Strategy</a>
+            <a href="https://bitcoincapreserve.com/why-bitcoin/">Why Bitcoin</a>
+            <a class="is-active" href="#hero">Metrics</a>
+            <a href="https://bitcoincapreserve.com/contact-2/">Contact</a>
+          </nav>
+          <a class="cta" href="https://bitcoincapreserve.com/contact-2/">Talk to us</a>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero" id="hero">
+          <div class="hero-media" aria-hidden="true"></div>
+          <div class="hero-gradient" aria-hidden="true"></div>
+          <div class="container hero-content">
+            <div class="hero-badge">
+              <span class="dot"></span>
+              Live Bitcoin Market Data
+            </div>
+            <h1>
+              Bitcoin Metrics
+              <span>Dashboard</span>
+            </h1>
+            <p>
+              Indicadores institucionais e insights de blockchain para orientar decisões de tesouraria
+              e fortalecer a estratégia da Bitcoin Capital Reserve.
+            </p>
+            <div class="hero-meta">
+              <div class="meta-item">
+                <span class="label">Última atualização</span>
+                <span class="value" data-field="last-updated">--:--:--</span>
+              </div>
+              <div class="meta-item">
+                <span class="label">Atualização automática</span>
+                <span class="value text-success">Cada 5 minutos</span>
+              </div>
+            </div>
+            <div class="hero-actions">
+              <a class="cta primary" href="https://bitcoincapreserve.com/contact-2/">
+                Falar com a tesouraria
+              </a>
+              <button class="cta ghost" id="refreshMetrics" type="button">
+                Atualizar agora
+              </button>
+            </div>
+          </div>
+          <div id="loading-panel" class="loading-panel" role="status">
+            <span class="spinner" aria-hidden="true"></span>
+            <p>Carregando métricas em tempo real...</p>
+          </div>
+          <div id="error-banner" class="error-banner" hidden role="alert">
+            <p>
+              Não foi possível atualizar as métricas agora.
+              <span id="error-message"></span>
+            </p>
+            <button type="button" id="retryMetrics">Tentar novamente</button>
+          </div>
+        </section>
+
+        <section class="section" id="market">
+          <div class="container section-header">
+            <div>
+              <p class="eyebrow">Market Value</p>
+              <h2>Panorama de mercado em tempo real</h2>
+              <p>
+                Monitoramento de preço, capitalização e liquidez para sustentar decisões de tesouraria
+                e governança corporativa.
+              </p>
+            </div>
+          </div>
+          <div class="container metrics-grid">
+            <article class="metric-card accent">
+              <header>
+                <span>Preço do Bitcoin</span>
+                <span class="pill" data-field="price-change"></span>
+              </header>
+              <strong data-field="price">$ --</strong>
+              <p>Preço spot (USD)</p>
+            </article>
+            <article class="metric-card">
+              <header>
+                <span>Market Cap</span>
+                <span class="pill neutral">24h</span>
+              </header>
+              <strong data-field="market-cap">$ --</strong>
+              <p>Valorização total do ativo</p>
+            </article>
+            <article class="metric-card">
+              <header>
+                <span>Volume 24h</span>
+                <span class="pill neutral">24h</span>
+              </header>
+              <strong data-field="volume">$ --</strong>
+              <p>Liquidez negociada nas últimas 24h</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section alt" id="supply">
+          <div class="container section-header">
+            <div>
+              <p class="eyebrow">Supply</p>
+              <h2>Escassez programada e progresso</h2>
+              <p>Distribuição atual da oferta e acompanhamento do limite máximo de 21 milhões BTC.</p>
+            </div>
+          </div>
+          <div class="container metrics-grid four">
+            <article class="metric-card">
+              <header>
+                <span>Oferta Circulante</span>
+                <span class="pill neutral">Atual</span>
+              </header>
+              <strong data-field="circulating">--</strong>
+              <p>BTC em circulação</p>
+            </article>
+            <article class="metric-card">
+              <header>
+                <span>Max Supply</span>
+                <span class="pill neutral">Deflacionário</span>
+              </header>
+              <strong>21.00M BTC</strong>
+              <p>Limite codificado na rede</p>
+            </article>
+            <article class="metric-card">
+              <header>
+                <span>Disponível</span>
+                <span class="pill neutral">Restante</span>
+              </header>
+              <strong data-field="remaining">--</strong>
+              <p>BTC ainda por minerar</p>
+            </article>
+            <article class="metric-card progress">
+              <header>
+                <span>Progresso</span>
+                <span class="pill neutral">%</span>
+              </header>
+              <strong data-field="progress">--%</strong>
+              <p>Percentual do supply emitido</p>
+              <div class="progress-bar">
+                <div class="progress-bar-fill" data-field="progress-bar" style="width: 0%"></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="performance">
+          <div class="container section-header">
+            <div>
+              <p class="eyebrow">Performance</p>
+              <h2>Variação temporal</h2>
+              <p>Comparativo semanal e mensal para medir volatilidade e momento do mercado.</p>
+            </div>
+          </div>
+          <div class="container metrics-grid">
+            <article class="metric-card">
+              <header>
+                <span>Variação 7d</span>
+                <span class="pill neutral">Trend</span>
+              </header>
+              <strong data-field="change-7d">--</strong>
+              <p>Oscilação percentual nos últimos 7 dias</p>
+            </article>
+            <article class="metric-card">
+              <header>
+                <span>Variação 30d</span>
+                <span class="pill neutral">Momentum</span>
+              </header>
+              <strong data-field="change-30d">--</strong>
+              <p>Tendência mensal do preço</p>
+            </article>
+            <article class="metric-card">
+              <header>
+                <span>Status</span>
+                <span class="dot"></span>
+              </header>
+              <strong>Live</strong>
+              <p>Atualizações contínuas a cada 5 minutos</p>
+            </article>
+          </div>
+          <div class="container note">
+            <p>Métricas sincronizadas a partir da CoinGecko • Última execução: <span data-field="last-updated-inline">--:--:--</span></p>
+          </div>
+        </section>
+
+        <section class="section highlight" id="strategy">
+          <div class="container strategy-grid">
+            <div>
+              <p class="eyebrow">Treasury Strategy</p>
+              <h2>Como a BCR utiliza esses dados</h2>
+              <p>
+                A Bitcoin Capital Reserve monitora continuamente indicadores on-chain e de mercado para
+                orientar acumulação estratégica de BTC, garantir governança transparente e ampliar o valor
+                por ação.
+              </p>
+            </div>
+            <div class="strategy-points">
+              <article>
+                <h3>Dados verificados</h3>
+                <p>
+                  CoinGecko + fontes on-chain para garantir precisão e confiabilidade institucional.
+                </p>
+              </article>
+              <article>
+                <h3>Sinais de liquidez</h3>
+                <p>
+                  Monitoramento de volume para otimizar entradas gradativas sem impacto relevante em
+                  preço.
+                </p>
+              </article>
+              <article>
+                <h3>Alertas automáticos</h3>
+                <p>
+                  Recalibração de posicionamento sempre que a volatilidade foge dos limites definidos pelo
+                  comitê.
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="bcr-footer" role="contentinfo">
+        <div class="container">
+          <div>
+            <h4>Bitcoin Capital Reserve</h4>
+            <p>
+              Estratégia institucional para preservação de valor em Bitcoin com governança e transparência.
+            </p>
+          </div>
+          <div>
+            <span class="footer-label">Contato</span>
+            <a href="mailto:info@bitcoincapreserve.com">info@bitcoincapreserve.com</a>
+            <a href="https://www.linkedin.com/company/bitcoin-capital-reserve/" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://bitcoincapreserve.substack.com/" target="_blank" rel="noopener">Substack</a>
+          </div>
+          <div>
+            <span class="footer-label">Governança</span>
+            <a href="https://bitcoincapreserve.com/corporate-governance/">Corporate Governance</a>
+            <a href="https://bitcoincapreserve.com/legal/">Legal &amp; Regulatory</a>
+          </div>
+        </div>
+        <div class="container footer-bottom">
+          <p>© <span id="currentYear"></span> Bitcoin Capital Reserve. Todos os direitos reservados.</p>
+          <span>Hospedagem Kinghost · WordPress</span>
+        </div>
+      </footer>
+    </div>
+
+    <script src="./metrics.js" type="module"></script>
+  </body>
+</html>
