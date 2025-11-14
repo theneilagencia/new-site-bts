@@ -16,6 +16,7 @@ import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { PageLoader } from '@/components/ui/page-loader';
 import { PortalApp } from '@/components/portal/portal-app';
 import { Toaster } from '@/components/ui/Toaster';
+import { AgenticChat } from '@/components/ui/AgenticChat';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'public' | 'portal'>('public');
@@ -36,6 +37,7 @@ export default function App() {
                 <PageLoader />
                 <CursorGlow />
                 <ScrollToTop />
+                <AgenticChat />
                 <Header onAccessPortal={() => setCurrentView('portal')} />
                 <main>
                   <HeroSection />
