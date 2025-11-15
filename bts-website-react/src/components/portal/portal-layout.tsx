@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '@/contexts/AuthContext';
-import { BtsLogo } from '@/components/ui/BtsLogo';
-import { 
-  FileText, 
-  History, 
-  User, 
-  LogOut, 
-  Menu, 
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
+import { BtsLogo } from "@/components/ui/BtsLogo";
+import {
+  FileText,
+  History,
+  User,
+  LogOut,
+  Menu,
   X,
   Users,
   LayoutDashboard,
   FileCheck,
-  Settings
-} from 'lucide-react';
+  Settings,
+} from "lucide-react";
 
 interface PortalLayoutProps {
   children: React.ReactNode;
@@ -22,25 +22,37 @@ interface PortalLayoutProps {
   onBackToPublic?: () => void;
 }
 
-export function PortalLayout({ children, activeSection, onNavigate, onBackToPublic }: PortalLayoutProps) {
+export function PortalLayout({
+  children,
+  activeSection,
+  onNavigate,
+  onBackToPublic,
+}: PortalLayoutProps) {
   const { user, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const partnerMenu = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'new-proposal', label: 'Nova Proposta', icon: FileText },
-    { id: 'history', label: 'Histórico', icon: History },
-    { id: 'profile', label: 'Perfil', icon: User },
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "new-proposal", label: "Nova Proposta", icon: FileText },
+    { id: "history", label: "Histórico", icon: History },
+    { id: "profile", label: "Perfil", icon: User },
   ];
 
   const adminMenu = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'proposals', label: 'Propostas', icon: FileCheck },
-    { id: 'users', label: 'Usuários', icon: Users },
-    { id: 'settings', label: 'Configurações', icon: Settings },
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "proposals", label: "Propostas", icon: FileCheck },
+    { id: "users", label: "Usuários", icon: Users },
+    { id: "settings", label: "Configurações", icon: Settings },
   ];
 
-  const menuItems = user?.role === 'admin' ? adminMenu : partnerMenu;
+  const isAdminRole = user?.role === "admin" || user?.role === "superadmin";
+  const menuItems = isAdminRole ? adminMenu : partnerMenu;
+  const roleBadge =
+    user?.role === "superadmin"
+      ? "Super Admin"
+      : isAdminRole
+        ? "Administrador"
+        : "Parceiro";
 
   const handleLogout = () => {
     logout();
@@ -56,7 +68,10 @@ export function PortalLayout({ children, activeSection, onNavigate, onBackToPubl
       {/* Orbital background */}
       <div className="fixed inset-0 opacity-20 pointer-events-none">
         <div className="absolute top-0 -left-1/4 w-[600px] h-[600px] bg-[#1F4AFF] rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-0 -right-1/4 w-[500px] h-[500px] bg-[#00E5FF] rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
+        <div
+          className="absolute bottom-0 -right-1/4 w-[500px] h-[500px] bg-[#00E5FF] rounded-full blur-[120px] animate-pulse"
+          style={{ animationDelay: "1s" }}
+        />
       </div>
 
       <div className="relative z-10 flex min-h-screen">
@@ -68,7 +83,7 @@ export function PortalLayout({ children, activeSection, onNavigate, onBackToPubl
               <p className="text-sm text-white">{user?.name}</p>
               <p className="text-xs text-[#C6CEDF]/70">{user?.email}</p>
               <span className="inline-block mt-2 px-2 py-1 text-xs rounded-md bg-[#1F4AFF]/20 text-[#00E5FF] border border-[#00E5FF]/20">
-                {user?.role === 'admin' ? 'Administrador' : 'Parceiro'}
+                {roleBadge}
               </span>
             </div>
           </div>
@@ -81,8 +96,8 @@ export function PortalLayout({ children, activeSection, onNavigate, onBackToPubl
                     onClick={() => onNavigate(item.id)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                       activeSection === item.id
-                        ? 'bg-gradient-to-r from-[#1F4AFF]/20 to-[#00E5FF]/20 text-white border border-[#1F4AFF]/30'
-                        : 'text-[#C6CEDF] hover:bg-white/5 hover:text-white'
+                        ? "bg-gradient-to-r from-[#1F4AFF]/20 to-[#00E5FF]/20 text-white border border-[#1F4AFF]/30"
+                        : "text-[#C6CEDF] hover:bg-white/5 hover:text-white"
                     }`}
                   >
                     <item.icon className="w-5 h-5" />
@@ -109,7 +124,11 @@ export function PortalLayout({ children, activeSection, onNavigate, onBackToPubl
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white/10 backdrop-blur-xl border border-white/20 text-white"
         >
-          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          {isMobileMenuOpen ? (
+            <X className="w-6 h-6" />
+          ) : (
+            <Menu className="w-6 h-6" />
+          )}
         </button>
 
         {/* Mobile Menu Overlay */}
@@ -127,7 +146,7 @@ export function PortalLayout({ children, activeSection, onNavigate, onBackToPubl
                   <p className="text-sm text-white">{user?.name}</p>
                   <p className="text-xs text-[#C6CEDF]/70">{user?.email}</p>
                   <span className="inline-block mt-2 px-2 py-1 text-xs rounded-md bg-[#1F4AFF]/20 text-[#00E5FF] border border-[#00E5FF]/20">
-                    {user?.role === 'admin' ? 'Administrador' : 'Parceiro'}
+                    {roleBadge}
                   </span>
                 </div>
               </div>
@@ -143,8 +162,8 @@ export function PortalLayout({ children, activeSection, onNavigate, onBackToPubl
                         }}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                           activeSection === item.id
-                            ? 'bg-gradient-to-r from-[#1F4AFF]/20 to-[#00E5FF]/20 text-white border border-[#1F4AFF]/30'
-                            : 'text-[#C6CEDF] hover:bg-white/5 hover:text-white'
+                            ? "bg-gradient-to-r from-[#1F4AFF]/20 to-[#00E5FF]/20 text-white border border-[#1F4AFF]/30"
+                            : "text-[#C6CEDF] hover:bg-white/5 hover:text-white"
                         }`}
                       >
                         <item.icon className="w-5 h-5" />

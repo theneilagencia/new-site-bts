@@ -1,33 +1,52 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Users, Plus, Edit, X, UserX, UserCheck, Key } from 'lucide-react';
-import { User } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Users,
+  Plus,
+  Edit,
+  X,
+  UserX,
+  UserCheck,
+  Key,
+  Trash2,
+} from "lucide-react";
+import { User } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 interface AdminUsersProps {
   users: User[];
-  onCreateUser: (user: Omit<User, 'id'> & { password: string }) => void;
+  currentUserRole?: User["role"];
+  onCreateUser: (user: Omit<User, "id"> & { password: string }) => void;
   onUpdateUser: (id: string, updates: Partial<User>) => void;
   onToggleStatus: (id: string) => void;
   onResetPassword?: (id: string, newPassword: string) => void;
+  onDeleteUser?: (id: string) => void;
 }
 
-export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus, onResetPassword }: AdminUsersProps) {
+export function AdminUsers({
+  users,
+  currentUserRole,
+  onCreateUser,
+  onUpdateUser,
+  onToggleStatus,
+  onResetPassword,
+  onDeleteUser,
+}: AdminUsersProps) {
   const [showModal, setShowModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [resettingUser, setResettingUser] = useState<User | null>(null);
-  const [newPassword, setNewPassword] = useState('');
+  const [newPassword, setNewPassword] = useState("");
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    role: 'partner' as 'partner' | 'admin',
+    name: "",
+    email: "",
+    password: "",
+    role: "partner" as User["role"],
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (editingUser) {
       onUpdateUser(editingUser.id, {
         name: formData.name,
@@ -37,13 +56,13 @@ export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus, 
     } else {
       onCreateUser({
         ...formData,
-        status: 'active',
+        status: "active",
       });
     }
 
     setShowModal(false);
     setEditingUser(null);
-    setFormData({ name: '', email: '', password: '', role: 'partner' });
+    setFormData({ name: "", email: "", password: "", role: "partner" });
   };
 
   const handleEdit = (user: User) => {
@@ -51,7 +70,7 @@ export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus, 
     setFormData({
       name: user.name,
       email: user.email,
-      password: '',
+      password: "",
       role: user.role,
     });
     setShowModal(true);
@@ -60,37 +79,41 @@ export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus, 
   const handleClose = () => {
     setShowModal(false);
     setEditingUser(null);
-    setFormData({ name: '', email: '', password: '', role: 'partner' });
+    setFormData({ name: "", email: "", password: "", role: "partner" });
   };
 
   const handleResetPassword = (user: User) => {
     setResettingUser(user);
-    setNewPassword('');
+    setNewPassword("");
     setShowResetModal(true);
   };
 
   const handleConfirmResetPassword = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!resettingUser || !newPassword) return;
 
     if (onResetPassword) {
       onResetPassword(resettingUser.id, newPassword);
-      toast.success('Senha resetada com sucesso!', {
+      toast.success("Senha resetada com sucesso!", {
         description: `Nova senha definida para ${resettingUser.name}`,
       });
     }
 
     setShowResetModal(false);
     setResettingUser(null);
-    setNewPassword('');
+    setNewPassword("");
   };
 
   const handleCloseResetModal = () => {
     setShowResetModal(false);
     setResettingUser(null);
-    setNewPassword('');
+    setNewPassword("");
   };
+
+  const canManageStatus =
+    currentUserRole === "admin" || currentUserRole === "superadmin";
+  const canDeleteUsers = currentUserRole === "superadmin";
 
   return (
     <div className="space-y-4">
@@ -138,134 +161,221 @@ export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus, 
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {users.map((user, index) => (
-                <motion.tr
-                  key={user.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: index * 0.02 }}
-                  className="hover:bg-white/[0.02] transition-colors"
-                >
-                  <td className="px-4 py-2.5">
-                    <p className="text-sm text-white">{user.name}</p>
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <p className="text-sm text-[#C6CEDF]/70">{user.email}</p>
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs border ${
-                      user.role === 'admin'
-                        ? 'bg-purple-500/10 text-purple-400 border-purple-500/20'
-                        : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                    }`}>
-                      {user.role === 'admin' ? 'Admin' : 'Parceiro'}
-                    </span>
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs border ${
-                      user.status === 'active'
-                        ? 'bg-green-500/10 text-green-400 border-green-500/20'
-                        : 'bg-red-500/10 text-red-400 border-red-500/20'
-                    }`}>
-                      {user.status === 'active' ? 'Ativo' : 'Inativo'}
-                    </span>
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => handleEdit(user)}
-                        className="p-1.5 rounded hover:bg-white/10 text-[#00E5FF] transition-colors"
-                        title="Editar"
-                      >
-                        <Edit className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleResetPassword(user)}
-                        className="p-1.5 rounded hover:bg-white/10 text-yellow-400 transition-colors"
-                        title="Resetar senha"
-                      >
-                        <Key className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => onToggleStatus(user.id)}
-                        className={`p-1.5 rounded transition-colors ${
-                          user.status === 'active'
-                            ? 'hover:bg-red-500/10 text-red-400'
-                            : 'hover:bg-green-500/10 text-green-400'
+              {users.map((user, index) => {
+                const roleLabel =
+                  user.role === "superadmin"
+                    ? "Super Admin"
+                    : user.role === "admin"
+                      ? "Admin"
+                      : "Parceiro";
+                const isSuperAdminUser = user.role === "superadmin";
+                const toggleDisabled = !canManageStatus || isSuperAdminUser;
+                const deleteDisabled = !canDeleteUsers || isSuperAdminUser;
+
+                return (
+                  <motion.tr
+                    key={user.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: index * 0.02 }}
+                    className="hover:bg-white/[0.02] transition-colors"
+                  >
+                    <td className="px-4 py-2.5">
+                      <p className="text-sm text-white">{user.name}</p>
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <p className="text-sm text-[#C6CEDF]/70">{user.email}</p>
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 rounded text-xs border ${
+                          user.role === "superadmin"
+                            ? "bg-pink-500/10 text-pink-300 border-pink-500/20"
+                            : user.role === "admin"
+                              ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
+                              : "bg-blue-500/10 text-blue-400 border-blue-500/20"
                         }`}
-                        title={user.status === 'active' ? 'Desativar' : 'Ativar'}
                       >
-                        {user.status === 'active' ? <UserX className="w-3.5 h-3.5" /> : <UserCheck className="w-3.5 h-3.5" />}
-                      </button>
-                    </div>
-                  </td>
-                </motion.tr>
-              ))}
+                        {roleLabel}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 rounded text-xs border ${
+                          user.status === "active"
+                            ? "bg-green-500/10 text-green-400 border-green-500/20"
+                            : "bg-red-500/10 text-red-400 border-red-500/20"
+                        }`}
+                      >
+                        {user.status === "active" ? "Ativo" : "Inativo"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => handleEdit(user)}
+                          className="p-1.5 rounded hover:bg-white/10 text-[#00E5FF] transition-colors"
+                          title="Editar"
+                        >
+                          <Edit className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleResetPassword(user)}
+                          className="p-1.5 rounded hover:bg-white/10 text-yellow-400 transition-colors"
+                          title="Resetar senha"
+                        >
+                          <Key className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() =>
+                            !toggleDisabled && onToggleStatus(user.id)
+                          }
+                          className={`p-1.5 rounded transition-colors ${
+                            toggleDisabled
+                              ? "text-[#C6CEDF]/40 cursor-not-allowed"
+                              : user.status === "active"
+                                ? "hover:bg-red-500/10 text-red-400"
+                                : "hover:bg-green-500/10 text-green-400"
+                          }`}
+                          title={
+                            toggleDisabled
+                              ? "Disponível apenas para Super Admin"
+                              : user.status === "active"
+                                ? "Desativar"
+                                : "Ativar"
+                          }
+                          disabled={toggleDisabled}
+                        >
+                          {user.status === "active" ? (
+                            <UserX className="w-3.5 h-3.5" />
+                          ) : (
+                            <UserCheck className="w-3.5 h-3.5" />
+                          )}
+                        </button>
+                        <button
+                          onClick={() =>
+                            !deleteDisabled && onDeleteUser?.(user.id)
+                          }
+                          className={`p-1.5 rounded transition-colors ${
+                            deleteDisabled
+                              ? "text-[#C6CEDF]/40 cursor-not-allowed"
+                              : "hover:bg-red-500/10 text-red-400"
+                          }`}
+                          title={
+                            deleteDisabled
+                              ? "Exclusivo para Super Admin"
+                              : "Excluir usuário"
+                          }
+                          disabled={deleteDisabled}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </td>
+                  </motion.tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
 
         {/* Mobile Cards */}
         <div className="lg:hidden divide-y divide-white/5">
-          {users.map((user, index) => (
-            <motion.div
-              key={user.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: index * 0.02 }}
-              className="p-4 space-y-2.5"
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <p className="text-sm text-white">{user.name}</p>
-                  <p className="text-xs text-[#C6CEDF]/60">{user.email}</p>
-                </div>
-                <div className="flex gap-1.5">
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs border ${
-                    user.role === 'admin'
-                      ? 'bg-purple-500/10 text-purple-400 border-purple-500/20'
-                      : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                  }`}>
-                    {user.role === 'admin' ? 'Admin' : 'Parceiro'}
-                  </span>
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs border ${
-                    user.status === 'active'
-                      ? 'bg-green-500/10 text-green-400 border-green-500/20'
-                      : 'bg-red-500/10 text-red-400 border-red-500/20'
-                  }`}>
-                    {user.status === 'active' ? 'Ativo' : 'Inativo'}
-                  </span>
-                </div>
-              </div>
+          {users.map((user, index) => {
+            const roleLabel =
+              user.role === "superadmin"
+                ? "Super Admin"
+                : user.role === "admin"
+                  ? "Admin"
+                  : "Parceiro";
+            const isSuperAdminUser = user.role === "superadmin";
+            const toggleDisabled = !canManageStatus || isSuperAdminUser;
+            const deleteDisabled = !canDeleteUsers || isSuperAdminUser;
 
-              <div className="flex gap-2 pt-1">
-                <button
-                  onClick={() => handleEdit(user)}
-                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-[#1F4AFF]/20 border border-[#1F4AFF]/30 rounded text-[#00E5FF] hover:bg-[#1F4AFF]/30 transition-colors"
-                >
-                  <Edit className="w-3.5 h-3.5" />
-                  <span className="text-xs">Editar</span>
-                </button>
-                <button
-                  onClick={() => handleResetPassword(user)}
-                  className="px-3 py-2 bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 rounded hover:bg-yellow-500/20 transition-colors"
-                  title="Resetar senha"
-                >
-                  <Key className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  onClick={() => onToggleStatus(user.id)}
-                  className={`px-3 py-2 border rounded transition-colors ${
-                    user.status === 'active'
-                      ? 'bg-red-500/10 border-red-500/20 text-red-400 hover:bg-red-500/20'
-                      : 'bg-green-500/10 border-green-500/20 text-green-400 hover:bg-green-500/20'
-                  }`}
-                >
-                  {user.status === 'active' ? <UserX className="w-3.5 h-3.5" /> : <UserCheck className="w-3.5 h-3.5" />}
-                </button>
-              </div>
-            </motion.div>
-          ))}
+            return (
+              <motion.div
+                key={user.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: index * 0.02 }}
+                className="p-4 space-y-2.5"
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-sm text-white">{user.name}</p>
+                    <p className="text-xs text-[#C6CEDF]/60">{user.email}</p>
+                  </div>
+                  <div className="flex gap-1.5">
+                    <span
+                      className={`inline-flex items-center px-2 py-0.5 rounded text-xs border ${
+                        user.role === "superadmin"
+                          ? "bg-pink-500/10 text-pink-300 border-pink-500/20"
+                          : user.role === "admin"
+                            ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
+                            : "bg-blue-500/10 text-blue-400 border-blue-500/20"
+                      }`}
+                    >
+                      {roleLabel}
+                    </span>
+                    <span
+                      className={`inline-flex items-center px-2 py-0.5 rounded text-xs border ${
+                        user.status === "active"
+                          ? "bg-green-500/10 text-green-400 border-green-500/20"
+                          : "bg-red-500/10 text-red-400 border-red-500/20"
+                      }`}
+                    >
+                      {user.status === "active" ? "Ativo" : "Inativo"}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-1">
+                  <button
+                    onClick={() => handleEdit(user)}
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-[#1F4AFF]/20 border border-[#1F4AFF]/30 rounded text-[#00E5FF] hover:bg-[#1F4AFF]/30 transition-colors"
+                  >
+                    <Edit className="w-3.5 h-3.5" />
+                    <span className="text-xs">Editar</span>
+                  </button>
+                  <button
+                    onClick={() => handleResetPassword(user)}
+                    className="px-3 py-2 bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 rounded hover:bg-yellow-500/20 transition-colors"
+                    title="Resetar senha"
+                  >
+                    <Key className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={() => !toggleDisabled && onToggleStatus(user.id)}
+                    className={`px-3 py-2 border rounded transition-colors ${
+                      toggleDisabled
+                        ? "bg-white/5 border-white/10 text-[#C6CEDF]/40 cursor-not-allowed"
+                        : user.status === "active"
+                          ? "bg-red-500/10 border-red-500/20 text-red-400 hover:bg-red-500/20"
+                          : "bg-green-500/10 border-green-500/20 text-green-400 hover:bg-green-500/20"
+                    }`}
+                    disabled={toggleDisabled}
+                  >
+                    {user.status === "active" ? (
+                      <UserX className="w-3.5 h-3.5" />
+                    ) : (
+                      <UserCheck className="w-3.5 h-3.5" />
+                    )}
+                  </button>
+                  <button
+                    onClick={() => !deleteDisabled && onDeleteUser?.(user.id)}
+                    className={`px-3 py-2 border rounded transition-colors ${
+                      deleteDisabled
+                        ? "bg-white/5 border-white/10 text-[#C6CEDF]/40 cursor-not-allowed"
+                        : "bg-red-500/10 border-red-500/20 text-red-400 hover:bg-red-500/20"
+                    }`}
+                    disabled={deleteDisabled}
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
 
@@ -288,7 +398,7 @@ export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus, 
             >
               <div className="flex items-center justify-between p-4 border-b border-white/10">
                 <h2 className="text-lg text-white">
-                  {editingUser ? 'Editar Usuário' : 'Novo Usuário'}
+                  {editingUser ? "Editar Usuário" : "Novo Usuário"}
                 </h2>
                 <button
                   onClick={handleClose}
@@ -300,24 +410,32 @@ export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus, 
 
               <form onSubmit={handleSubmit} className="p-4 space-y-3">
                 <div>
-                  <label className="block text-xs text-[#C6CEDF]/70 mb-1.5">Nome *</label>
+                  <label className="block text-xs text-[#C6CEDF]/70 mb-1.5">
+                    Nome *
+                  </label>
                   <input
                     type="text"
                     required
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                     placeholder="João Silva"
                     className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded text-sm text-white placeholder:text-[#C6CEDF]/30 focus:outline-none focus:border-[#1F4AFF] transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs text-[#C6CEDF]/70 mb-1.5">E-mail *</label>
+                  <label className="block text-xs text-[#C6CEDF]/70 mb-1.5">
+                    E-mail *
+                  </label>
                   <input
                     type="email"
                     required
                     value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
                     placeholder="joao@empresa.com"
                     className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded text-sm text-white placeholder:text-[#C6CEDF]/30 focus:outline-none focus:border-[#1F4AFF] transition-colors"
                   />
@@ -325,12 +443,16 @@ export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus, 
 
                 {!editingUser && (
                   <div>
-                    <label className="block text-xs text-[#C6CEDF]/70 mb-1.5">Senha temporária *</label>
+                    <label className="block text-xs text-[#C6CEDF]/70 mb-1.5">
+                      Senha temporária *
+                    </label>
                     <input
                       type="password"
                       required={!editingUser}
                       value={formData.password}
-                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, password: e.target.value })
+                      }
                       placeholder="••••••••"
                       className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded text-sm text-white placeholder:text-[#C6CEDF]/30 focus:outline-none focus:border-[#1F4AFF] transition-colors"
                     />
@@ -338,10 +460,17 @@ export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus, 
                 )}
 
                 <div>
-                  <label className="block text-xs text-[#C6CEDF]/70 mb-1.5">Perfil *</label>
+                  <label className="block text-xs text-[#C6CEDF]/70 mb-1.5">
+                    Perfil *
+                  </label>
                   <select
                     value={formData.role}
-                    onChange={(e) => setFormData({ ...formData, role: e.target.value as 'partner' | 'admin' })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        role: e.target.value as User["role"],
+                      })
+                    }
                     className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded text-sm text-white focus:outline-none focus:border-[#1F4AFF] transition-colors"
                   >
                     <option value="partner">Parceiro</option>
@@ -361,7 +490,7 @@ export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus, 
                     type="submit"
                     className="flex-1 px-3 py-2 bg-gradient-to-r from-[#1F4AFF] to-[#00E5FF] rounded text-sm text-white hover:shadow-lg hover:shadow-[#1F4AFF]/30 transition-all"
                   >
-                    {editingUser ? 'Salvar' : 'Criar'}
+                    {editingUser ? "Salvar" : "Criar"}
                   </button>
                 </div>
               </form>
@@ -400,17 +529,26 @@ export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus, 
                 </button>
               </div>
 
-              <form onSubmit={handleConfirmResetPassword} className="p-4 space-y-4">
+              <form
+                onSubmit={handleConfirmResetPassword}
+                className="p-4 space-y-4"
+              >
                 <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
                   <p className="text-sm text-yellow-400">
                     Você está redefinindo a senha para:
                   </p>
-                  <p className="text-white font-medium mt-1">{resettingUser.name}</p>
-                  <p className="text-xs text-[#C6CEDF]/70">{resettingUser.email}</p>
+                  <p className="text-white font-medium mt-1">
+                    {resettingUser.name}
+                  </p>
+                  <p className="text-xs text-[#C6CEDF]/70">
+                    {resettingUser.email}
+                  </p>
                 </div>
 
                 <div>
-                  <label className="block text-xs text-[#C6CEDF]/70 mb-1.5">Nova Senha *</label>
+                  <label className="block text-xs text-[#C6CEDF]/70 mb-1.5">
+                    Nova Senha *
+                  </label>
                   <input
                     type="text"
                     required
@@ -420,7 +558,8 @@ export function AdminUsers({ users, onCreateUser, onUpdateUser, onToggleStatus, 
                     className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded text-sm text-white placeholder:text-[#C6CEDF]/30 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 transition-all"
                   />
                   <p className="text-xs text-[#C6CEDF]/50 mt-1.5">
-                    💡 Use uma senha forte com letras, números e caracteres especiais
+                    💡 Use uma senha forte com letras, números e caracteres
+                    especiais
                   </p>
                 </div>
 

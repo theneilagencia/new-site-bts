@@ -2,8 +2,8 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  role: 'partner' | 'admin';
-  status?: 'active' | 'inactive';
+  role: "partner" | "admin" | "superadmin";
+  status?: "active" | "inactive";
   company?: string;
   phone?: string;
   cpf_cnpj?: string;
@@ -21,7 +21,7 @@ export interface Proposal {
   quantity: number;
   unitPrice: number;
   totalPrice: number;
-  status: 'pending' | 'approved' | 'rejected';
+  status: "pending" | "approved" | "rejected";
   createdAt: string;
   updatedAt?: string;
   pdfUrl?: string;
@@ -36,7 +36,7 @@ export interface Structure {
   image?: string;
 }
 
-export type Language = 'pt' | 'en';
+export type Language = "pt" | "en";
 
 export interface Translations {
   nav: {
@@ -64,7 +64,7 @@ export interface Translations {
 
 export interface AgenticMessage {
   id: string;
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
   timestamp: Date;
 }
@@ -73,7 +73,7 @@ export interface AgenticConversation {
   id: string;
   userId?: string;
   messages: AgenticMessage[];
-  status: 'active' | 'completed' | 'failed';
+  status: "active" | "completed" | "failed";
   createdAt: Date;
   updatedAt: Date;
 }
