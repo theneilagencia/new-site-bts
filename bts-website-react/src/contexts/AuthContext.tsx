@@ -56,10 +56,31 @@ function ensureDefaultUsers(users: Array<User & { password: string }>): Array<Us
   let updated = false;
 
   for (const defaultUser of DEFAULT_USERS) {
-    const exists = users.some(u => u.email === defaultUser.email);
-    if (!exists) {
+    const existingIndex = users.findIndex(u => u.email === defaultUser.email);
+
+    if (existingIndex === -1) {
       users.push(defaultUser);
       updated = true;
+    } else {
+      const existingUser = users[existingIndex];
+      const mergedUser = {
+        ...existingUser,
+        ...defaultUser,
+      };
+
+      // Check if any property changed after merge
+      const changed =
+        existingUser.password !== mergedUser.password ||
+        existingUser.name !== mergedUser.name ||
+        existingUser.role !== mergedUser.role ||
+        existingUser.status !== mergedUser.status ||
+        existingUser.company !== mergedUser.company ||
+        existingUser.phone !== mergedUser.phone;
+
+      if (changed) {
+        users[existingIndex] = mergedUser;
+        updated = true;
+      }
     }
   }
 
