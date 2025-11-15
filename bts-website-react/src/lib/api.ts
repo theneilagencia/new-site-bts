@@ -3,6 +3,48 @@ const API_BASE_URL = typeof window !== 'undefined' && window.location.hostname !
   ? '/api'
   : 'http://localhost:3000/api';
 
+const AUTH_TOKEN_KEY = 'bts-auth-token';
+
+function getSessionStorage(): Storage | null {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  try {
+    return window.sessionStorage;
+  } catch (error) {
+    console.error('Error accessing sessionStorage:', error);
+    return null;
+  }
+}
+
+function getAuthToken(): string | null {
+  const storage = getSessionStorage();
+  return storage ? storage.getItem(AUTH_TOKEN_KEY) : null;
+}
+
+function setAuthToken(token: string) {
+  const storage = getSessionStorage();
+  if (!storage) return;
+
+  try {
+    storage.setItem(AUTH_TOKEN_KEY, token);
+  } catch (error) {
+    console.error('Error saving auth token:', error);
+  }
+}
+
+function clearAuthToken() {
+  const storage = getSessionStorage();
+  if (!storage) return;
+
+  try {
+    storage.removeItem(AUTH_TOKEN_KEY);
+  } catch (error) {
+    console.error('Error clearing auth token:', error);
+  }
+}
+
 class ApiError extends Error {
   constructor(public status: number, message: string) {
     super(message);
@@ -11,7 +53,7 @@ class ApiError extends Error {
 }
 
 async function fetchApi(endpoint: string, options: RequestInit = {}) {
-  const token = localStorage.getItem('bts-auth-token');
+  const token = getAuthToken();
   
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -46,11 +88,9 @@ export const authApi = {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
-    
     if (data.token) {
-      localStorage.setItem('bts-auth-token', data.token);
+      setAuthToken(data.token);
     }
-    
     return data;
   },
 
@@ -65,11 +105,9 @@ export const authApi = {
       method: 'POST',
       body: JSON.stringify(userData),
     });
-    
     if (data.token) {
-      localStorage.setItem('bts-auth-token', data.token);
+      setAuthToken(data.token);
     }
-    
     return data;
   },
 
@@ -78,7 +116,7 @@ export const authApi = {
   },
 
   logout() {
-    localStorage.removeItem('bts-auth-token');
+    clearAuthToken();
   },
 };
 

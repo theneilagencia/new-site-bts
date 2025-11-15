@@ -24,7 +24,11 @@ export default function App() {
   const handleBackToPublic = () => {
     setCurrentView('public');
     // Clear any stored session
-    localStorage.removeItem('bts-user');
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('bts-user');
+      sessionStorage.removeItem('bts-session-expiry');
+      sessionStorage.removeItem('bts-auth-token');
+    }
   };
 
   return (

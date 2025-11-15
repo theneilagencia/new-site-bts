@@ -1,5 +1,6 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { User } from '@/types';
+import { authApi, ApiError } from '@/lib/api';
 
 export type { User };
 
@@ -13,8 +14,79 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const SESSION_DURATION_MS = 4 * 60 * 60 * 1000;
+const SESSION_USER_KEY = 'bts-user';
+const SESSION_EXPIRY_KEY = 'bts-session-expiry';
+
+const DEFAULT_USERS: Array<User & { password: string }> = [
+  {
+    id: 'superadmin-001',
+    email: 'admin@btsglobalcorp.com',
+    password: 'BtS@13112025',
+    name: 'Super Admin',
+    role: 'admin',
+    company: 'BTS Global Corp',
+    status: 'active',
+  },
+];
+
+const isBrowser = () => typeof window !== 'undefined';
+
+function readStoredSession(): { user: User | null; expiry: number | null } {
+  if (!isBrowser()) {
+    return { user: null, expiry: null };
+  }
+
+  try {
+    const storedUser = sessionStorage.getItem(SESSION_USER_KEY);
+    const storedExpiry = sessionStorage.getItem(SESSION_EXPIRY_KEY);
+
+    if (!storedUser || !storedExpiry) {
+      return { user: null, expiry: null };
+    }
+
+    const expiry = Number(storedExpiry);
+    if (!Number.isFinite(expiry) || Date.now() >= expiry) {
+      sessionStorage.removeItem(SESSION_USER_KEY);
+      sessionStorage.removeItem(SESSION_EXPIRY_KEY);
+      return { user: null, expiry: null };
+    }
+
+    return { user: JSON.parse(storedUser), expiry };
+  } catch (error) {
+    console.error('Error restoring auth session:', error);
+    return { user: null, expiry: null };
+  }
+}
+
+function saveSession(user: User, expiry: number) {
+  if (!isBrowser()) return;
+
+  try {
+    sessionStorage.setItem(SESSION_USER_KEY, JSON.stringify(user));
+    sessionStorage.setItem(SESSION_EXPIRY_KEY, expiry.toString());
+  } catch (error) {
+    console.error('Error saving auth session:', error);
+  }
+}
+
+function clearSessionStorage() {
+  if (!isBrowser()) return;
+
+  try {
+    sessionStorage.removeItem(SESSION_USER_KEY);
+    sessionStorage.removeItem(SESSION_EXPIRY_KEY);
+  } catch (error) {
+    console.error('Error clearing auth session:', error);
+  }
+}
+
 // Get all users from localStorage
 function getAllUsers(): Array<User & { password: string }> {
+  if (!isBrowser()) {
+    return DEFAULT_USERS;
+  }
+
   try {
     const stored = localStorage.getItem('bts-all-users');
     if (stored) {
@@ -24,22 +96,13 @@ function getAllUsers(): Array<User & { password: string }> {
     console.error('Error loading users:', error);
   }
   
-  // Default superadmin
-  return [
-    {
-      id: 'superadmin-001',
-      email: 'admin@btsglobalcorp.com',
-      password: 'BtS@13112025',
-      name: 'Super Admin',
-      role: 'admin',
-      company: 'BTS Global Corp',
-      status: 'active',
-    },
-  ];
+  return DEFAULT_USERS;
 }
 
 // Save users to localStorage
 function saveAllUsers(users: Array<User & { password: string }>) {
+  if (!isBrowser()) return;
+
   try {
     localStorage.setItem('bts-all-users', JSON.stringify(users));
   } catch (error) {
@@ -47,18 +110,42 @@ function saveAllUsers(users: Array<User & { password: string }>) {
   }
 }
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  // ⚠️ MUDANÇA CRÍTICA: Usar sessionStorage ao invés de localStorage
-  // Isso faz logout automático ao fechar o navegador
-  const [user, setUser] = useState<User | null>(() => {
-    const stored = sessionStorage.getItem('bts-user');
-    return stored ? JSON.parse(stored) : null;
-  });
+function findLocalUser(email: string, password: string): User | null {
+  const allUsers = getAllUsers();
+  const foundUser = allUsers.find(
+    (u) => u.email === email && u.password === password && u.status !== 'inactive'
+  );
 
-  const [sessionExpiry, setSessionExpiry] = useState<number | null>(null);
+  if (!foundUser) {
+    return null;
+  }
+
+  const { password: _unused, ...userWithoutPassword } = foundUser;
+  return userWithoutPassword;
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const initialSession = readStoredSession();
+  const [user, setUser] = useState<User | null>(initialSession.user);
+  const [sessionExpiry, setSessionExpiry] = useState<number | null>(initialSession.expiry);
 
   const isAuthenticated = !!user;
   const isAdmin = user?.role === 'admin';
+
+  const persistSession = useCallback((nextUser: User, expiryOverride?: number) => {
+    const expiry = expiryOverride ?? Date.now() + SESSION_DURATION_MS;
+    setUser(nextUser);
+    setSessionExpiry(expiry);
+    saveSession(nextUser, expiry);
+  }, []);
+
+  const logout = useCallback(() => {
+    setUser(null);
+    setSessionExpiry(null);
+    clearSessionStorage();
+    authApi.logout();
+    console.log('👋 Logout realizado');
+  }, []);
 
   // Validar sessão periodicamente
   useEffect(() => {
@@ -73,49 +160,65 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, 30000); // Check every 30 seconds
 
     return () => clearInterval(checkSession);
-  }, [user, sessionExpiry]);
+  }, [logout, sessionExpiry, user]);
+
+  // Sincronizar usuário autenticado via API quando houver token válido
+  useEffect(() => {
+    if (!isBrowser()) return;
+
+    let isMounted = true;
+
+    const syncAuthenticatedUser = async () => {
+      try {
+        const authenticatedUser = await authApi.getMe();
+        if (authenticatedUser && isMounted) {
+          const expiry =
+            sessionExpiry && sessionExpiry > Date.now()
+              ? sessionExpiry
+              : Date.now() + SESSION_DURATION_MS;
+          persistSession(authenticatedUser, expiry);
+        }
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 401) {
+          logout();
+        } else {
+          console.error('Erro ao sincronizar sessão:', error);
+        }
+      }
+    };
+
+    syncAuthenticatedUser();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [logout, persistSession, sessionExpiry]);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    try {
+      const data = await authApi.login(email, password);
+      if (data?.user) {
+        persistSession(data.user);
+        console.log('✅ Login bem-sucedido (API):', data.user.email);
+        console.log('🕒 Sessão expira em 4 horas');
+        return true;
+      }
 
-    // Get all users (including dynamically created ones)
-    const allUsers = getAllUsers();
+      console.warn('Login via API não retornou usuário.');
+      return false;
+    } catch (error) {
+      console.warn('Login via API falhou, tentando fallback local...', error);
+      const fallbackUser = findLocalUser(email, password);
 
-    // Find user
-    const foundUser = allUsers.find(
-      (u) => u.email === email && u.password === password && u.status !== 'inactive'
-    );
+      if (fallbackUser) {
+        persistSession(fallbackUser);
+        console.log('✅ Login realizado com usuário local:', fallbackUser.email);
+        return true;
+      }
 
-    if (foundUser) {
-      const { password: _, ...userWithoutPassword } = foundUser;
-      
-      // Set session expiry (4 hours)
-      const expiry = Date.now() + (4 * 60 * 60 * 1000);
-      setSessionExpiry(expiry);
-      
-      setUser(userWithoutPassword);
-      
-      // ⚠️ MUDANÇA: sessionStorage ao invés de localStorage
-      sessionStorage.setItem('bts-user', JSON.stringify(userWithoutPassword));
-      sessionStorage.setItem('bts-session-expiry', expiry.toString());
-      
-      console.log('✅ Login bem-sucedido:', userWithoutPassword.email);
-      console.log('🕒 Sessão expira em 4 horas');
-      
-      return true;
+      console.warn('❌ Login falhou para:', email);
+      return false;
     }
-
-    console.warn('❌ Login falhou para:', email);
-    return false;
-  };
-
-  const logout = () => {
-    setUser(null);
-    setSessionExpiry(null);
-    sessionStorage.removeItem('bts-user');
-    sessionStorage.removeItem('bts-session-expiry');
-    console.log('👋 Logout realizado');
   };
 
   return (
