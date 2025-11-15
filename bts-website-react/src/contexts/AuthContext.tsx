@@ -52,6 +52,24 @@ const DEFAULT_USERS: Array<User & { password: string }> = [
   },
 ];
 
+function ensureDefaultUsers(users: Array<User & { password: string }>): Array<User & { password: string }> {
+  let updated = false;
+
+  for (const defaultUser of DEFAULT_USERS) {
+    const exists = users.some(u => u.email === defaultUser.email);
+    if (!exists) {
+      users.push(defaultUser);
+      updated = true;
+    }
+  }
+
+  if (updated) {
+    saveAllUsers(users);
+  }
+
+  return users;
+}
+
 // Get all users from localStorage
 function getAllUsers(): Array<User & { password: string }> {
   if (typeof window === 'undefined') {
@@ -61,7 +79,10 @@ function getAllUsers(): Array<User & { password: string }> {
   try {
     const stored = window.localStorage.getItem('bts-all-users');
     if (stored) {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) {
+        return ensureDefaultUsers(parsed);
+      }
     }
   } catch (error) {
     console.error('Error loading users:', error);
