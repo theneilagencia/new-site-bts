@@ -24,14 +24,14 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
     setError('');
     setIsLoading(true);
 
-    const success = await login(email, password);
+    const result = await login(email, password);
     
     setIsLoading(false);
 
-    if (success) {
+    if (result.success) {
       onLoginSuccess();
     } else {
-      setError('E-mail ou senha incorretos');
+      setError(result.message || 'Não foi possível realizar o login. Tente novamente.');
     }
   };
 

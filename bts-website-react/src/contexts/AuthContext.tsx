@@ -3,9 +3,17 @@ import { User } from '@/types';
 
 export type { User };
 
+export type LoginErrorCode = 'user_not_found' | 'inactive_user' | 'invalid_password' | 'unknown_error';
+
+export interface LoginResult {
+  success: boolean;
+  message?: string;
+  code?: LoginErrorCode;
+}
+
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<LoginResult>;
   logout: () => void;
   isAuthenticated: boolean;
   isAdmin: boolean;
@@ -75,39 +83,58 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(checkSession);
   }, [user, sessionExpiry]);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<LoginResult> => {
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     // Get all users (including dynamically created ones)
     const allUsers = getAllUsers();
 
-    // Find user
-    const foundUser = allUsers.find(
-      (u) => u.email === email && u.password === password && u.status !== 'inactive'
-    );
+    const userByEmail = allUsers.find((u) => u.email === email);
 
-    if (foundUser) {
-      const { password: _, ...userWithoutPassword } = foundUser;
-      
-      // Set session expiry (4 hours)
-      const expiry = Date.now() + (4 * 60 * 60 * 1000);
-      setSessionExpiry(expiry);
-      
-      setUser(userWithoutPassword);
-      
-      // ⚠️ MUDANÇA: sessionStorage ao invés de localStorage
-      sessionStorage.setItem('bts-user', JSON.stringify(userWithoutPassword));
-      sessionStorage.setItem('bts-session-expiry', expiry.toString());
-      
-      console.log('✅ Login bem-sucedido:', userWithoutPassword.email);
-      console.log('🕒 Sessão expira em 4 horas');
-      
-      return true;
+    if (!userByEmail) {
+      console.warn('❌ Login falhou - usuário não encontrado:', email);
+      return {
+        success: false,
+        code: 'user_not_found',
+        message: 'Não encontramos uma conta com este e-mail. Verifique os dados e tente novamente.',
+      };
     }
 
-    console.warn('❌ Login falhou para:', email);
-    return false;
+    if (userByEmail.status === 'inactive') {
+      console.warn('❌ Login bloqueado - usuário inativo:', email);
+      return {
+        success: false,
+        code: 'inactive_user',
+        message: 'Este usuário está desativado. Entre em contato com um administrador para reativar o acesso.',
+      };
+    }
+
+    if (userByEmail.password !== password) {
+      console.warn('❌ Login falhou - senha incorreta:', email);
+      return {
+        success: false,
+        code: 'invalid_password',
+        message: 'Senha incorreta. Confira e tente novamente.',
+      };
+    }
+
+    const { password: _, ...userWithoutPassword } = userByEmail;
+    
+    // Set session expiry (4 hours)
+    const expiry = Date.now() + (4 * 60 * 60 * 1000);
+    setSessionExpiry(expiry);
+    
+    setUser(userWithoutPassword);
+    
+    // ⚠️ MUDANÇA: sessionStorage ao invés de localStorage
+    sessionStorage.setItem('bts-user', JSON.stringify(userWithoutPassword));
+    sessionStorage.setItem('bts-session-expiry', expiry.toString());
+    
+    console.log('✅ Login bem-sucedido:', userWithoutPassword.email);
+    console.log('🕒 Sessão expira em 4 horas');
+    
+    return { success: true };
   };
 
   const logout = () => {
