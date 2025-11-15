@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, getAllStoredUsers, createStoredUser, updateStoredUser, resetStoredUserPassword } from '@/contexts/AuthContext';
 import { LoginPage } from '../auth/login-page';
 import { PortalLayout } from './portal-layout';
 import { NewProposalForm } from './new-proposal-form';
@@ -15,6 +15,7 @@ import { Proposal } from '@/lib/proposal-types';
 import { User } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { sendStatusChangeNotification } from '@/lib/email-notifications';
+import { useEffect } from 'react';
 
 interface PortalAppProps {
   onBackToPublic?: () => void;
@@ -23,23 +24,18 @@ interface PortalAppProps {
 // Production - Clean database
 const MOCK_PROPOSALS: Proposal[] = [];
 
-// Production - SuperAdmin only (managed in AuthContext)
-const MOCK_USERS: User[] = [
-  {
-    id: 'superadmin-001',
-    name: 'Super Admin',
-    email: 'admin@btsglobalcorp.com',
-    role: 'admin',
-    company: 'BTS Global Corp',
-    status: 'active',
-  },
-];
-
 export function PortalApp({ onBackToPublic }: PortalAppProps) {
   const { user, isAuthenticated } = useAuth();
   const [activeSection, setActiveSection] = useState<string>('dashboard');
   const [proposals, setProposals] = useState<Proposal[]>(MOCK_PROPOSALS);
-  const [users, setUsers] = useState<User[]>(MOCK_USERS);
+  
+  // Load users from localStorage on mount
+  const [users, setUsers] = useState<User[]>(() => getAllStoredUsers());
+  
+  // Sync users whenever they change
+  useEffect(() => {
+    setUsers(getAllStoredUsers());
+  }, []);
   const [viewingProposal, setViewingProposal] = useState<Proposal | null>(null);
 
   // If not authenticated, show login
@@ -106,36 +102,39 @@ export function PortalApp({ onBackToPublic }: PortalAppProps) {
         return;
       }
 
-      // Check if email already exists
-      if (users.some(u => u.email === userData.email)) {
-        toast.error('E-mail já cadastrado!', {
-          description: 'Use outro e-mail ou edite o usuário existente.',
-        });
-        return;
-      }
-
       // Validate password
       if (!userData.password || userData.password.length < 6) {
         toast.error('Senha deve ter no mínimo 6 caracteres!');
         return;
       }
 
-      const newUser: User = {
+      const newUser: User & { password: string } = {
         id: `user_${Date.now()}`,
         name: userData.name,
         email: userData.email,
         role: userData.role,
         status: userData.status || 'active',
+        password: userData.password,
       };
 
-      setUsers([...users, newUser]);
+      // Save to localStorage
+      const success = createStoredUser(newUser);
       
-      toast.success('Usuário criado com sucesso!', {
+      if (!success) {
+        toast.error('E-mail já cadastrado!', {
+          description: 'Use outro e-mail ou edite o usuário existente.',
+        });
+        return;
+      }
+      
+      // Update local state
+      setUsers(getAllStoredUsers());
+      
+      toast.success('✅ Usuário criado e salvo com sucesso!', {
         description: `${newUser.name} (${newUser.email})`,
       });
 
-      // In production, this would also save to database
-      console.log('New user created:', { ...newUser, password: '***' });
+      console.log('✅ Usuário persistido no localStorage');
     } catch (error) {
       console.error('Error creating user:', error);
       toast.error('Erro ao criar usuário!', {
@@ -145,8 +144,14 @@ export function PortalApp({ onBackToPublic }: PortalAppProps) {
   };
 
   const handleUpdateUser = (id: string, updates: Partial<User>) => {
-    setUsers(users.map(u => u.id === id ? { ...u, ...updates } : u));
-    toast.success('Usuário atualizado com sucesso!');
+    const success = updateStoredUser(id, updates);
+    
+    if (success) {
+      setUsers(getAllStoredUsers());
+      toast.success('✅ Usuário atualizado e salvo!');
+    } else {
+      toast.error('❌ Erro ao atualizar usuário!');
+    }
   };
 
   const handleToggleUserStatus = (id: string) => {
@@ -159,10 +164,16 @@ export function PortalApp({ onBackToPublic }: PortalAppProps) {
   };
 
   const handleResetPassword = (id: string, newPassword: string) => {
-    // In production, this would call a backend API to update the password
-    // For now, we'll just show a success message
-    console.log(`Password reset for user ${id}: ${newPassword}`);
-    // The actual password storage would be handled by the backend
+    const success = resetStoredUserPassword(id, newPassword);
+    
+    if (success) {
+      toast.success('✅ Senha resetada e salva!', {
+        description: 'O usuário já pode fazer login com a nova senha.',
+      });
+      console.log('✅ Nova senha persistida no localStorage');
+    } else {
+      toast.error('❌ Erro ao resetar senha!');
+    }
   };
 
   const renderContent = () => {
