@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { BtsLogo } from '@/components/ui/BtsLogo';
-import { Mail, Lock, ArrowRight, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, ArrowRight, AlertCircle, Eye, EyeOff, X } from 'lucide-react';
 
 interface LoginPageProps {
   onLoginSuccess: () => void;
@@ -15,6 +15,9 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [resetSent, setResetSent] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,6 +33,24 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
     } else {
       setError('E-mail ou senha incorretos');
     }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Simulate sending reset email
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    
+    setResetSent(true);
+    
+    // In production, this would call an API to send reset email
+    console.log('Password reset requested for:', forgotEmail);
+    
+    setTimeout(() => {
+      setShowForgotPassword(false);
+      setResetSent(false);
+      setForgotEmail('');
+    }, 3000);
   };
 
   return (
@@ -122,6 +143,7 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
                 <div className="flex justify-end">
                   <button
                     type="button"
+                    onClick={() => setShowForgotPassword(true)}
                     className="text-sm text-[#1F4AFF] hover:text-[#00E5FF] transition-colors"
                   >
                     Esqueci minha senha
@@ -153,6 +175,86 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
           </div>
         </motion.div>
       </div>
+
+      {/* Forgot Password Modal */}
+      {showForgotPassword && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative w-full max-w-md mx-4"
+          >
+            <div className="relative bg-[#0A1432] border border-white/10 rounded-2xl p-8">
+              {/* Close Button */}
+              <button
+                onClick={() => {
+                  setShowForgotPassword(false);
+                  setResetSent(false);
+                  setForgotEmail('');
+                }}
+                className="absolute top-4 right-4 text-[#C6CEDF]/50 hover:text-white transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              {!resetSent ? (
+                <>
+                  <h2 className="text-2xl text-white mb-2">Recuperar Senha</h2>
+                  <p className="text-sm text-[#C6CEDF]/70 mb-6">
+                    Digite seu e-mail e enviaremos instruções para redefinir sua senha.
+                  </p>
+
+                  <form onSubmit={handleForgotPassword}>
+                    <div className="mb-6">
+                      <label className="block text-sm text-[#C6CEDF] mb-2">E-mail</label>
+                      <div className="relative">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#C6CEDF]/50" />
+                        <input
+                          type="email"
+                          value={forgotEmail}
+                          onChange={(e) => setForgotEmail(e.target.value)}
+                          required
+                          placeholder="seu@email.com"
+                          className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-[#C6CEDF]/30 focus:outline-none focus:border-[#1F4AFF] focus:ring-2 focus:ring-[#1F4AFF]/20 transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full group relative overflow-hidden rounded-lg bg-gradient-to-r from-[#1F4AFF] to-[#00E5FF] p-[1px] transition-all hover:shadow-lg hover:shadow-[#1F4AFF]/30"
+                    >
+                      <div className="relative flex items-center justify-center gap-2 bg-[#050B18] rounded-lg px-6 py-3 group-hover:bg-transparent transition-all">
+                        <span className="text-white font-medium">Enviar</span>
+                        <ArrowRight className="w-5 h-5 text-white transition-transform group-hover:translate-x-1" />
+                      </div>
+                    </button>
+                  </form>
+                </>
+              ) : (
+                <div className="text-center">
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-500/20 flex items-center justify-center"
+                  >
+                    <svg className="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </motion.div>
+                  <h3 className="text-xl text-white mb-2">E-mail Enviado!</h3>
+                  <p className="text-sm text-[#C6CEDF]/70">
+                    Verifique sua caixa de entrada em <span className="text-[#00E5FF]">{forgotEmail}</span>
+                  </p>
+                  <p className="text-xs text-[#C6CEDF]/50 mt-4">
+                    ⚠️ Funcionalidade em desenvolvimento. Entre em contato com o administrador.
+                  </p>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }

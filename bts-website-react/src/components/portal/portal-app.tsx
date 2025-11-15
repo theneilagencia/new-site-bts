@@ -99,15 +99,49 @@ export function PortalApp({ onBackToPublic }: PortalAppProps) {
   };
 
   const handleCreateUser = (userData: Omit<User, 'id'> & { password: string }) => {
-    const newUser: User = {
-      id: `${Date.now()}`,
-      name: userData.name,
-      email: userData.email,
-      role: userData.role,
-      status: userData.status,
-    };
-    setUsers([...users, newUser]);
-    toast.success('Usuário criado com sucesso!');
+    try {
+      // Validate email
+      if (!userData.email || !userData.email.includes('@')) {
+        toast.error('E-mail inválido!');
+        return;
+      }
+
+      // Check if email already exists
+      if (users.some(u => u.email === userData.email)) {
+        toast.error('E-mail já cadastrado!', {
+          description: 'Use outro e-mail ou edite o usuário existente.',
+        });
+        return;
+      }
+
+      // Validate password
+      if (!userData.password || userData.password.length < 6) {
+        toast.error('Senha deve ter no mínimo 6 caracteres!');
+        return;
+      }
+
+      const newUser: User = {
+        id: `user_${Date.now()}`,
+        name: userData.name,
+        email: userData.email,
+        role: userData.role,
+        status: userData.status || 'active',
+      };
+
+      setUsers([...users, newUser]);
+      
+      toast.success('Usuário criado com sucesso!', {
+        description: `${newUser.name} (${newUser.email})`,
+      });
+
+      // In production, this would also save to database
+      console.log('New user created:', { ...newUser, password: '***' });
+    } catch (error) {
+      console.error('Error creating user:', error);
+      toast.error('Erro ao criar usuário!', {
+        description: 'Tente novamente ou contate o suporte.',
+      });
+    }
   };
 
   const handleUpdateUser = (id: string, updates: Partial<User>) => {
