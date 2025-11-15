@@ -21,10 +21,45 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const DEFAULT_USERS: Array<User & { password: string }> = [
+  {
+    id: 'superadmin-001',
+    email: 'admin@btsglobalcorp.com',
+    password: 'BtS@13112025',
+    name: 'Super Admin',
+    role: 'admin',
+    company: 'BTS Global Corp',
+    status: 'active',
+  },
+  {
+    id: 'partner-demo-001',
+    email: 'parceiro@demo.com',
+    password: 'demo123',
+    name: 'Parceiro Demo',
+    role: 'partner',
+    company: 'Demo Corp',
+    status: 'active',
+  },
+  {
+    id: 'partner-theo-001',
+    email: 'theo@btsglobalcorp.com',
+    password: 'Theo@2025',
+    name: 'Theo Logistics',
+    role: 'partner',
+    company: 'BTS Logistics',
+    phone: '+55 11 4002-8922',
+    status: 'active',
+  },
+];
+
 // Get all users from localStorage
 function getAllUsers(): Array<User & { password: string }> {
+  if (typeof window === 'undefined') {
+    return DEFAULT_USERS;
+  }
+
   try {
-    const stored = localStorage.getItem('bts-all-users');
+    const stored = window.localStorage.getItem('bts-all-users');
     if (stored) {
       return JSON.parse(stored);
     }
@@ -32,24 +67,16 @@ function getAllUsers(): Array<User & { password: string }> {
     console.error('Error loading users:', error);
   }
   
-  // Default superadmin
-  return [
-    {
-      id: 'superadmin-001',
-      email: 'admin@btsglobalcorp.com',
-      password: 'BtS@13112025',
-      name: 'Super Admin',
-      role: 'admin',
-      company: 'BTS Global Corp',
-      status: 'active',
-    },
-  ];
+  saveAllUsers(DEFAULT_USERS);
+  return DEFAULT_USERS;
 }
 
 // Save users to localStorage
 function saveAllUsers(users: Array<User & { password: string }>) {
+  if (typeof window === 'undefined') return;
+
   try {
-    localStorage.setItem('bts-all-users', JSON.stringify(users));
+    window.localStorage.setItem('bts-all-users', JSON.stringify(users));
   } catch (error) {
     console.error('Error saving users:', error);
   }

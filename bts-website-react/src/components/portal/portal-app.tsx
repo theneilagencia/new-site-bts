@@ -155,12 +155,22 @@ export function PortalApp({ onBackToPublic }: PortalAppProps) {
   };
 
   const handleToggleUserStatus = (id: string) => {
-    setUsers(users.map(u => 
-      u.id === id 
-        ? { ...u, status: u.status === 'active' ? 'inactive' as const : 'active' as const }
-        : u
-    ));
-    toast.success('Status atualizado com sucesso!');
+    const targetUser = users.find(u => u.id === id);
+    if (!targetUser) return;
+
+    const nextStatus = targetUser.status === 'active' ? 'inactive' : 'active';
+    const success = updateStoredUser(id, { status: nextStatus });
+
+    if (success) {
+      setUsers(getAllStoredUsers());
+      toast.success(
+        nextStatus === 'active'
+          ? '✅ Usuário reativado com sucesso!'
+          : '✅ Usuário desativado com sucesso!'
+      );
+    } else {
+      toast.error('❌ Não foi possível atualizar o status do usuário.');
+    }
   };
 
   const handleResetPassword = (id: string, newPassword: string) => {
