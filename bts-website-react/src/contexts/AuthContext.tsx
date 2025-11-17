@@ -13,49 +13,116 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Get all users from localStorage
-function getAllUsers(): Array<User & { password: string }> {
-  try {
-    const stored = localStorage.getItem('bts-all-users');
-    if (stored) {
-      return JSON.parse(stored);
-    }
-  } catch (error) {
-    console.error('Error loading users:', error);
-  }
-  
-  // Default superadmin
+const DEMO_COMPANY = 'BTS Global Corp';
+const STORAGE_KEYS = {
+  USERS: 'bts-all-users',
+  SESSION_USER: 'bts-user',
+  SESSION_EXPIRY: 'bts-session-expiry',
+};
+
+const demoPartnerEmail = import.meta.env.VITE_DEMO_PARTNER_EMAIL ?? 'parceiro@demo.com';
+const demoPartnerPassword = import.meta.env.VITE_DEMO_PARTNER_PASSWORD ?? 'demo123';
+const demoAdminEmail = import.meta.env.VITE_DEMO_ADMIN_EMAIL ?? 'admin@btsglobal.com';
+const demoAdminPassword = import.meta.env.VITE_DEMO_ADMIN_PASSWORD ?? 'admin123';
+
+function getDefaultUsers(): Array<User & { password: string }> {
   return [
     {
-      id: 'superadmin-001',
-      email: 'admin@btsglobalcorp.com',
-      password: 'BtS@13112025',
-      name: 'Super Admin',
+      id: 'partner-demo',
+      email: demoPartnerEmail,
+      password: demoPartnerPassword,
+      name: 'Parceiro Demo',
+      role: 'partner',
+      company: DEMO_COMPANY,
+      status: 'active',
+    },
+    {
+      id: 'admin-demo',
+      email: demoAdminEmail,
+      password: demoAdminPassword,
+      name: 'Administrador Demo',
       role: 'admin',
-      company: 'BTS Global Corp',
+      company: DEMO_COMPANY,
       status: 'active',
     },
   ];
 }
 
+// Get all users from localStorage
+function withDemoUsers(users: Array<User & { password: string }>): Array<User & { password: string }> {
+  const demoUsers = getDefaultUsers();
+  let updated = false;
+  const mappedEmails = new Set(users.map((user) => user.email));
+
+  demoUsers.forEach((demoUser) => {
+    if (!mappedEmails.has(demoUser.email)) {
+      users.push(demoUser);
+      updated = true;
+    }
+  });
+
+  if (updated) {
+    saveAllUsers(users);
+  }
+
+  return users;
+}
+
+function getAllUsers(): Array<User & { password: string }> {
+  if (typeof window === 'undefined') {
+    return getDefaultUsers();
+  }
+
+  try {
+    const stored = localStorage.getItem(STORAGE_KEYS.USERS);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return withDemoUsers(parsed);
+      }
+    }
+  } catch (error) {
+    console.error('Error loading users:', error);
+  }
+  
+  const seededUsers = getDefaultUsers();
+  saveAllUsers(seededUsers);
+  return seededUsers;
+}
+
 // Save users to localStorage
 function saveAllUsers(users: Array<User & { password: string }>) {
+  if (typeof window === 'undefined') return;
+
   try {
-    localStorage.setItem('bts-all-users', JSON.stringify(users));
+    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
   } catch (error) {
     console.error('Error saving users:', error);
   }
 }
 
+const getInitialSessionUser = () => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  const stored = sessionStorage.getItem(STORAGE_KEYS.SESSION_USER);
+  return stored ? JSON.parse(stored) : null;
+};
+
+const getInitialSessionExpiry = () => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  const stored = sessionStorage.getItem(STORAGE_KEYS.SESSION_EXPIRY);
+  return stored ? Number(stored) : null;
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   // ⚠️ MUDANÇA CRÍTICA: Usar sessionStorage ao invés de localStorage
   // Isso faz logout automático ao fechar o navegador
-  const [user, setUser] = useState<User | null>(() => {
-    const stored = sessionStorage.getItem('bts-user');
-    return stored ? JSON.parse(stored) : null;
-  });
+  const [user, setUser] = useState<User | null>(() => getInitialSessionUser());
 
-  const [sessionExpiry, setSessionExpiry] = useState<number | null>(null);
+  const [sessionExpiry, setSessionExpiry] = useState<number | null>(() => getInitialSessionExpiry());
 
   const isAuthenticated = !!user;
   const isAdmin = user?.role === 'admin';
@@ -97,8 +164,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(userWithoutPassword);
       
       // ⚠️ MUDANÇA: sessionStorage ao invés de localStorage
-      sessionStorage.setItem('bts-user', JSON.stringify(userWithoutPassword));
-      sessionStorage.setItem('bts-session-expiry', expiry.toString());
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem(STORAGE_KEYS.SESSION_USER, JSON.stringify(userWithoutPassword));
+        sessionStorage.setItem(STORAGE_KEYS.SESSION_EXPIRY, expiry.toString());
+      }
       
       console.log('✅ Login bem-sucedido:', userWithoutPassword.email);
       console.log('🕒 Sessão expira em 4 horas');
@@ -113,8 +182,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setUser(null);
     setSessionExpiry(null);
-    sessionStorage.removeItem('bts-user');
-    sessionStorage.removeItem('bts-session-expiry');
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem(STORAGE_KEYS.SESSION_USER);
+      sessionStorage.removeItem(STORAGE_KEYS.SESSION_EXPIRY);
+    }
     console.log('👋 Logout realizado');
   };
 
