@@ -25,6 +25,11 @@ const demoPartnerPassword = import.meta.env.VITE_DEMO_PARTNER_PASSWORD ?? 'demo1
 const demoAdminEmail = import.meta.env.VITE_DEMO_ADMIN_EMAIL ?? 'admin@btsglobal.com';
 const demoAdminPassword = import.meta.env.VITE_DEMO_ADMIN_PASSWORD ?? 'admin123';
 
+const legacyPartnerEmail = 'elcio@bts.com';
+const legacyPartnerPassword = 'partner123';
+const legacyAdminEmail = 'admin@btsglobalcorp.com';
+const legacyAdminPassword = 'BtS@13112025';
+
 function getDefaultUsers(): Array<User & { password: string }> {
   return [
     {
@@ -32,6 +37,15 @@ function getDefaultUsers(): Array<User & { password: string }> {
       email: demoPartnerEmail,
       password: demoPartnerPassword,
       name: 'Parceiro Demo',
+      role: 'partner',
+      company: DEMO_COMPANY,
+      status: 'active',
+    },
+    {
+      id: 'partner-legacy',
+      email: legacyPartnerEmail,
+      password: legacyPartnerPassword,
+      name: 'Elcio (Parceiro)',
       role: 'partner',
       company: DEMO_COMPANY,
       status: 'active',
@@ -45,6 +59,15 @@ function getDefaultUsers(): Array<User & { password: string }> {
       company: DEMO_COMPANY,
       status: 'active',
     },
+    {
+      id: 'admin-legacy',
+      email: legacyAdminEmail,
+      password: legacyAdminPassword,
+      name: 'Super Admin',
+      role: 'admin',
+      company: DEMO_COMPANY,
+      status: 'active',
+    },
   ];
 }
 
@@ -52,20 +75,39 @@ function getDefaultUsers(): Array<User & { password: string }> {
 function withDemoUsers(users: Array<User & { password: string }>): Array<User & { password: string }> {
   const demoUsers = getDefaultUsers();
   let updated = false;
-  const mappedEmails = new Set(users.map((user) => user.email));
+  const clonedUsers = [...users];
 
   demoUsers.forEach((demoUser) => {
-    if (!mappedEmails.has(demoUser.email)) {
-      users.push(demoUser);
+    const index = clonedUsers.findIndex((user) => user.email === demoUser.email);
+
+    if (index === -1) {
+      clonedUsers.push(demoUser);
+      updated = true;
+      return;
+    }
+
+    const existingUser = clonedUsers[index];
+    const requiresSync =
+      existingUser.password !== demoUser.password ||
+      existingUser.role !== demoUser.role ||
+      existingUser.status !== 'active';
+
+    if (requiresSync) {
+      clonedUsers[index] = {
+        ...existingUser,
+        ...demoUser,
+        id: existingUser.id ?? demoUser.id,
+        status: 'active',
+      };
       updated = true;
     }
   });
 
   if (updated) {
-    saveAllUsers(users);
+    saveAllUsers(clonedUsers);
   }
 
-  return users;
+  return clonedUsers;
 }
 
 function getAllUsers(): Array<User & { password: string }> {
