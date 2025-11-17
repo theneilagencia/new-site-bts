@@ -3,6 +3,17 @@ const API_BASE_URL = typeof window !== 'undefined' && window.location.hostname !
   ? '/api'
   : 'http://localhost:3000/api';
 
+export interface ApiUser {
+  id: string;
+  email: string;
+  name: string;
+  role: 'partner' | 'admin';
+  status: 'active' | 'inactive';
+  company?: string;
+  phone?: string;
+  createdAt?: string;
+}
+
 class ApiError extends Error {
   constructor(public status: number, message: string) {
     super(message);
@@ -79,6 +90,58 @@ export const authApi = {
 
   logout() {
     localStorage.removeItem('bts-auth-token');
+  },
+};
+
+// Users API (admin only)
+export const usersApi = {
+  async list(): Promise<ApiUser[]> {
+    return await fetchApi('/auth/users');
+  },
+
+  async create(userData: {
+    name: string;
+    email: string;
+    password: string;
+    role: 'partner' | 'admin';
+    company?: string;
+    phone?: string;
+    status?: 'active' | 'inactive';
+  }): Promise<ApiUser> {
+    return await fetchApi('/auth/users', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    });
+  },
+
+  async update(
+    id: string,
+    updates: Partial<{
+      name: string;
+      email: string;
+      role: 'partner' | 'admin';
+      company?: string;
+      phone?: string;
+      status?: 'active' | 'inactive';
+    }>
+  ): Promise<ApiUser> {
+    return await fetchApi(`/auth/users/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(updates),
+    });
+  },
+
+  async remove(id: string) {
+    return await fetchApi(`/auth/users/${id}`, {
+      method: 'DELETE',
+    });
+  },
+
+  async resetPassword(id: string, password: string) {
+    return await fetchApi(`/auth/users/${id}/password`, {
+      method: 'PATCH',
+      body: JSON.stringify({ password }),
+    });
   },
 };
 

@@ -32,6 +32,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         phone: true,
         city: true,
         state: true,
+          status: true,
         createdAt: true,
       },
     });

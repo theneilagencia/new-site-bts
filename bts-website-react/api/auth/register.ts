@@ -31,9 +31,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const body = registerSchema.parse(req.body);
 
     // Check if user exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email: body.email },
-    });
+      const existingUser = await prisma.user.findFirst({
+        where: {
+          email: {
+            equals: body.email.trim().toLowerCase(),
+            mode: 'insensitive',
+          },
+        },
+      });
 
     if (existingUser) {
       return error(res, 'Email already registered', 400);
@@ -45,12 +50,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Create user
     const user = await prisma.user.create({
       data: {
-        email: body.email,
+          email: body.email.trim().toLowerCase(),
         password: hashedPassword,
         name: body.name,
         company: body.company,
         phone: body.phone,
         role: 'partner',
+          status: 'active',
       },
     });
 
@@ -68,6 +74,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         email: user.email,
         name: user.name,
         role: user.role,
+          status: user.status,
       },
     }, 201);
   } catch (err: any) {

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useAuth, getAllStoredUsers, createStoredUser, updateStoredUser, resetStoredUserPassword } from '@/contexts/AuthContext';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { LoginPage } from '../auth/login-page';
 import { PortalLayout } from './portal-layout';
 import { NewProposalForm } from './new-proposal-form';
@@ -15,27 +15,30 @@ import { Proposal } from '@/lib/proposal-types';
 import { User } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { sendStatusChangeNotification } from '@/lib/email-notifications';
-import { useEffect } from 'react';
+import { ApiError, usersApi, ApiUser } from '@/lib/api';
 
 interface PortalAppProps {
   onBackToPublic?: () => void;
 }
 
-// Production - Clean database
 const MOCK_PROPOSALS: Proposal[] = [];
+
+const mapApiUserToUser = (apiUser: ApiUser): User => ({
+  id: apiUser.id,
+  email: apiUser.email,
+  name: apiUser.name,
+  role: apiUser.role,
+  company: apiUser.company,
+  phone: apiUser.phone,
+  status: apiUser.status,
+});
 
 export function PortalApp({ onBackToPublic }: PortalAppProps) {
   const { user, isAuthenticated } = useAuth();
   const [activeSection, setActiveSection] = useState<string>('dashboard');
   const [proposals, setProposals] = useState<Proposal[]>(MOCK_PROPOSALS);
-  
-  // Load users from localStorage on mount
-  const [users, setUsers] = useState<User[]>(() => getAllStoredUsers());
-  
-  // Sync users whenever they change
-  useEffect(() => {
-    setUsers(getAllStoredUsers());
-  }, []);
+  const [users, setUsers] = useState<User[]>([]);
+  const [isLoadingUsers, setIsLoadingUsers] = useState(false);
   const [viewingProposal, setViewingProposal] = useState<Proposal | null>(null);
 
   // If not authenticated, show login
@@ -94,85 +97,93 @@ export function PortalApp({ onBackToPublic }: PortalAppProps) {
     }
   };
 
-  const handleCreateUser = (userData: Omit<User, 'id'> & { password: string }) => {
+  const getErrorMessage = (err: unknown) => {
+    if (err instanceof ApiError) return err.message;
+    if (err instanceof Error) return err.message;
+    return 'Tente novamente em instantes.';
+  };
+
+  const fetchUsers = useCallback(async () => {
+    if (user?.role !== 'admin') return;
+    setIsLoadingUsers(true);
     try {
-      // Validate email
-      if (!userData.email || !userData.email.includes('@')) {
-        toast.error('E-mail inválido!');
-        return;
-      }
+      const apiUsers = await usersApi.list();
+      setUsers(apiUsers.map(mapApiUserToUser));
+    } catch (err) {
+      console.error('Erro ao carregar usuários:', err);
+      toast.error('Não foi possível carregar os usuários', {
+        description: getErrorMessage(err),
+      });
+    } finally {
+      setIsLoadingUsers(false);
+    }
+  }, [user?.role]);
 
-      // Validate password
-      if (!userData.password || userData.password.length < 6) {
-        toast.error('Senha deve ter no mínimo 6 caracteres!');
-        return;
-      }
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
-      const newUser: User & { password: string } = {
-        id: `user_${Date.now()}`,
+  const handleUserActionError = (title: string, err: unknown) => {
+    console.error(title, err);
+    toast.error(title, { description: getErrorMessage(err) });
+  };
+
+  const handleCreateUser = async (userData: Omit<User, 'id'> & { password: string }) => {
+    try {
+      await usersApi.create({
         name: userData.name,
         email: userData.email,
-        role: userData.role,
-        status: userData.status || 'active',
         password: userData.password,
-      };
-
-      // Save to localStorage
-      const success = createStoredUser(newUser);
-      
-      if (!success) {
-        toast.error('E-mail já cadastrado!', {
-          description: 'Use outro e-mail ou edite o usuário existente.',
-        });
-        return;
-      }
-      
-      // Update local state
-      setUsers(getAllStoredUsers());
-      
-      toast.success('✅ Usuário criado e salvo com sucesso!', {
-        description: `${newUser.name} (${newUser.email})`,
+        role: userData.role,
+        company: userData.company,
+        phone: userData.phone,
+        status: userData.status ?? 'active',
       });
 
-      console.log('✅ Usuário persistido no localStorage');
-    } catch (error) {
-      console.error('Error creating user:', error);
-      toast.error('Erro ao criar usuário!', {
-        description: 'Tente novamente ou contate o suporte.',
+      toast.success('Usuário criado e salvo com sucesso!', {
+        description: `${userData.name} (${userData.email})`,
       });
+
+      await fetchUsers();
+    } catch (err) {
+      handleUserActionError('Erro ao criar usuário', err);
+      throw err;
     }
   };
 
-  const handleUpdateUser = (id: string, updates: Partial<User>) => {
-    const success = updateStoredUser(id, updates);
-    
-    if (success) {
-      setUsers(getAllStoredUsers());
-      toast.success('✅ Usuário atualizado e salvo!');
-    } else {
-      toast.error('❌ Erro ao atualizar usuário!');
+  const handleUpdateUser = async (id: string, updates: Partial<User>) => {
+    try {
+      await usersApi.update(id, updates);
+      toast.success('Usuário atualizado e salvo!');
+      await fetchUsers();
+    } catch (err) {
+      handleUserActionError('Erro ao atualizar usuário', err);
+      throw err;
     }
   };
 
-  const handleToggleUserStatus = (id: string) => {
-    setUsers(users.map(u => 
-      u.id === id 
-        ? { ...u, status: u.status === 'active' ? 'inactive' as const : 'active' as const }
-        : u
-    ));
-    toast.success('Status atualizado com sucesso!');
+  const handleToggleUserStatus = async (id: string, nextStatus: 'active' | 'inactive') => {
+    try {
+      await usersApi.update(id, { status: nextStatus });
+      toast.success(
+        nextStatus === 'active' ? 'Usuário reativado com sucesso!' : 'Usuário desativado com sucesso!'
+      );
+      await fetchUsers();
+    } catch (err) {
+      handleUserActionError('Erro ao atualizar status do usuário', err);
+      throw err;
+    }
   };
 
-  const handleResetPassword = (id: string, newPassword: string) => {
-    const success = resetStoredUserPassword(id, newPassword);
-    
-    if (success) {
-      toast.success('✅ Senha resetada e salva!', {
+  const handleResetPassword = async (id: string, newPassword: string) => {
+    try {
+      await usersApi.resetPassword(id, newPassword);
+      toast.success('Senha resetada e salva!', {
         description: 'O usuário já pode fazer login com a nova senha.',
       });
-      console.log('✅ Nova senha persistida no localStorage');
-    } else {
-      toast.error('❌ Erro ao resetar senha!');
+    } catch (err) {
+      handleUserActionError('Erro ao resetar senha', err);
+      throw err;
     }
   };
 
@@ -223,6 +234,7 @@ export function PortalApp({ onBackToPublic }: PortalAppProps) {
           return (
             <AdminUsers
               users={users}
+                isLoading={isLoadingUsers}
               onCreateUser={handleCreateUser}
               onUpdateUser={handleUpdateUser}
               onToggleStatus={handleToggleUserStatus}

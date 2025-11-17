@@ -79,6 +79,7 @@ async function upsertDemoUser(demo: DemoUserConfig) {
         role: demo.role,
         name: demo.name,
         company: demo.company ?? existing.company,
+        status: 'active',
       },
     });
   }
@@ -90,6 +91,7 @@ async function upsertDemoUser(demo: DemoUserConfig) {
       role: demo.role,
       name: demo.name,
       company: demo.company ?? 'BTS Global Corp',
+      status: 'active',
     },
   });
 }
@@ -143,6 +145,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return error(res, 'Invalid credentials', 401);
       }
 
+      if (user.status === 'inactive') {
+        return error(res, 'Account disabled', 403);
+      }
+
     // Generate token
     const token = generateToken({
       userId: user.id,
@@ -159,6 +165,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         role: user.role,
         company: user.company,
         phone: user.phone,
+          status: user.status,
       },
     });
   } catch (err: any) {

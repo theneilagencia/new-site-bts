@@ -17,6 +17,7 @@ model User {
   password      String
   name          String
   role          String      @default("partner") // partner, admin
+  status        UserStatus  @default(active)
   company       String?
   phone         String?
   city          String?
@@ -69,4 +70,9 @@ model AgenticConversation {
   
   @@index([sessionId])
   @@index([userId])
+}
+
+enum UserStatus {
+  active
+  inactive
 }
