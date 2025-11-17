@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { prisma } from '../lib/db';
-import { comparePassword, generateToken } from '../lib/auth';
+import { comparePassword, generateToken, hashPassword } from '../lib/auth';
 import { success, error } from '../lib/response';
 import { z } from 'zod';
 
@@ -8,6 +8,91 @@ const loginSchema = z.object({
   email: z.string().email(),
   password: z.string(),
 });
+
+type DemoUserConfig = {
+  email: string;
+  password: string;
+  role: 'partner' | 'admin';
+  name: string;
+  company?: string;
+};
+
+const toLowerCase = (value: string) => value.trim().toLowerCase();
+
+const demoUsers: DemoUserConfig[] = [
+  {
+    email: toLowerCase(process.env.DEMO_PARTNER_EMAIL || process.env.VITE_DEMO_PARTNER_EMAIL || 'parceiro@demo.com'),
+    password: process.env.DEMO_PARTNER_PASSWORD || process.env.VITE_DEMO_PARTNER_PASSWORD || 'demo123',
+    role: 'partner',
+    name: 'Parceiro Demo',
+    company: 'BTS Global Corp',
+  },
+  {
+    email: toLowerCase(process.env.DEMO_LEGACY_PARTNER_EMAIL || 'elcio@bts.com'),
+    password: process.env.DEMO_LEGACY_PARTNER_PASSWORD || 'partner123',
+    role: 'partner',
+    name: 'Elcio (Parceiro)',
+    company: 'BTS Global Corp',
+  },
+  {
+    email: toLowerCase(process.env.DEMO_ADMIN_EMAIL || process.env.VITE_DEMO_ADMIN_EMAIL || 'admin@btsglobal.com'),
+    password: process.env.DEMO_ADMIN_PASSWORD || process.env.VITE_DEMO_ADMIN_PASSWORD || 'admin123',
+    role: 'admin',
+    name: 'Administrador Demo',
+    company: 'BTS Global Corp',
+  },
+  {
+    email: toLowerCase(process.env.DEMO_SUPERADMIN_EMAIL || 'admin@btsglobalcorp.com'),
+    password: process.env.DEMO_SUPERADMIN_PASSWORD || 'BtS@13112025',
+    role: 'admin',
+    name: 'Super Admin',
+    company: 'BTS Global Corp',
+  },
+].filter((demo) => demo.email && demo.password);
+
+function findDemoUser(email: string, password: string): DemoUserConfig | null {
+  const normalizedEmail = toLowerCase(email);
+  return (
+    demoUsers.find(
+      (demo) => demo.email === normalizedEmail && demo.password === password
+    ) || null
+  );
+}
+
+async function upsertDemoUser(demo: DemoUserConfig) {
+  const hashedPassword = await hashPassword(demo.password);
+  const existing = await prisma.user.findFirst({
+    where: {
+      email: {
+        equals: demo.email,
+        mode: 'insensitive',
+      },
+    },
+  });
+
+  if (existing) {
+    return prisma.user.update({
+      where: { id: existing.id },
+      data: {
+        email: demo.email,
+        password: hashedPassword,
+        role: demo.role,
+        name: demo.name,
+        company: demo.company ?? existing.company,
+      },
+    });
+  }
+
+  return prisma.user.create({
+    data: {
+      email: demo.email,
+      password: hashedPassword,
+      role: demo.role,
+      name: demo.name,
+      company: demo.company ?? 'BTS Global Corp',
+    },
+  });
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS
@@ -24,29 +109,44 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return error(res, 'Method not allowed', 405);
   }
 
-  try {
-    const body = loginSchema.parse(req.body);
+    try {
+      const body = loginSchema.parse(req.body);
+      const normalizedEmail = toLowerCase(body.email);
 
-    // Find user
-    const user = await prisma.user.findUnique({
-      where: { email: body.email },
-    });
+      let user = await prisma.user.findFirst({
+        where: {
+          email: {
+            equals: normalizedEmail,
+            mode: 'insensitive',
+          },
+        },
+      });
 
-    if (!user) {
-      return error(res, 'Invalid credentials', 401);
-    }
+      const demoMatch = findDemoUser(normalizedEmail, body.password);
 
-    // Check password
-    const isValid = await comparePassword(body.password, user.password);
+      if (!user && demoMatch) {
+        user = await upsertDemoUser(demoMatch);
+      }
 
-    if (!isValid) {
-      return error(res, 'Invalid credentials', 401);
-    }
+      if (!user) {
+        return error(res, 'Invalid credentials', 401);
+      }
+
+      let isValid = await comparePassword(body.password, user.password);
+
+      if (!isValid && demoMatch) {
+        user = await upsertDemoUser(demoMatch);
+        isValid = await comparePassword(body.password, user.password);
+      }
+
+      if (!isValid) {
+        return error(res, 'Invalid credentials', 401);
+      }
 
     // Generate token
     const token = generateToken({
       userId: user.id,
-      email: user.email,
+        email: user.email.toLowerCase(),
       role: user.role,
     });
 
@@ -54,7 +154,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       token,
       user: {
         id: user.id,
-        email: user.email,
+          email: user.email.toLowerCase(),
         name: user.name,
         role: user.role,
         company: user.company,

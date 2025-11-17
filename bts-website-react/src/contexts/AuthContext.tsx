@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { User } from '@/types';
+import { authApi, ApiError } from '@/lib/api';
 
 export type { User };
 
@@ -19,6 +20,7 @@ const STORAGE_KEYS = {
   SESSION_USER: 'bts-user',
   SESSION_EXPIRY: 'bts-session-expiry',
 };
+const SESSION_DURATION_MS = 4 * 60 * 60 * 1000;
 
 const demoPartnerEmail = import.meta.env.VITE_DEMO_PARTNER_EMAIL ?? 'parceiro@demo.com';
 const demoPartnerPassword = import.meta.env.VITE_DEMO_PARTNER_PASSWORD ?? 'demo123';
@@ -160,14 +162,36 @@ const getInitialSessionExpiry = () => {
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // ⚠️ MUDANÇA CRÍTICA: Usar sessionStorage ao invés de localStorage
-  // Isso faz logout automático ao fechar o navegador
   const [user, setUser] = useState<User | null>(() => getInitialSessionUser());
-
   const [sessionExpiry, setSessionExpiry] = useState<number | null>(() => getInitialSessionExpiry());
 
   const isAuthenticated = !!user;
   const isAdmin = user?.role === 'admin';
+
+  const normalizeApiUser = (apiUser: any): User => ({
+    id: apiUser.id,
+    email: apiUser.email,
+    name: apiUser.name,
+    role: apiUser.role === 'admin' ? 'admin' : 'partner',
+    company: apiUser.company ?? DEMO_COMPANY,
+    phone: apiUser.phone ?? undefined,
+    status: (apiUser.status as User['status']) ?? 'active',
+  });
+
+  const clearSessionStorage = () => {
+    if (typeof window === 'undefined') return;
+    sessionStorage.removeItem(STORAGE_KEYS.SESSION_USER);
+    sessionStorage.removeItem(STORAGE_KEYS.SESSION_EXPIRY);
+  };
+
+  const persistSession = (sessionUser: User, expiry: number) => {
+    setSessionExpiry(expiry);
+    setUser(sessionUser);
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(STORAGE_KEYS.SESSION_USER, JSON.stringify(sessionUser));
+      sessionStorage.setItem(STORAGE_KEYS.SESSION_EXPIRY, expiry.toString());
+    }
+  };
 
   // Validar sessão periodicamente
   useEffect(() => {
@@ -184,50 +208,80 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(checkSession);
   }, [user, sessionExpiry]);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
+  // Restaurar sessão via token da API (JWT)
+  useEffect(() => {
+    let cancelled = false;
 
-    // Get all users (including dynamically created ones)
+    const hydrateFromApiToken = async () => {
+      if (typeof window === 'undefined') return;
+      const storedToken = localStorage.getItem('bts-auth-token');
+      if (!storedToken) return;
+
+      try {
+        const apiUser = await authApi.getMe();
+        if (cancelled) return;
+        persistSession(normalizeApiUser(apiUser), Date.now() + SESSION_DURATION_MS);
+      } catch (error) {
+        console.warn('Falha ao restaurar sessão via API:', error);
+        authApi.logout();
+        clearSessionStorage();
+      }
+    };
+
+    hydrateFromApiToken();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const loginWithLocalFallback = async (email: string, password: string): Promise<boolean> => {
     const allUsers = getAllUsers();
-
-    // Find user
     const foundUser = allUsers.find(
       (u) => u.email === email && u.password === password && u.status !== 'inactive'
     );
 
     if (foundUser) {
       const { password: _, ...userWithoutPassword } = foundUser;
-      
-      // Set session expiry (4 hours)
-      const expiry = Date.now() + (4 * 60 * 60 * 1000);
-      setSessionExpiry(expiry);
-      
-      setUser(userWithoutPassword);
-      
-      // ⚠️ MUDANÇA: sessionStorage ao invés de localStorage
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem(STORAGE_KEYS.SESSION_USER, JSON.stringify(userWithoutPassword));
-        sessionStorage.setItem(STORAGE_KEYS.SESSION_EXPIRY, expiry.toString());
-      }
-      
-      console.log('✅ Login bem-sucedido:', userWithoutPassword.email);
-      console.log('🕒 Sessão expira em 4 horas');
-      
+      const sessionUser: User = {
+        ...userWithoutPassword,
+        status: userWithoutPassword.status ?? 'active',
+      };
+      persistSession(sessionUser, Date.now() + SESSION_DURATION_MS);
+      console.log('✅ Login local (fallback) bem-sucedido:', sessionUser.email);
       return true;
     }
 
-    console.warn('❌ Login falhou para:', email);
+    console.warn('❌ Login local falhou para:', email);
     return false;
   };
 
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      const data = await authApi.login(email, password);
+      const sessionUser = normalizeApiUser(data.user);
+      persistSession(sessionUser, Date.now() + SESSION_DURATION_MS);
+      console.log('✅ Login via API:', sessionUser.email);
+      return true;
+    } catch (err) {
+      console.error('Erro ao autenticar via API:', err);
+
+      if (err instanceof ApiError) {
+        if (err.status >= 500) {
+          return loginWithLocalFallback(email, password);
+        }
+        return false;
+      }
+
+      return loginWithLocalFallback(email, password);
+    }
+  };
+
   const logout = () => {
+    authApi.logout();
     setUser(null);
     setSessionExpiry(null);
-    if (typeof window !== 'undefined') {
-      sessionStorage.removeItem(STORAGE_KEYS.SESSION_USER);
-      sessionStorage.removeItem(STORAGE_KEYS.SESSION_EXPIRY);
-    }
+    clearSessionStorage();
     console.log('👋 Logout realizado');
   };
 
