@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { ContactFormModal } from '@/components/contact/ContactFormModal';
 
 interface ContactFormContextValue {
@@ -12,8 +12,8 @@ const ContactFormContext = createContext<ContactFormContextValue | undefined>(un
 export function ContactFormProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const openContactForm = () => setIsOpen(true);
-  const closeContactForm = () => setIsOpen(false);
+  const openContactForm = useCallback(() => setIsOpen(true), []);
+  const closeContactForm = useCallback(() => setIsOpen(false), []);
 
   const value = useMemo(
     () => ({
@@ -21,8 +21,17 @@ export function ContactFormProvider({ children }: { children: ReactNode }) {
       openContactForm,
       closeContactForm,
     }),
-    [isOpen],
+    [isOpen, openContactForm, closeContactForm],
   );
+
+  useEffect(() => {
+    (window as any).openContactForm = openContactForm;
+    return () => {
+      if ((window as any).openContactForm === openContactForm) {
+        delete (window as any).openContactForm;
+      }
+    };
+  }, [openContactForm]);
 
   return (
     <ContactFormContext.Provider value={value}>
