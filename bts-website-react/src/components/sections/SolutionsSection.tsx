@@ -2,10 +2,12 @@
 
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useContactForm } from '@/contexts/ContactFormContext';
 import { useRef, useState } from 'react';
 
 export function SolutionsSection() {
   const { t } = useLanguage();
+  const { openContactForm } = useContactForm();
   const containerRef = useRef(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   
@@ -363,53 +365,56 @@ export function SolutionsSection() {
             })}
           </div>
 
-          {/* Global CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9, delay: 0.7 }}
-            className="mt-32 text-center"
+        {/* Global CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.9, delay: 0.7 }}
+          className="mt-32 text-center"
+        >
+          <p className="mb-8 text-lg text-[var(--text-tertiary)]">{t.solutions.globalCta}</p>
+
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            className="group relative overflow-hidden rounded-lg shadow-lg shadow-[#00639A]/20 transition-shadow duration-300 hover:shadow-2xl hover:shadow-[#00639A]/30"
+            type="button"
+            onClick={openContactForm}
+            aria-label={t.solutions.globalCtaButton}
           >
-            <p className="mb-8 text-lg text-[var(--text-tertiary)]">{t.solutions.globalCta}</p>
+            {/* Gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#00639A] to-[#21B6F3]" />
 
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="group relative overflow-hidden rounded-lg shadow-lg shadow-[#00639A]/20 transition-shadow duration-300 hover:shadow-2xl hover:shadow-[#00639A]/30"
-            >
-              {/* Gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#00639A] to-[#21B6F3]" />
+            {/* Animated shine effect */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent"
+              animate={{ x: ['-200%', '200%'] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+            />
 
-              {/* Animated shine effect */}
+            {/* Glow border */}
+            <motion.div
+              className="absolute inset-0 rounded-lg opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              style={{
+                boxShadow: '0 0 40px rgba(33, 182, 243, 0.4)',
+              }}
+            />
+
+            <div className="relative flex items-center gap-3 px-10 py-4 text-white">
+              <span className="font-medium">{t.solutions.globalCtaButton}</span>
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent"
-                animate={{ x: ['-200%', '200%'] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-              />
-
-              {/* Glow border */}
-              <motion.div
-                className="absolute inset-0 rounded-lg opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                style={{
-                  boxShadow: '0 0 40px rgba(33, 182, 243, 0.4)',
-                }}
-              />
-
-              <div className="relative flex items-center gap-3 px-10 py-4 text-white">
-                <span className="font-medium">{t.solutions.globalCtaButton}</span>
-                <motion.div
-                  animate={{ x: [0, 6, 0] }}
-                  transition={{ duration: 1.8, repeat: Infinity }}
-                >
-                  <div className="flex items-center">
-                    <div className="h-px w-5 bg-white" />
-                    <div className="h-0 w-0 border-y-[5px] border-l-[6px] border-y-transparent border-l-white" />
-                  </div>
-                </motion.div>
-              </div>
-            </motion.button>
-          </motion.div>
+                animate={{ x: [0, 6, 0] }}
+                transition={{ duration: 1.8, repeat: Infinity }}
+              >
+                <div className="flex items-center">
+                  <div className="h-px w-5 bg-white" />
+                  <div className="h-0 w-0 border-y-[5px] border-l-[6px] border-y-transparent border-l-white" />
+                </div>
+              </motion.div>
+            </div>
+          </motion.button>
+        </motion.div>
 
           {/* Bottom divider */}
           <motion.div

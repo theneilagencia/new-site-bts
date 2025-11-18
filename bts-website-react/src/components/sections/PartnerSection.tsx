@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useContactForm } from '@/contexts/ContactFormContext';
 import { ArrowRight, LogIn } from 'lucide-react';
 
 interface PartnerV6Props {
@@ -10,6 +11,7 @@ interface PartnerV6Props {
 
 export function PartnerSection({ onAccessPortal }: PartnerV6Props) {
   const { t } = useLanguage();
+  const { openContactForm } = useContactForm();
 
   const infrastructureItems = [
     t.partner.infrastructure1,
@@ -322,28 +324,31 @@ export function PartnerSection({ onAccessPortal }: PartnerV6Props) {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6"
-          >
-            {/* Primary CTA - Apply to Become Partner - IGUAL AO HERO */}
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="group relative w-full overflow-hidden rounded-lg sm:w-auto"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-[#00639A] to-[#21B6F3]" />
-              <div className="relative flex items-center gap-2 px-8 py-4 text-white">
-                <span>{t.partner.cta}</span>
+              {/* Primary CTA - Apply to Become Partner - IGUAL AO HERO */}
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="group relative w-full overflow-hidden rounded-lg sm:w-auto"
+                type="button"
+                onClick={openContactForm}
+                aria-label={t.partner.cta}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-[#00639A] to-[#21B6F3]" />
+                <div className="relative flex items-center gap-2 px-8 py-4 text-white">
+                  <span>{t.partner.cta}</span>
+                  <motion.div
+                    animate={{ x: [0, 4, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                  </motion.div>
+                </div>
                 <motion.div
-                  animate={{ x: [0, 4, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </motion.div>
-              </div>
-              <motion.div
-                className="absolute inset-0 bg-white/15 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                initial={false}
-              />
-            </motion.button>
+                  className="absolute inset-0 bg-white/15 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  initial={false}
+                />
+              </motion.button>
 
             {/* Secondary CTA - Partner Login */}
             <motion.button

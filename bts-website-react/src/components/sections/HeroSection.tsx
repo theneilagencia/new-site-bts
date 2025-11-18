@@ -2,11 +2,13 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useContactForm } from '@/contexts/ContactFormContext';
 import { ArrowRight, Play } from 'lucide-react';
 import { useRef } from 'react';
 
 export function HeroSection() {
   const { t } = useLanguage();
+  const { openContactForm } = useContactForm();
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -108,51 +110,54 @@ export function HeroSection() {
             {t.hero.description}
           </motion.p>
 
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="flex flex-col gap-4 sm:flex-row mb-24"
-          >
-            {/* Primary CTA */}
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="group relative overflow-hidden rounded-lg"
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="flex flex-col gap-4 sm:flex-row mb-24"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-[#00639A] to-[#21B6F3]" />
-              <div className="relative flex items-center gap-2 px-8 py-4 text-white">
-                <span className="font-medium">{t.hero.cta}</span>
+              {/* Primary CTA */}
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="group relative overflow-hidden rounded-lg"
+                type="button"
+                onClick={openContactForm}
+                aria-label={t.hero.cta}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-[#00639A] to-[#21B6F3]" />
+                <div className="relative flex items-center gap-2 px-8 py-4 text-white">
+                  <span className="font-medium">{t.hero.cta}</span>
+                  <motion.div
+                    animate={{ x: [0, 4, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                  </motion.div>
+                </div>
                 <motion.div
-                  animate={{ x: [0, 4, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </motion.div>
-              </div>
-              <motion.div
-                className="absolute inset-0 bg-white/15 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                initial={false}
-              />
-            </motion.button>
+                  className="absolute inset-0 bg-white/15 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  initial={false}
+                />
+              </motion.button>
 
-            {/* Secondary CTA */}
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="group relative overflow-hidden rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)]/50 backdrop-blur-sm"
-            >
-              <div className="relative flex items-center gap-2 px-8 py-4 text-[var(--text-primary)]">
-                <Play className="h-4 w-4" />
-                <span className="font-medium">{t.hero.ctaSecondary}</span>
-              </div>
-              <motion.div
-                className="absolute inset-0 bg-[#00639A]/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                initial={false}
-              />
-            </motion.button>
-          </motion.div>
+              {/* Secondary CTA */}
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="group relative overflow-hidden rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)]/50 backdrop-blur-sm"
+              >
+                <div className="relative flex items-center gap-2 px-8 py-4 text-[var(--text-primary)]">
+                  <Play className="h-4 w-4" />
+                  <span className="font-medium">{t.hero.ctaSecondary}</span>
+                </div>
+                <motion.div
+                  className="absolute inset-0 bg-[#00639A]/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  initial={false}
+                />
+              </motion.button>
+            </motion.div>
         </div>
       </motion.div>
 

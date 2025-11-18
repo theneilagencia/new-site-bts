@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { LanguageProvider } from '@/contexts/LanguageContext';
-import { ThemeProvider } from '@/contexts/ThemeContext';
-import { AuthProvider } from '@/contexts/AuthContext';
+import { AppProviders } from '@/contexts/AppProviders';
 import { Header } from '@/components/layout/Header';
 import { HeroSection } from '@/components/sections/HeroSection';
 import { WhySection } from '@/components/sections/WhySection';
@@ -28,35 +26,31 @@ export default function App() {
   };
 
   return (
-    <ThemeProvider>
-      <LanguageProvider>
-        <AuthProvider>
-          <div className="min-h-screen">
-            {currentView === 'public' ? (
-              <>
-                <PageLoader />
-                <CursorGlow />
-                <ScrollToTop />
-                <AgenticChat />
-                <Header onAccessPortal={() => setCurrentView('portal')} />
-                <main>
-                  <HeroSection />
-                  <WhySection />
-                  <PrivacySection />
-                  <TrustedSection />
-                  <SolutionsSection />
-                  <AboutSection />
-                  <PartnerSection onAccessPortal={() => setCurrentView('portal')} />
-                </main>
-                <Footer />
-              </>
-            ) : (
-              <PortalApp onBackToPublic={handleBackToPublic} />
-            )}
-            <Toaster />
-          </div>
-        </AuthProvider>
-      </LanguageProvider>
-    </ThemeProvider>
+    <AppProviders>
+      <div className="min-h-screen">
+        {currentView === 'public' ? (
+          <>
+            <PageLoader />
+            <CursorGlow />
+            <ScrollToTop />
+            <AgenticChat />
+            <Header onAccessPortal={() => setCurrentView('portal')} />
+            <main>
+              <HeroSection />
+              <WhySection />
+              <PrivacySection />
+              <TrustedSection />
+              <SolutionsSection />
+              <AboutSection />
+              <PartnerSection onAccessPortal={() => setCurrentView('portal')} />
+            </main>
+            <Footer />
+          </>
+        ) : (
+          <PortalApp onBackToPublic={handleBackToPublic} />
+        )}
+        <Toaster />
+      </div>
+    </AppProviders>
   );
 }
