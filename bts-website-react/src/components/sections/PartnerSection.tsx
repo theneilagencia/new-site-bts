@@ -333,6 +333,7 @@ export function PartnerSection({ onAccessPortal }: PartnerV6Props) {
                 type="button"
                 onClick={openContactForm}
                 aria-label={t.partner.cta}
+                data-contact-trigger
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-[#00639A] to-[#21B6F3]" />
                 <div className="relative flex items-center gap-2 px-8 py-4 text-white">

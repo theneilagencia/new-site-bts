@@ -382,6 +382,7 @@ export function SolutionsSection() {
             type="button"
             onClick={openContactForm}
             aria-label={t.solutions.globalCtaButton}
+            data-contact-trigger
           >
             {/* Gradient background */}
             <div className="absolute inset-0 bg-gradient-to-r from-[#00639A] to-[#21B6F3]" />

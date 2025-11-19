@@ -33,6 +33,20 @@ export function ContactFormProvider({ children }: { children: ReactNode }) {
     };
   }, [openContactForm]);
 
+  useEffect(() => {
+    const handler = (event: Event) => {
+      event.preventDefault();
+      openContactForm();
+    };
+
+    const triggers = Array.from(document.querySelectorAll('[data-contact-trigger]'));
+    triggers.forEach((node) => node.addEventListener('click', handler));
+
+    return () => {
+      triggers.forEach((node) => node.removeEventListener('click', handler));
+    };
+  }, [openContactForm]);
+
   return (
     <ContactFormContext.Provider value={value}>
       {children}
